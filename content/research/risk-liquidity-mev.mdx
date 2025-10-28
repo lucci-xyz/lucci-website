@@ -1,0 +1,37 @@
+---
+title: "Risk, Liquidity, and MEV: Notes from the Lab"
+date: "2025-10-20"
+summary: "Sketching a risk lens for protocol design and the inevitability of adversarial flow."
+tags: ["risk", "mev", "design"]
+---
+
+# Risk, Liquidity, and MEV: Notes from the Lab
+
+Drafts live here. Expect footguns.
+
+## The Problem Space
+
+When building DeFi protocols, we often ignore the adversarial nature of public blockchains. MEV (Maximal Extractable Value) isn't a bug—it's a feature of transparent state machines with competitive block production.
+
+## Key Observations
+
+1. **Liquidity is adversarial**: Every pool is a target for sandwich attacks.
+2. **State transparency = price transparency**: Front-running isn't just possible, it's optimal.
+3. **Gas auctions incentivize extraction**: Priority fees create a race to extract value.
+
+## Design Implications
+
+- Accept MEV as inevitable
+- Design for worst-case extraction scenarios
+- Consider private mempools and sealed-bid mechanisms
+- Build in explicit fee structures that capture value for protocol users
+
+## Work in Progress
+
+We're exploring mechanisms that:
+- Reduce information leakage
+- Align MEV with protocol goals
+- Distribute extracted value fairly
+
+More to come as experiments evolve.
+

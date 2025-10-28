@@ -1,0 +1,43 @@
+[
+  {
+    "name": "BountyEscrow",
+    "blurb": "On-chain escrow for GitHub issues with automatic payouts on merge.",
+    "tags": ["escrow", "github", "usdc"],
+    "status": "alpha",
+    "githubUrl": "https://github.com/LucciCapital/bounty",
+    "siteUrl": null
+  },
+  {
+    "name": "FeeVault",
+    "blurb": "Minimal owner-controlled vault for fee aggregation and sweeps.",
+    "tags": ["contracts", "ops"],
+    "status": "experimental",
+    "githubUrl": "https://github.com/LucciCapital/fee-vault",
+    "siteUrl": null
+  },
+  {
+    "name": "zkProofKit",
+    "blurb": "Modular toolkit for integrating zero-knowledge proofs into Solidity contracts.",
+    "tags": ["zk", "cryptography", "solidity"],
+    "status": "experimental",
+    "githubUrl": "https://github.com/LucciCapital/zk-proof-kit",
+    "siteUrl": null
+  },
+  {
+    "name": "LiquidityOracle",
+    "blurb": "Real-time liquidity depth oracle for DeFi protocols with manipulation resistance.",
+    "tags": ["oracle", "defi", "liquidity"],
+    "status": "alpha",
+    "githubUrl": "https://github.com/LucciCapital/liquidity-oracle",
+    "siteUrl": null
+  },
+  {
+    "name": "TokenomicsLab",
+    "blurb": "Simulation framework for testing token economics models before deployment.",
+    "tags": ["tokenomics", "simulation", "research"],
+    "status": "archived",
+    "githubUrl": "https://github.com/LucciCapital/tokenomics-lab",
+    "siteUrl": null
+  }
+]
+

@@ -1,0 +1,51 @@
+---
+title: "Zero-Knowledge Primitives for Smart Contracts"
+date: "2025-09-15"
+summary: "Exploring practical ZK applications beyond simple proofs: private state, selective disclosure, and efficient verification."
+tags: ["zk", "cryptography", "privacy"]
+---
+
+# Zero-Knowledge Primitives for Smart Contracts
+
+Zero-knowledge proofs are powerful, but integrating them into production smart contracts requires careful design.
+
+## Current State
+
+Most ZK implementations focus on:
+- Simple proof verification
+- Basic privacy preserving transfers
+- Rollup validity proofs
+
+## What's Missing
+
+1. **Composable private state**: How do contracts interact with hidden data?
+2. **Efficient selective disclosure**: Prove properties without revealing values
+3. **Gas-optimized verification**: Current proof verification is expensive
+
+## Our Approach
+
+We're building modular ZK primitives that:
+- Work with existing Solidity tooling
+- Minimize on-chain verification costs
+- Enable private DeFi interactions
+
+### Example: Private Balance Proofs
+
+```solidity
+// Prove you have sufficient balance without revealing amount
+function proveBalance(bytes calldata proof, uint256 threshold) 
+  external 
+  returns (bool)
+{
+  return zkVerifier.verify(proof, threshold);
+}
+```
+
+## Challenges
+
+- Circuit complexity grows quickly
+- Trusted setup requirements
+- Developer experience gaps
+
+Still early, but the primitives are getting better.
+

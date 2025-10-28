@@ -1,0 +1,50 @@
+---
+title: "Token Design Failures: A Field Guide"
+date: "2025-08-03"
+summary: "Common tokenomics mistakes and how to avoid them (or at least fail faster)."
+tags: ["tokenomics", "governance", "design"]
+---
+
+# Token Design Failures: A Field Guide
+
+A collection of ways token designs break in production.
+
+## Common Failure Modes
+
+### 1. The Death Spiral
+
+**Setup**: Token value tied to protocol revenue, but low token value reduces confidence, reducing usage, reducing revenue...
+
+**Example**: Every algorithmic stablecoin that failed.
+
+**Fix**: Don't create circular dependencies between token price and protocol utility.
+
+### 2. Governance Capture
+
+**Setup**: Token holders vote on protocol changes, large holder accumulates majority, protocol becomes extractive.
+
+**Example**: Most DeFi governance tokens within 6 months.
+
+**Fix**: Consider conviction voting, time locks, or give up on governance altogether.
+
+### 3. The Airdrop Dump
+
+**Setup**: Large airdrop to "reward community," recipients immediately sell, price crashes, protocol DOA.
+
+**Example**: Too many to list.
+
+**Fix**: Vest tokens, require meaningful participation, or skip the airdrop.
+
+## What Actually Works
+
+1. **Minimal token utility**: Don't force it
+2. **Real revenue sharing**: If you promise yield, deliver yield
+3. **Time-based mechanisms**: Vesting, cooldowns, epochs
+4. **Accept mercenary capital**: Design for it, don't fight it
+
+## Our Philosophy
+
+We test aggressive models in controlled environments. Some will fail spectacularly. That's the point.
+
+Token design is adversarial game theory. Act accordingly.
+
