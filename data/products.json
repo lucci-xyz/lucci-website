@@ -1,0 +1,33 @@
+[
+  {
+    "name": "BountyEscrow",
+    "blurb": "On\u2011chain escrow for GitHub issues with automatic payouts on merge.",
+    "tags": [
+      "escrow",
+      "github",
+      "usdc"
+    ],
+    "status": "alpha",
+    "href": "https://github.com/LucciCapital/bounty"
+  },
+  {
+    "name": "FeeVault",
+    "blurb": "Minimal owner\u2011controlled vault for fee aggregation and sweeps.",
+    "tags": [
+      "contracts",
+      "ops"
+    ],
+    "status": "experimental",
+    "href": "https://github.com/LucciCapital/fee-vault"
+  },
+  {
+    "name": "RiskLedger",
+    "blurb": "Merkle\u2011anchored weekly risk roots for protocol decisions.",
+    "tags": [
+      "risk",
+      "analytics"
+    ],
+    "status": "research",
+    "href": "https://github.com/LucciCapital"
+  }
+]
