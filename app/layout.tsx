@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     description: 'A playground for Web3 / Crypto / DeFi R&D.',
     images: ['/og.png']
   },
-  icons: { icon: '/favicon.svg' }
+  icons: { icon: '/og.png' }
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
