@@ -61,7 +61,7 @@ export default function DocsSidebar() {
               {section.links.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={link.href}
+                    href={link.href as any}
                     className={`block text-sm transition-colors ${
                       pathname === link.href
                         ? 'text-primary font-medium'
