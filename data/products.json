@@ -91,25 +91,5 @@
         "url": "https://github.com/natalie-a-1/Meta-Scraper"
       }
     ]
-  },
-  {
-    "name": "FeeVault",
-    "blurb": "Minimal owner‑controlled vault for fee aggregation and sweeps.",
-    "tags": [
-      "contracts",
-      "ops"
-    ],
-    "status": "experimental",
-    "href": "https://github.com/LucciCapital/fee-vault"
-  },
-  {
-    "name": "RiskLedger",
-    "blurb": "Merkle‑anchored weekly risk roots for protocol decisions.",
-    "tags": [
-      "risk",
-      "analytics"
-    ],
-    "status": "research",
-    "href": "https://github.com/LucciCapital"
   }
 ]

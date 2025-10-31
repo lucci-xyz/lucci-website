@@ -16,3 +16,66 @@
 .animate-breathe {
   animation: breathe 3s ease-in-out infinite;
 }
+
+/* Code block syntax highlighting - IDE style with light background */
+.prose pre {
+  @apply bg-gray-50 text-gray-900 border border-gray-200;
+}
+
+.prose pre code {
+  @apply bg-transparent text-sm;
+}
+
+/* Syntax highlighting colors */
+.prose pre code .token.comment,
+.prose pre code .token.prolog,
+.prose pre code .token.doctype,
+.prose pre code .token.cdata {
+  @apply text-gray-500;
+}
+
+.prose pre code .token.punctuation {
+  @apply text-gray-700;
+}
+
+.prose pre code .token.property,
+.prose pre code .token.tag,
+.prose pre code .token.boolean,
+.prose pre code .token.number,
+.prose pre code .token.constant,
+.prose pre code .token.symbol {
+  @apply text-blue-600;
+}
+
+.prose pre code .token.selector,
+.prose pre code .token.attr-name,
+.prose pre code .token.string,
+.prose pre code .token.char,
+.prose pre code .token.builtin {
+  @apply text-green-600;
+}
+
+.prose pre code .token.operator,
+.prose pre code .token.entity,
+.prose pre code .token.url,
+.prose pre code .token.variable {
+  @apply text-orange-600;
+}
+
+.prose pre code .token.atrule,
+.prose pre code .token.attr-value,
+.prose pre code .token.keyword,
+.prose pre code .token.function,
+.prose pre code .token.class-name {
+  @apply text-purple-600;
+}
+
+.prose pre code .token.regex,
+.prose pre code .token.important {
+  @apply text-red-600;
+}
+
+/* Inline code */
+.prose code {
+  @apply bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded;
+}

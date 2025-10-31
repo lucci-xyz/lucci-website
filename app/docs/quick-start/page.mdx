@@ -1,0 +1,69 @@
+export const metadata = { 
+  title: 'Quick Start — Lucci Labs',
+  description: 'Get started with Lucci Labs in minutes'
+}
+
+# Quick Start
+
+Get up and running with Lucci Labs products.
+
+## BountyPay
+
+Install and use BountyPay for automated bounty payments.
+
+### Installation
+
+```bash
+npm install @lucci/bountypay-sdk
+```
+
+### Basic Usage
+
+```typescript
+import { BountyPayClient } from '@lucci/bountypay-sdk'
+
+const client = new BountyPayClient({
+  apiKey: process.env.BOUNTYPAY_API_KEY,
+  network: 'base'
+})
+
+// Create a bounty
+await client.createBounty({
+  repository: 'owner/repo',
+  issueNumber: 123,
+  amount: 100 // USDC
+})
+```
+
+[Full BountyPay Documentation →](/docs/products/bountypay)
+
+## Good First Issues
+
+Browse beginner-friendly issues from Web3 projects.
+
+Visit [Good First Issues](https://good-first-issues-three.vercel.app/) to explore curated issues by technology stack.
+
+## Smart Contract Integration
+
+For products with smart contracts, connect your wallet and interact:
+
+```typescript
+import { useWriteContract } from 'wagmi'
+import { parseEther } from 'viem'
+
+const { writeContract } = useWriteContract()
+
+await writeContract({
+  address: contractAddress,
+  abi: BountyABI,
+  functionName: 'createBounty',
+  args: [payeeAddress, parseEther('1')],
+  value: parseEther('1')
+})
+```
+
+## Need Help?
+
+- Check [GitHub repositories](https://github.com/LucciCapital) for examples
+- Open an issue with reproduction steps
+- Join our community for support

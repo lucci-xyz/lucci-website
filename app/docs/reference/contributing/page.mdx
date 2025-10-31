@@ -1,0 +1,95 @@
+export const metadata = { 
+  title: 'Contributing — Lucci Labs',
+  description: 'Contribute to Lucci Labs'
+}
+
+# Contributing
+
+We welcome contributions! This guide helps you get started.
+
+## Ways to Contribute
+
+- Report bugs with clear reproduction steps
+- Suggest features with use cases
+- Improve documentation
+- Submit code via pull requests
+
+## Getting Started
+
+```bash
+# Fork and clone
+git clone https://github.com/your-username/[repo-name]
+cd [repo-name]
+
+# Install dependencies
+npm install
+
+# Create a branch
+git checkout -b feature/your-feature-name
+```
+
+## Development Workflow
+
+1. Make your changes
+2. Write tests
+3. Run linter: `npm run lint`
+4. Build: `npm run build`
+5. Commit with clear messages
+6. Push and create PR
+
+### Commit Format
+
+```bash
+git commit -m "feat(bounty): add cancellation feature"
+git commit -m "fix(api): handle rate limit errors"
+git commit -m "docs: update integration guide"
+```
+
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+## Pull Request Guidelines
+
+- Keep changes focused and atomic
+- Write clear descriptions
+- Reference related issues
+- Include tests
+- Ensure CI passes
+
+## Code Style
+
+### TypeScript
+
+```typescript
+// Good
+export async function createBounty(
+  params: BountyParams
+): Promise<Bounty> {
+  // Implementation
+}
+```
+
+### Solidity
+
+```solidity
+// Good
+contract BountyEscrow {
+    /// @notice Creates a new bounty
+    /// @param payee Address to receive bounty
+    /// @return bountyId Unique identifier
+    function createBounty(
+        address payee,
+        uint256 amount
+    ) external payable returns (uint256 bountyId) {
+        // Implementation
+    }
+}
+```
+
+## Community
+
+- **Discord:** [Join our server](https://discord.gg/lucci)
+- **GitHub:** [Discussions](https://github.com/lucci-xyz/bounty/discussions)
+
+## License
+
+By contributing, you agree your contributions will be licensed under the project's license (typically MIT).
