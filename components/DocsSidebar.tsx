@@ -32,6 +32,7 @@ const docSections: DocSection[] = [
   {
     title: 'Reference',
     links: [
+      { label: 'Smart Contracts', href: '/docs/reference/smart-contracts' },
       { label: 'Contributing', href: '/docs/reference/contributing' },
       { label: 'Support', href: '/docs/reference/support' }
     ]
