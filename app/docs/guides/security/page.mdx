@@ -1,0 +1,574 @@
+export const metadata = { 
+  title: 'Security Best Practices — Lucci Labs',
+  description: 'Security guidelines for using and integrating Lucci Labs products'
+}
+
+# Security Best Practices
+
+Security is paramount when building Web3 applications. This guide covers best practices for securely integrating and using Lucci Labs products.
+
+## General Security Principles
+
+### Never Expose Private Keys
+
+```typescript
+// ❌ NEVER do this
+const PRIVATE_KEY = '0x1234567890abcdef...'
+
+// ✅ Use environment variables
+const PRIVATE_KEY = process.env.PRIVATE_KEY
+
+// ✅ Use secure key management
+import { KMS } from 'aws-sdk'
+const key = await kms.decrypt({ CiphertextBlob: encryptedKey })
+```
+
+### API Key Management
+
+```typescript
+// ❌ Don't commit API keys
+const apiKey = 'sk_live_abc123'
+
+// ✅ Use environment variables
+const apiKey = process.env.BOUNTYPAY_API_KEY
+
+// ✅ Validate keys exist
+if (!process.env.BOUNTYPAY_API_KEY) {
+  throw new Error('BOUNTYPAY_API_KEY environment variable not set')
+}
+
+// ✅ Use different keys for environments
+const apiKey = process.env.NODE_ENV === 'production'
+  ? process.env.BOUNTYPAY_LIVE_KEY
+  : process.env.BOUNTYPAY_TEST_KEY
+```
+
+### Input Validation
+
+```typescript
+import { z } from 'zod'
+
+// Define schemas for all inputs
+const createBountySchema = z.object({
+  repository: z.string().regex(/^[\w-]+\/[\w-]+$/),
+  issueNumber: z.number().int().positive().max(999999),
+  amount: z.number().positive().max(10000),
+  chain: z.enum(['base', 'ethereum', 'optimism'])
+})
+
+// Validate before processing
+try {
+  const validated = createBountySchema.parse(input)
+  await createBounty(validated)
+} catch (error) {
+  if (error instanceof z.ZodError) {
+    return res.status(400).json({ errors: error.errors })
+  }
+}
+```
+
+## Smart Contract Security
+
+### Check-Effects-Interactions Pattern
+
+```solidity
+// ✅ Correct order
+function withdraw(uint256 amount) external {
+    // 1. Checks
+    require(balances[msg.sender] >= amount, "Insufficient balance");
+    
+    // 2. Effects
+    balances[msg.sender] -= amount;
+    
+    // 3. Interactions
+    (bool success, ) = msg.sender.call{value: amount}("");
+    require(success, "Transfer failed");
+}
+
+// ❌ Vulnerable to reentrancy
+function withdraw(uint256 amount) external {
+    require(balances[msg.sender] >= amount);
+    (bool success, ) = msg.sender.call{value: amount}("");
+    balances[msg.sender] -= amount; // Too late!
+}
+```
+
+### Access Control
+
+```solidity
+import "@openzeppelin/contracts/access/AccessControl.sol";
+
+contract BountyEscrow is AccessControl {
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    
+    constructor() {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+    
+    function emergencyPause() external onlyRole(ADMIN_ROLE) {
+        _pause();
+    }
+    
+    function updateFeeRate(uint256 newRate) external onlyRole(ADMIN_ROLE) {
+        require(newRate <= MAX_FEE_RATE, "Fee too high");
+        feeRate = newRate;
+    }
+}
+```
+
+### Reentrancy Protection
+
+```solidity
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+contract BountyEscrow is ReentrancyGuard {
+    function releaseBounty(uint256 bountyId) 
+        external 
+        nonReentrant 
+    {
+        Bounty storage bounty = bounties[bountyId];
+        require(bounty.status == Status.Approved, "Not approved");
+        
+        bounty.status = Status.Paid;
+        
+        (bool success, ) = bounty.payee.call{value: bounty.amount}("");
+        require(success, "Transfer failed");
+        
+        emit BountyPaid(bountyId, bounty.payee, bounty.amount);
+    }
+}
+```
+
+### Gas Limit Considerations
+
+```typescript
+// ✅ Set reasonable gas limits
+const tx = await contract.createBounty(payee, amount, {
+  gasLimit: 200000 // Prevent griefing attacks
+})
+
+// ✅ Estimate gas before sending
+const gasEstimate = await contract.estimateGas.createBounty(payee, amount)
+const gasLimit = gasEstimate.mul(120).div(100) // 20% buffer
+```
+
+## API Security
+
+### Rate Limiting
+
+```typescript
+import rateLimit from 'express-rate-limit'
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+  message: 'Too many requests, please try again later'
+})
+
+app.use('/api/', limiter)
+
+// Different limits for different endpoints
+const createBountyLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10 // 10 bounties per minute max
+})
+
+app.post('/api/bounties', createBountyLimiter, createBountyHandler)
+```
+
+### Authentication
+
+```typescript
+import jwt from 'jsonwebtoken'
+
+// Generate JWT
+function generateToken(userId: string) {
+  return jwt.sign(
+    { userId, scope: 'api' },
+    process.env.JWT_SECRET!,
+    { expiresIn: '1h' }
+  )
+}
+
+// Verify JWT middleware
+function authenticateToken(req, res, next) {
+  const token = req.headers['authorization']?.split(' ')[1]
+  
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' })
+  }
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!)
+    req.user = decoded
+    next()
+  } catch (error) {
+    return res.status(403).json({ error: 'Invalid token' })
+  }
+}
+
+app.use('/api/protected', authenticateToken)
+```
+
+### CORS Configuration
+
+```typescript
+import cors from 'cors'
+
+// ❌ Too permissive
+app.use(cors({ origin: '*' }))
+
+// ✅ Whitelist specific origins
+const allowedOrigins = [
+  'https://yourdomain.com',
+  'https://app.yourdomain.com'
+]
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true
+}))
+```
+
+### Webhook Signature Verification
+
+```typescript
+import crypto from 'crypto'
+
+function verifyWebhookSignature(
+  payload: string,
+  signature: string,
+  secret: string
+): boolean {
+  const expectedSignature = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex')
+  
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expectedSignature)
+  )
+}
+
+// Use in webhook handler
+app.post('/webhooks/bountypay', (req, res) => {
+  const signature = req.headers['x-bountypay-signature']
+  const payload = JSON.stringify(req.body)
+  
+  if (!verifyWebhookSignature(payload, signature, WEBHOOK_SECRET)) {
+    return res.status(401).json({ error: 'Invalid signature' })
+  }
+  
+  // Process webhook...
+})
+```
+
+## Frontend Security
+
+### XSS Prevention
+
+```typescript
+// ❌ Vulnerable to XSS
+function UserProfile({ user }) {
+  return <div dangerouslySetInnerHTML={{ __html: user.bio }} />
+}
+
+// ✅ Sanitize user input
+import DOMPurify from 'dompurify'
+
+function UserProfile({ user }) {
+  const sanitized = DOMPurify.sanitize(user.bio)
+  return <div dangerouslySetInnerHTML={{ __html: sanitized }} />
+}
+
+// ✅ Even better: Just use text content
+function UserProfile({ user }) {
+  return <div>{user.bio}</div>
+}
+```
+
+### Secure Wallet Connection
+
+```typescript
+import { useConnect, useAccount } from 'wagmi'
+
+function ConnectWallet() {
+  const { connect, connectors, error } = useConnect()
+  const { address, isConnected } = useAccount()
+  
+  // ✅ Validate connection
+  useEffect(() => {
+    if (isConnected && address) {
+      // Verify the connected chain
+      if (chain?.id !== expectedChainId) {
+        console.warn('Wrong network')
+        // Prompt user to switch
+      }
+    }
+  }, [isConnected, address, chain])
+  
+  // ✅ Handle errors
+  if (error) {
+    console.error('Connection failed:', error)
+  }
+  
+  return (
+    <div>
+      {connectors.map(connector => (
+        <button key={connector.id} onClick={() => connect({ connector })}>
+          Connect {connector.name}
+        </button>
+      ))}
+    </div>
+  )
+}
+```
+
+### Transaction Confirmation
+
+```typescript
+// ✅ Always show transaction details before signing
+function ConfirmTransaction({ tx }) {
+  return (
+    <div className="confirmation-modal">
+      <h3>Confirm Transaction</h3>
+      <div>
+        <strong>To:</strong> {tx.to}
+      </div>
+      <div>
+        <strong>Value:</strong> {formatEther(tx.value)} ETH
+      </div>
+      <div>
+        <strong>Gas Estimate:</strong> {tx.gasEstimate}
+      </div>
+      <div>
+        <strong>Function:</strong> {tx.functionName}
+      </div>
+      <button onClick={handleConfirm}>Confirm</button>
+      <button onClick={handleCancel}>Cancel</button>
+    </div>
+  )
+}
+```
+
+## Database Security
+
+### Parameterized Queries
+
+```typescript
+// ❌ SQL injection vulnerability
+const query = `SELECT * FROM bounties WHERE id = ${bountyId}`
+await db.query(query)
+
+// ✅ Use parameterized queries
+await db.query('SELECT * FROM bounties WHERE id = $1', [bountyId])
+
+// ✅ Use an ORM
+await prisma.bounty.findUnique({ where: { id: bountyId } })
+```
+
+### Encryption at Rest
+
+```typescript
+import crypto from 'crypto'
+
+// Encrypt sensitive data
+function encryptData(data: string, key: string): string {
+  const iv = crypto.randomBytes(16)
+  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv)
+  
+  let encrypted = cipher.update(data, 'utf8', 'hex')
+  encrypted += cipher.final('hex')
+  
+  const authTag = cipher.getAuthTag()
+  
+  return JSON.stringify({
+    encrypted,
+    iv: iv.toString('hex'),
+    authTag: authTag.toString('hex')
+  })
+}
+
+// Decrypt
+function decryptData(encryptedData: string, key: string): string {
+  const { encrypted, iv, authTag } = JSON.parse(encryptedData)
+  
+  const decipher = crypto.createDecipheriv(
+    'aes-256-gcm',
+    key,
+    Buffer.from(iv, 'hex')
+  )
+  
+  decipher.setAuthTag(Buffer.from(authTag, 'hex'))
+  
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+  decrypted += decipher.final('utf8')
+  
+  return decrypted
+}
+```
+
+## Dependency Security
+
+### Regular Updates
+
+```bash
+# Check for vulnerabilities
+npm audit
+
+# Fix automatically when possible
+npm audit fix
+
+# Check for outdated packages
+npm outdated
+
+# Update packages
+npm update
+```
+
+### Lock Files
+
+```bash
+# Always commit lock files
+git add package-lock.json
+git commit -m "Update dependencies"
+
+# Use exact versions for critical packages
+npm install --save-exact @lucci/bountypay
+```
+
+### Verify Package Integrity
+
+```json
+{
+  "dependencies": {
+    "@lucci/bountypay": "1.0.0"
+  },
+  "overrides": {
+    "vulnerable-package": "safe-version"
+  }
+}
+```
+
+## Incident Response
+
+### Monitoring
+
+```typescript
+import * as Sentry from '@sentry/node'
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+  tracesSampleRate: 1.0
+})
+
+// Report errors
+try {
+  await createBounty(params)
+} catch (error) {
+  Sentry.captureException(error, {
+    tags: { feature: 'bounty-creation' },
+    extra: { params }
+  })
+  throw error
+}
+```
+
+### Circuit Breakers
+
+```typescript
+class CircuitBreaker {
+  private failures = 0
+  private readonly threshold = 5
+  private readonly timeout = 60000 // 1 minute
+  private state: 'closed' | 'open' | 'half-open' = 'closed'
+  private nextAttempt = Date.now()
+  
+  async execute<T>(fn: () => Promise<T>): Promise<T> {
+    if (this.state === 'open') {
+      if (Date.now() < this.nextAttempt) {
+        throw new Error('Circuit breaker is open')
+      }
+      this.state = 'half-open'
+    }
+    
+    try {
+      const result = await fn()
+      this.onSuccess()
+      return result
+    } catch (error) {
+      this.onFailure()
+      throw error
+    }
+  }
+  
+  private onSuccess() {
+    this.failures = 0
+    this.state = 'closed'
+  }
+  
+  private onFailure() {
+    this.failures++
+    if (this.failures >= this.threshold) {
+      this.state = 'open'
+      this.nextAttempt = Date.now() + this.timeout
+    }
+  }
+}
+
+// Usage
+const breaker = new CircuitBreaker()
+await breaker.execute(() => bountyPay.createBounty(params))
+```
+
+## Security Checklist
+
+Before deploying to production:
+
+- [ ] All secrets in environment variables
+- [ ] API keys have appropriate scopes/permissions
+- [ ] Input validation on all user inputs
+- [ ] Rate limiting implemented
+- [ ] CORS properly configured
+- [ ] Webhook signatures verified
+- [ ] SQL injection protection (parameterized queries)
+- [ ] XSS prevention (sanitize user content)
+- [ ] HTTPS enforced
+- [ ] Dependencies up to date
+- [ ] Error handling doesn't leak sensitive info
+- [ ] Logging excludes sensitive data
+- [ ] Smart contracts audited
+- [ ] Multi-sig on admin functions
+- [ ] Emergency pause mechanism
+- [ ] Monitoring and alerts set up
+
+## Reporting Security Issues
+
+If you discover a security vulnerability:
+
+1. **DO NOT** open a public GitHub issue
+2. Email security@lucci.xyz with details
+3. Include steps to reproduce
+4. Allow 90 days for patching before disclosure
+
+We appreciate responsible disclosure and will credit researchers who report valid issues.
+
+## Resources
+
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [Smart Contract Best Practices](https://consensys.github.io/smart-contract-best-practices/)
+- [Node.js Security Best Practices](https://nodejs.org/en/docs/guides/security/)
+
+## Next Steps
+
+- [Integration Guide](/docs/guides/integration)
+- [Architecture Overview](/docs/architecture)
+- [Contributing Guidelines](/docs/reference/contributing)

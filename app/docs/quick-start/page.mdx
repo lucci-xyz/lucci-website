@@ -1,0 +1,246 @@
+export const metadata = { 
+  title: 'Quick Start — Lucci Labs',
+  description: 'Get started with Lucci Labs products in minutes'
+}
+
+# Quick Start Guide
+
+Get up and running with Lucci Labs products quickly. This guide will walk you through the basics of integrating our tools into your projects.
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- **Node.js 18+** installed on your system
+- **Git** for cloning repositories
+- **A Web3 wallet** (MetaMask, Rainbow, etc.) for blockchain interactions
+- **Basic knowledge** of TypeScript, React, and Web3 concepts
+
+## Installation
+
+Most Lucci Labs products can be installed via npm or used directly from GitHub:
+
+```bash
+# Clone a repository
+git clone https://github.com/lucci-xyz/[product-name]
+
+# Install dependencies
+cd [product-name]
+npm install
+
+# Start development server
+npm run dev
+```
+
+## Using BountyPay
+
+BountyPay is our most popular product for automating bounty payouts. Here's how to get started:
+
+### 1. Install the GitHub App
+
+Visit the [BountyPay GitHub App](https://github.com/apps/bountypay) and install it on your repository.
+
+### 2. Fund Your Bounty
+
+```typescript
+// Example: Create a bounty on an issue
+import { BountyPayClient } from 'bountypay-sdk'
+
+const client = new BountyPayClient({
+  apiKey: process.env.BOUNTYPAY_API_KEY
+})
+
+await client.createBounty({
+  repository: 'owner/repo',
+  issueNumber: 123,
+  amount: 100, // USDC
+  chain: 'base'
+})
+```
+
+### 3. Issue Gets Resolved
+
+When a contributor closes the issue with a PR, BountyPay automatically:
+- Verifies the PR was merged
+- Releases payment to the contributor's wallet
+- Updates the issue with payment confirmation
+
+[Read full BountyPay docs →](/docs/products/bountypay)
+
+## Using Good First Issues
+
+Discover beginner-friendly issues across Web3 projects:
+
+### 1. Browse Issues
+
+Visit [Good First Issues](https://good-first-issues-three.vercel.app/) to explore curated issues.
+
+### 2. Filter by Technology
+
+```bash
+# Issues are tagged by technology stack
+- Solidity
+- Rust
+- TypeScript
+- Python
+```
+
+### 3. Start Contributing
+
+Click through to GitHub and start working on issues that match your skills.
+
+[Read full Good First Issues docs →](/docs/products/good-first-issues)
+
+## Working with Smart Contracts
+
+For products involving smart contracts (BountyPay, FeeVault), you'll need:
+
+### 1. Configure Your Network
+
+```typescript
+// config.ts
+export const config = {
+  networks: {
+    base: {
+      rpcUrl: process.env.BASE_RPC_URL,
+      chainId: 8453,
+      contracts: {
+        bountyEscrow: '0x...'
+      }
+    }
+  }
+}
+```
+
+### 2. Connect Your Wallet
+
+```typescript
+import { createWalletClient, custom } from 'viem'
+import { base } from 'viem/chains'
+
+const client = createWalletClient({
+  chain: base,
+  transport: custom(window.ethereum)
+})
+```
+
+### 3. Interact with Contracts
+
+```typescript
+// Read contract state
+const balance = await client.readContract({
+  address: contractAddress,
+  abi: contractABI,
+  functionName: 'getBalance',
+  args: [userAddress]
+})
+
+// Write to contract
+const hash = await client.writeContract({
+  address: contractAddress,
+  abi: contractABI,
+  functionName: 'deposit',
+  args: [amount],
+  value: amount
+})
+```
+
+## Development Workflow
+
+Here's our recommended workflow for contributing to Lucci Labs projects:
+
+### 1. Fork and Clone
+
+```bash
+# Fork the repository on GitHub, then:
+git clone https://github.com/your-username/[product-name]
+cd [product-name]
+```
+
+### 2. Create a Branch
+
+```bash
+git checkout -b feature/your-feature-name
+```
+
+### 3. Make Changes
+
+```bash
+# Run tests
+npm test
+
+# Run linter
+npm run lint
+
+# Build the project
+npm run build
+```
+
+### 4. Submit a PR
+
+```bash
+git add .
+git commit -m "feat: add new feature"
+git push origin feature/your-feature-name
+```
+
+Then open a PR on GitHub with a clear description of your changes.
+
+## Common Patterns
+
+### Error Handling
+
+```typescript
+try {
+  const result = await client.doSomething()
+  console.log('Success:', result)
+} catch (error) {
+  if (error.code === 'USER_REJECTED') {
+    console.log('User cancelled transaction')
+  } else {
+    console.error('Transaction failed:', error)
+  }
+}
+```
+
+### Gas Optimization
+
+```typescript
+// Estimate gas before sending transaction
+const gasEstimate = await client.estimateGas({
+  to: contractAddress,
+  data: encodedData
+})
+
+// Add 20% buffer
+const gasLimit = (gasEstimate * 120n) / 100n
+```
+
+### Event Listening
+
+```typescript
+// Listen for contract events
+const unwatch = client.watchContractEvent({
+  address: contractAddress,
+  abi: contractABI,
+  eventName: 'BountyCreated',
+  onLogs: (logs) => {
+    console.log('New bounty created:', logs)
+  }
+})
+```
+
+## Next Steps
+
+Now that you've got the basics, explore our detailed product documentation:
+
+- [BountyPay Integration Guide →](/docs/products/bountypay)
+- [Architecture Overview →](/docs/architecture)
+- [Security Best Practices →](/docs/guides/security)
+- [Contributing Guidelines →](/docs/reference/contributing)
+
+## Need Help?
+
+- Check our [GitHub repositories](https://github.com/LucciCapital) for examples
+- Open an issue with detailed logs and reproduction steps
+- Review existing issues for similar problems and solutions
