@@ -42,8 +42,8 @@ export default function DocsSidebar() {
   const pathname = usePathname()
   
   return (
-    <aside className="w-64 flex-shrink-0 pr-8 border-r border-black/5">
-      <div className="sticky top-20 space-y-6">
+    <aside className="w-full lg:w-64 lg:flex-shrink-0 lg:pr-8 lg:border-r border-black/5">
+      <div className="lg:sticky lg:top-20 space-y-6">
         {docSections.map((section) => (
           <div key={section.title}>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-ink/50 mb-3">
