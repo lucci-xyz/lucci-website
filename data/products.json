@@ -1,18 +1,100 @@
 [
   {
-    "name": "BountyEscrow",
-    "blurb": "On\u2011chain escrow for GitHub issues with automatic payouts on merge.",
+    "name": "BountyPay",
+    "blurb": "A tool that provides seamless, automated bounty payouts for your open-source contributions. Simply fund with USDC on Base, and let BountyPay manage the rest efficiently.",
     "tags": [
       "escrow",
       "github",
-      "usdc"
+      "usdc",
+      "base"
     ],
     "status": "alpha",
-    "href": "https://github.com/LucciCapital/bounty"
+    "links": [
+      {
+        "label": "App",
+        "url": "https://github.com/apps/bountypay"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/lucci-xyz/bounty"
+      }
+    ]
+  },
+  {
+    "name": "Good First Issues",
+    "blurb": "A platform that helps curious newcomers discover beginner-friendly issues from the most exciting projects in Crypto, Web3, Blockchain, and DeFi.",
+    "tags": [
+      "web3",
+      "crypto",
+      "open-source"
+    ],
+    "status": "live",
+    "links": [
+      {
+        "label": "Website",
+        "url": "https://good-first-issues-three.vercel.app/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/natalie-a-1/GoodFirstIssues"
+      }
+    ]
+  },
+  {
+    "name": "Flash",
+    "blurb": "A decentralized application (dApp) that facilitates flash loan arbitrage between decentralized exchanges (DEXs).",
+    "tags": [
+      "defi",
+      "flash-loans",
+      "arbitrage"
+    ],
+    "status": "experimental",
+    "links": [
+      {
+        "label": "Code",
+        "url": "https://github.com/natalie-a-1/Flash"
+      }
+    ]
+  },
+  {
+    "name": "Chain Trace",
+    "blurb": "A blockchain analysis tool that offers valuable insights into NFT transaction histories. It provides comprehensive visualizations and statistics, aiding researchers, collectors, and developers in understanding how NFTs move through the Ethereum ecosystem.",
+    "tags": [
+      "nft",
+      "ethereum",
+      "analytics"
+    ],
+    "status": "research",
+    "links": [
+      {
+        "label": "Code",
+        "url": "https://github.com/natalie-a-1/ChainTrace"
+      }
+    ]
+  },
+  {
+    "name": "Meta Scraper",
+    "blurb": "A Visual Studio Code extension that enhances your privacy by allowing you to view and remove metadata from image files, ensuring your sensitive information remains secure when sharing images.",
+    "tags": [
+      "vscode",
+      "privacy",
+      "security"
+    ],
+    "status": "live",
+    "links": [
+      {
+        "label": "Install",
+        "url": "https://marketplace.visualstudio.com/items?itemName=NatalieHill.metascraper"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/natalie-a-1/Meta-Scraper"
+      }
+    ]
   },
   {
     "name": "FeeVault",
-    "blurb": "Minimal owner\u2011controlled vault for fee aggregation and sweeps.",
+    "blurb": "Minimal owner‑controlled vault for fee aggregation and sweeps.",
     "tags": [
       "contracts",
       "ops"
@@ -22,7 +104,7 @@
   },
   {
     "name": "RiskLedger",
-    "blurb": "Merkle\u2011anchored weekly risk roots for protocol decisions.",
+    "blurb": "Merkle‑anchored weekly risk roots for protocol decisions.",
     "tags": [
       "risk",
       "analytics"
