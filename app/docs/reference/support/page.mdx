@@ -1,27 +1,17 @@
 export const metadata = { 
   title: 'Support — Lucci Labs',
-  description: 'Get help with Lucci Labs products'
+  description: 'Get help with Lucci Labs'
 }
 
 # Support
 
-Need help with Lucci Labs products? Here's how to get support.
+Need help? Here's how to get support.
 
 ## Before You Ask
 
-### Check Documentation
-
-Most questions are answered in our docs:
-- [Quick Start Guide](/docs/quick-start)
-- [Product Documentation](/docs/products/bountypay)
-- [Integration Guide](/docs/guides/integration)
-- [Architecture Overview](/docs/architecture)
-
-### Search Existing Issues
-
-Someone may have already asked your question:
-- [GitHub Issues](https://github.com/lucci-xyz/bounty/issues)
-- [GitHub Discussions](https://github.com/lucci-xyz/bounty/discussions)
+- Check the documentation
+- Search existing issues on GitHub
+- Review the quick start guide
 
 ## Support Channels
 
@@ -29,140 +19,56 @@ Someone may have already asked your question:
 
 For bugs and feature requests:
 
-**Best for:**
-- Bugs and errors
-- Feature requests
-- Security issues (non-sensitive)
-
-**When opening an issue:**
-1. Search for existing issues first
-2. Use the issue template
-3. Include reproduction steps
-4. Attach logs and screenshots
-5. Specify your environment
-
 [Open an Issue →](https://github.com/lucci-xyz/bounty/issues/new)
+
+**Include:**
+- Clear description
+- Steps to reproduce
+- Expected vs actual behavior
+- Environment details
 
 ### GitHub Discussions
 
 For questions and general discussion:
 
-**Best for:**
-- How-to questions
-- Architecture discussions
-- Feature ideas (before formal request)
-- General feedback
-
 [Start a Discussion →](https://github.com/lucci-xyz/bounty/discussions)
 
-### Discord Community
+### Discord
 
-For real-time chat:
-
-**Best for:**
-- Quick questions
-- Community help
-- Troubleshooting
-- Networking
+For real-time chat and community help:
 
 [Join Discord →](https://discord.gg/lucci)
 
-### Email Support
+### Email
 
 For sensitive issues:
 
-**Email:** support@lucci.xyz
-
-**Best for:**
-- Security vulnerabilities
-- Private issues
-- Partnership inquiries
-- Enterprise support
-
+**Email:** support@lucci.xyz  
 **Response time:** 48-72 hours
 
 ## Common Issues
 
-### BountyPay Issues
+### BountyPay: "Insufficient funds"
 
-#### "Insufficient funds" error
+Check your USDC balance:
 
-**Cause:** Your account doesn't have enough USDC.
-
-**Solution:**
 ```bash
-# Check balance
 npx bountypay balance
-
-# Deposit funds
 npx bountypay deposit --amount 1000
 ```
 
-#### Bounty not releasing after merge
+### Payment Not Releasing
 
-**Possible causes:**
-1. PR not actually merged (closed ≠ merged)
-2. PR author doesn't match claimer
-3. Network congestion delaying transaction
+Verify:
+- PR was merged (not just closed)
+- PR author matches claimer
+- Contributor wallet configured
 
-**Solution:**
+### API Rate Limit
+
+Implement exponential backoff:
+
 ```typescript
-// Check bounty status
-const status = await client.getBountyStatus(bountyId)
-console.log(status)
-
-// Check transaction
-if (status.transaction) {
-  console.log(`TX: ${status.transaction}`)
-  // Check on block explorer
-}
-```
-
-#### GitHub webhook not firing
-
-**Causes:**
-- Webhook URL not accessible
-- Firewall blocking requests
-- SSL certificate issues
-
-**Solution:**
-1. Verify webhook URL in GitHub settings
-2. Check webhook delivery logs
-3. Test with RequestBin or similar tool
-
-### Smart Contract Issues
-
-#### Transaction failing with "out of gas"
-
-**Solution:**
-```typescript
-// Increase gas limit
-const tx = await contract.createBounty(payee, amount, {
-  gasLimit: 300000 // Increase from default
-})
-```
-
-#### "Nonce too low" error
-
-**Cause:** Pending transaction with same nonce.
-
-**Solution:**
-```typescript
-// Wait for pending transaction
-await provider.waitForTransaction(pendingTxHash)
-
-// Or manually set nonce
-const nonce = await provider.getTransactionCount(address, 'pending')
-const tx = await contract.createBounty(payee, amount, { nonce })
-```
-
-### API Issues
-
-#### 429 Rate Limit Exceeded
-
-**Solution:**
-```typescript
-// Implement exponential backoff
 async function withRetry(fn, maxRetries = 3) {
   for (let i = 0; i < maxRetries; i++) {
     try {
@@ -178,196 +84,20 @@ async function withRetry(fn, maxRetries = 3) {
 }
 ```
 
-#### 401 Unauthorized
-
-**Cause:** Invalid or expired API key.
-
-**Solution:**
-```bash
-# Verify API key
-echo $BOUNTYPAY_API_KEY
-
-# Regenerate if needed
-npx bountypay keys:create
-```
-
-## Debugging Tips
-
-### Enable Debug Logging
-
-```typescript
-// Set environment variable
-process.env.DEBUG = 'lucci:*'
-
-// Or in code
-import { setLogLevel } from '@lucci/bountypay'
-setLogLevel('debug')
-```
-
-### Check Network Status
-
-```bash
-# Verify RPC connectivity
-curl -X POST https://mainnet.base.org \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
-```
-
-### Verify Contract Deployment
-
-```typescript
-// Check if contract is deployed
-const code = await provider.getCode(contractAddress)
-console.log('Contract deployed:', code !== '0x')
-
-// Check contract version
-const version = await contract.version()
-console.log('Version:', version)
-```
-
-### Transaction Debugging
-
-```typescript
-// Get transaction receipt
-const receipt = await provider.getTransactionReceipt(txHash)
-console.log('Status:', receipt.status) // 1 = success, 0 = failure
-
-// Get transaction details
-const tx = await provider.getTransaction(txHash)
-console.log('Gas used:', receipt.gasUsed.toString())
-console.log('Gas price:', tx.gasPrice.toString())
-
-// Decode revert reason
-if (receipt.status === 0) {
-  try {
-    await provider.call(tx, tx.blockNumber)
-  } catch (error) {
-    console.log('Revert reason:', error.message)
-  }
-}
-```
-
 ## Emergency Contacts
 
-### Critical Issues
-
-For time-sensitive critical issues:
-
-**Email:** emergency@lucci.xyz  
-**Response time:** 4 hours (business days)
-
-**What qualifies as critical:**
-- Security vulnerabilities being exploited
-- Complete service outage
-- Data loss
-- Financial loss in progress
-
-### Security Issues
-
-For security vulnerabilities:
-
-**Email:** security@lucci.xyz  
-**PGP Key:** [Download](https://lucci.xyz/security.asc)
-
-**Please include:**
-- Vulnerability description
-- Steps to reproduce
-- Potential impact
-- Suggested fix (if any)
-
-**Our commitment:**
-- Acknowledge within 24 hours
-- Provide updates every 48 hours
-- Fix critical issues within 7 days
-- Credit researchers (if desired)
-
-## Service Status
-
-### Check Service Status
-
-- **Status Page:** [status.lucci.xyz](https://status.lucci.xyz)
-- **Twitter:** [@LucciLabs](https://twitter.com/LucciLabs)
-
-### Subscribe to Updates
-
-Get notified about:
-- Planned maintenance
-- Service outages
-- Security updates
-- New releases
-
-[Subscribe →](https://status.lucci.xyz/subscribe)
+**Critical issues:** emergency@lucci.xyz  
+**Security issues:** security@lucci.xyz
 
 ## Response Times
 
-**GitHub Issues:** 24-48 hours  
-**GitHub Discussions:** 12-24 hours  
-**Discord:** Community-driven (typically < 1 hour)  
-**Email (General):** 48-72 hours  
-**Email (Security):** 24 hours  
-**Email (Critical):** 4 hours
+- GitHub Issues: 24-48 hours
+- GitHub Discussions: 12-24 hours
+- Discord: Community-driven
+- Email: 48-72 hours
 
-Note: Response times are for business days (Mon-Fri). Weekend/holiday responses may be delayed.
-
-## Self-Service Resources
-
-### Example Repositories
-
-Check our example repos:
-- [BountyPay Examples](https://github.com/lucci-xyz/bountypay-examples)
-- [Integration Templates](https://github.com/lucci-xyz/integration-templates)
-
-### Video Tutorials
-
-Coming soon!
-
-### Blog Posts
-
-Technical deep dives:
-- [Building with BountyPay](https://blog.lucci.xyz/building-with-bountypay)
-- [Flash Loan Strategies](https://blog.lucci.xyz/flash-loan-strategies)
+**Note:** Response times are for business days.
 
 ## Feedback
 
-We value your feedback!
-
-**What's working well?**  
-**What could be better?**  
-**What features do you need?**
-
-Send feedback to: feedback@lucci.xyz
-
-## Disclaimer
-
-**Support Scope:**
-
-✅ We support:
-- Product bugs and errors
-- Documentation clarifications
-- Integration assistance
-- Best practices guidance
-
-❌ We don't provide:
-- Custom development
-- 24/7 live support (yet)
-- Financial advice
-- Legal advice
-
-**Remember:** Lucci Labs products are open source R&D projects. While we strive to provide good support, this is not a commercial product with SLAs.
-
-## Enterprise Support
-
-Need dedicated support for your organization?
-
-**Contact:** enterprise@lucci.xyz
-
-**Enterprise benefits:**
-- Priority support
-- Dedicated Slack channel
-- Architecture review
-- Custom features
-- SLA guarantees
-
----
-
-**Still stuck?** Don't hesitate to reach out. We're here to help! 🚀
+We value your feedback! Send to: feedback@lucci.xyz

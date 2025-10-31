@@ -1,131 +1,25 @@
 export const metadata = { 
   title: 'Chain Trace — Lucci Labs',
-  description: 'NFT transaction analysis and visualization tool'
+  description: 'NFT transaction analysis'
 }
 
 # Chain Trace
 
-A blockchain analysis tool providing valuable insights into NFT transaction histories with comprehensive visualizations and statistics.
-
-## Overview
-
-Chain Trace helps researchers, collectors, and developers understand how NFTs move through the Ethereum ecosystem by analyzing transaction histories and presenting them in intuitive visualizations.
+Blockchain analysis tool for NFT transaction histories and visualizations.
 
 **Status:** Research  
 **Chain:** Ethereum  
-**Focus:** NFT Analytics
 
-## Features
+## Overview
 
-### Transaction Tracking
-Follow NFT transfers from mint to current owner, including all intermediate transactions.
+Chain Trace helps researchers and collectors understand how NFTs move through the Ethereum ecosystem by analyzing transaction histories.
 
-### Wallet Analysis
-Analyze wallet behavior patterns:
-- Most traded collections
-- Average hold time
-- Profit/loss metrics
-- Trading frequency
+### Features
 
-### Collection Insights
-Get detailed statistics on NFT collections:
-- Floor price trends
-- Trading volume
-- Unique holders
-- Wash trading detection
-
-### Visual Network Graphs
-Interactive network visualizations showing relationships between wallets and NFTs.
-
-## Use Cases
-
-### For Collectors
-
-**Due Diligence:** Before purchasing an NFT, check its transaction history:
-```typescript
-import { ChainTrace } from 'chain-trace'
-
-const trace = new ChainTrace()
-
-// Get full NFT history
-const history = await trace.getNFTHistory({
-  contract: '0x...',
-  tokenId: '1234'
-})
-
-console.log(`Times traded: ${history.transferCount}`)
-console.log(`Current owner: ${history.currentOwner}`)
-console.log(`Time since mint: ${history.age}`)
-```
-
-**Authenticity Verification:** Detect wash trading or suspicious patterns:
-```typescript
-const analysis = await trace.analyzeNFT({
-  contract: '0x...',
-  tokenId: '1234'
-})
-
-if (analysis.washTradingScore > 0.7) {
-  console.warn('Potential wash trading detected')
-}
-```
-
-### For Researchers
-
-**Market Analysis:** Study NFT market behavior:
-```typescript
-// Analyze collection trading patterns
-const collection = await trace.analyzeCollection({
-  contract: '0x...',
-  startDate: '2024-01-01',
-  endDate: '2024-12-31'
-})
-
-console.log(`Total volume: ${collection.totalVolume} ETH`)
-console.log(`Unique traders: ${collection.uniqueTraders}`)
-console.log(`Average hold time: ${collection.avgHoldTime} days`)
-```
-
-**Whale Tracking:** Monitor large holder movements:
-```typescript
-// Track wallets with >100 ETH in NFTs
-const whales = await trace.findWhales({
-  minPortfolioValue: ethers.utils.parseEther('100'),
-  collection: '0x...'
-})
-
-for (const whale of whales) {
-  console.log(`${whale.address}: ${whale.nftCount} NFTs`)
-}
-```
-
-### For Developers
-
-**Integration:** Add NFT history to your app:
-```typescript
-import { ChainTrace } from 'chain-trace'
-
-function NFTCard({ contract, tokenId }) {
-  const [history, setHistory] = useState(null)
-  
-  useEffect(() => {
-    const trace = new ChainTrace()
-    trace.getNFTHistory({ contract, tokenId })
-      .then(setHistory)
-  }, [contract, tokenId])
-  
-  if (!history) return <Loading />
-  
-  return (
-    <div>
-      <h3>NFT #{tokenId}</h3>
-      <p>Traded {history.transferCount} times</p>
-      <p>Current owner: {history.currentOwner}</p>
-      <TransactionList transactions={history.transactions} />
-    </div>
-  )
-}
-```
+- Transaction tracking from mint to current owner
+- Wallet behavior analysis
+- Collection insights and statistics
+- Interactive network visualizations
 
 ## Installation
 
@@ -135,369 +29,74 @@ npm install chain-trace
 
 ## Quick Start
 
-### Basic Usage
-
 ```typescript
 import { ChainTrace } from 'chain-trace'
 
-// Initialize with your provider
 const trace = new ChainTrace({
   rpcUrl: process.env.ETHEREUM_RPC_URL,
   apiKey: process.env.ETHERSCAN_API_KEY
 })
 
-// Get NFT transaction history
+// Get NFT history
 const nft = await trace.getNFTHistory({
-  contract: '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D', // BAYC
+  contract: '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D',
   tokenId: '1'
 })
 
-// Display results
-console.log('NFT Transaction History:')
-nft.transactions.forEach((tx, i) => {
-  console.log(`${i + 1}. ${tx.from} → ${tx.to}`)
-  console.log(`   Price: ${tx.price} ETH`)
-  console.log(`   Date: ${tx.timestamp}`)
-})
+console.log(`Traded ${nft.transferCount} times`)
+console.log(`Current owner: ${nft.currentOwner}`)
 ```
 
-### Advanced Queries
+## Use Cases
+
+### Due Diligence
+
+Check NFT history before purchasing:
 
 ```typescript
-// Get collection floor price over time
-const floorPrice = await trace.getFloorPriceHistory({
+const history = await trace.getNFTHistory({
   contract: '0x...',
-  interval: 'daily',
-  from: '2024-01-01',
-  to: '2024-12-31'
+  tokenId: '1234'
 })
 
-// Analyze wallet portfolio
-const portfolio = await trace.analyzeWallet({
-  address: '0x...',
-  includeCollections: true,
-  includeValues: true
-})
-
-console.log(`Total NFTs: ${portfolio.nftCount}`)
-console.log(`Total value: ${portfolio.totalValue} ETH`)
-console.log(`Collections: ${portfolio.collections.length}`)
-```
-
-## API Reference
-
-### getNFTHistory
-
-Get complete transaction history for an NFT:
-
-```typescript
-interface NFTHistoryParams {
-  contract: string      // NFT contract address
-  tokenId: string       // Token ID
-  includeMetadata?: boolean  // Include metadata (default: true)
-  includePrices?: boolean    // Include sale prices (default: true)
-}
-
-interface NFTHistory {
-  contract: string
-  tokenId: string
-  currentOwner: string
-  mintedAt: string
-  transactions: Transaction[]
-  transferCount: number
-  totalVolume: string
-  metadata?: NFTMetadata
+if (history.washTradingScore > 0.7) {
+  console.warn('Potential wash trading detected')
 }
 ```
 
-### analyzeCollection
+### Collection Analysis
 
-Get comprehensive collection statistics:
-
-```typescript
-interface CollectionParams {
-  contract: string
-  startDate?: string
-  endDate?: string
-  includeWashTrading?: boolean
-}
-
-interface CollectionAnalysis {
-  contract: string
-  totalVolume: string
-  floorPrice: string
-  uniqueHolders: number
-  uniqueTraders: number
-  avgHoldTime: number
-  washTradingScore: number
-  priceHistory: PricePoint[]
-  topHolders: Holder[]
-}
-```
-
-### findSimilarNFTs
-
-Find NFTs with similar transaction patterns:
+Study market behavior:
 
 ```typescript
-interface SimilarityParams {
-  contract: string
-  tokenId: string
-  metric?: 'price' | 'holders' | 'transfers'
-  limit?: number
-}
-
-const similar = await trace.findSimilarNFTs({
+const collection = await trace.analyzeCollection({
   contract: '0x...',
-  tokenId: '1',
-  metric: 'price',
-  limit: 10
+  startDate: '2024-01-01',
+  endDate: '2024-12-31'
 })
+
+console.log(`Total volume: ${collection.totalVolume} ETH`)
+console.log(`Unique traders: ${collection.uniqueTraders}`)
 ```
 
 ## Visualizations
 
-### Transaction Network
-
-Generate network graph visualization:
-
 ```typescript
-import { ChainTrace } from 'chain-trace'
 import { NetworkGraph } from 'chain-trace/viz'
 
-const trace = new ChainTrace()
 const data = await trace.getTransactionNetwork({
   contract: '0x...',
-  depth: 2 // Levels of connections to show
+  depth: 2
 })
 
-// Render network graph
 const graph = new NetworkGraph(data)
-graph.render('#chart-container', {
+graph.render('#chart', {
   nodeSize: 'nftCount',
-  nodeColor: 'totalValue',
-  showLabels: true
+  nodeColor: 'totalValue'
 })
 ```
 
-### Price Chart
-
-```typescript
-import { PriceChart } from 'chain-trace/viz'
-
-const priceData = await trace.getFloorPriceHistory({
-  contract: '0x...',
-  interval: 'daily',
-  from: '2024-01-01'
-})
-
-const chart = new PriceChart(priceData)
-chart.render('#price-chart', {
-  type: 'line',
-  showVolume: true,
-  annotations: true
-})
-```
-
-### Holder Distribution
-
-```typescript
-import { HolderChart } from 'chain-trace/viz'
-
-const holders = await trace.getHolderDistribution({
-  contract: '0x...'
-})
-
-const chart = new HolderChart(holders)
-chart.render('#holder-chart', {
-  type: 'pie',
-  threshold: 0.01 // Show holders with >1%
-})
-```
-
-## Data Sources
-
-Chain Trace aggregates data from multiple sources:
-
-1. **On-Chain Data:** Direct blockchain reads via RPC
-2. **Etherscan API:** Transaction details and verified contracts
-3. **OpenSea API:** Metadata and marketplace prices
-4. **The Graph:** Indexed NFT transfer events
-5. **IPFS:** NFT metadata and images
-
-## Performance
-
-### Caching
-
-Chain Trace implements intelligent caching:
-
-```typescript
-const trace = new ChainTrace({
-  cache: {
-    enabled: true,
-    ttl: 3600, // 1 hour
-    maxSize: 1000 // Max cached items
-  }
-})
-
-// First call hits the blockchain
-await trace.getNFTHistory({ contract, tokenId }) // ~2s
-
-// Second call uses cache
-await trace.getNFTHistory({ contract, tokenId }) // ~10ms
-```
-
-### Batch Requests
-
-Analyze multiple NFTs efficiently:
-
-```typescript
-// Batch process multiple token IDs
-const results = await trace.batchGetNFTHistory({
-  contract: '0x...',
-  tokenIds: ['1', '2', '3', '4', '5']
-})
-
-// Results returned as array
-results.forEach((nft, i) => {
-  console.log(`Token ${i + 1}: ${nft.transferCount} transfers`)
-})
-```
-
-## Examples
-
-### Wash Trading Detector
-
-```typescript
-async function detectWashTrading(contract: string, tokenId: string) {
-  const history = await trace.getNFTHistory({ contract, tokenId })
-  
-  // Check for back-and-forth trading
-  const addresses = history.transactions.map(tx => tx.to)
-  const uniqueAddresses = new Set(addresses)
-  
-  // If few unique addresses with many transactions
-  const washTradingScore = 1 - (uniqueAddresses.size / addresses.length)
-  
-  // Check for same-day round trips
-  let roundTrips = 0
-  for (let i = 0; i < history.transactions.length - 1; i++) {
-    const tx1 = history.transactions[i]
-    const tx2 = history.transactions[i + 1]
-    
-    if (tx1.to === tx2.from && isSameDay(tx1.timestamp, tx2.timestamp)) {
-      roundTrips++
-    }
-  }
-  
-  return {
-    score: washTradingScore,
-    roundTrips,
-    suspicious: washTradingScore > 0.5 || roundTrips > 2
-  }
-}
-```
-
-### Profit Calculator
-
-```typescript
-async function calculateProfit(walletAddress: string) {
-  const transactions = await trace.getWalletTransactions({
-    address: walletAddress,
-    type: 'nft'
-  })
-  
-  let totalSpent = BigNumber.from(0)
-  let totalEarned = BigNumber.from(0)
-  
-  for (const tx of transactions) {
-    if (tx.type === 'purchase') {
-      totalSpent = totalSpent.add(tx.value)
-    } else if (tx.type === 'sale') {
-      totalEarned = totalEarned.add(tx.value)
-    }
-  }
-  
-  const profit = totalEarned.sub(totalSpent)
-  
-  return {
-    spent: formatEther(totalSpent),
-    earned: formatEther(totalEarned),
-    profit: formatEther(profit),
-    roi: profit.mul(100).div(totalSpent).toNumber()
-  }
-}
-```
-
-### Collection Monitor
-
-```typescript
-// Monitor collection for significant events
-async function monitorCollection(contract: string) {
-  const ws = trace.subscribe({
-    contract,
-    events: ['Transfer', 'Sale']
-  })
-  
-  ws.on('transfer', async (event) => {
-    console.log(`Transfer: Token ${event.tokenId}`)
-    console.log(`From: ${event.from} → To: ${event.to}`)
-    
-    // Check if it's a significant holder
-    const toBalance = await trace.getWalletBalance({
-      address: event.to,
-      contract
-    })
-    
-    if (toBalance > 10) {
-      console.log(`🐋 Whale alert! ${event.to} now holds ${toBalance} NFTs`)
-    }
-  })
-  
-  ws.on('sale', (event) => {
-    const price = formatEther(event.price)
-    console.log(`💰 Sale: Token ${event.tokenId} for ${price} ETH`)
-    
-    if (event.price.gt(floorPrice.mul(2))) {
-      console.log(`🔥 High value sale!`)
-    }
-  })
-}
-```
-
-## Roadmap
-
-- [x] Basic transaction tracking
-- [x] Collection analytics
-- [ ] Real-time monitoring
-- [ ] Multi-chain support (Polygon, Arbitrum)
-- [ ] ML-based pattern detection
-- [ ] Mobile app
-- [ ] Public API with rate limiting
-
-## Contributing
-
-We welcome contributions! Areas of interest:
-
-- Additional visualizations
-- Performance optimizations
-- New data sources
-- Documentation improvements
-
-```bash
-git clone https://github.com/natalie-a-1/ChainTrace
-cd ChainTrace
-npm install
-npm test
-```
-
-## Resources
+## Links
 
 - [Source Code](https://github.com/natalie-a-1/ChainTrace)
-- [Example Dashboards](https://github.com/natalie-a-1/ChainTrace/tree/main/examples)
-- [API Documentation](https://docs.chaintrace.dev)
-
-## Support
-
-- **GitHub:** [Issues](https://github.com/natalie-a-1/ChainTrace/issues)
-- **Discord:** [Join community](https://discord.gg/chaintrace)
+- [Examples](https://github.com/natalie-a-1/ChainTrace/tree/main/examples)

@@ -17,8 +17,7 @@ const docSections: DocSection[] = [
     title: 'Getting Started',
     links: [
       { label: 'Overview', href: '/docs' },
-      { label: 'Quick Start', href: '/docs/quick-start' },
-      { label: 'Architecture', href: '/docs/architecture' }
+      { label: 'Quick Start', href: '/docs/quick-start' }
     ]
   },
   {
@@ -28,13 +27,6 @@ const docSections: DocSection[] = [
       { label: 'Good First Issues', href: '/docs/products/good-first-issues' },
       { label: 'Flash Loans', href: '/docs/products/flash' },
       { label: 'Chain Trace', href: '/docs/products/chain-trace' }
-    ]
-  },
-  {
-    title: 'Guides',
-    links: [
-      { label: 'Integration Guide', href: '/docs/guides/integration' },
-      { label: 'Security Best Practices', href: '/docs/guides/security' }
     ]
   },
   {

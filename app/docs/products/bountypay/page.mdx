@@ -1,93 +1,58 @@
 export const metadata = { 
   title: 'BountyPay — Lucci Labs',
-  description: 'Automated bounty payouts for open-source contributions'
+  description: 'Automated bounty payouts for GitHub issues'
 }
 
 # BountyPay
 
-Automated bounty payouts for open-source contributions. Fund with USDC on Base and let BountyPay handle seamless, automated payments when issues are resolved.
-
-## Overview
-
-BountyPay is a GitHub App that enables project maintainers to create on-chain bounties for GitHub issues. When a contributor successfully resolves an issue, they automatically receive payment in USDC.
+Automated bounty payouts for open-source contributions. Fund with USDC on Base and let BountyPay handle payments when issues are resolved.
 
 **Status:** Alpha  
 **Chain:** Base  
 **Token:** USDC
 
-## Key Features
+## Overview
 
-### Automated Payments
-No manual processing—payments are released automatically when a PR is merged.
+BountyPay is a GitHub App that creates on-chain bounties for GitHub issues. When a contributor resolves an issue, they automatically receive payment in USDC.
 
-### On-Chain Escrow
-Funds are secured in a smart contract until the issue is resolved, ensuring trust between maintainers and contributors.
+### Key Features
 
-### GitHub Integration
-Deep integration with GitHub issues and pull requests for a seamless developer experience.
-
-### Multi-Repository Support
-Manage bounties across all your repositories from a single dashboard.
+- Automated payments when PRs are merged
+- On-chain escrow for trust and security
+- GitHub integration for seamless workflow
+- Multi-repository support
 
 ## Getting Started
 
-### 1. Install BountyPay
+### 1. Install the GitHub App
 
-Install the [BountyPay GitHub App](https://github.com/apps/bountypay) on your repository or organization.
+Install [BountyPay](https://github.com/apps/bountypay) on your repository.
 
 ### 2. Fund Your Account
-
-Connect your wallet and deposit USDC on Base:
 
 ```typescript
 import { useBountyPay } from '@lucci/bountypay-sdk'
 
-function FundAccount() {
-  const { depositFunds } = useBountyPay()
-  
-  const handleDeposit = async () => {
-    await depositFunds({
-      amount: '1000.00', // USDC
-      chain: 'base'
-    })
-  }
-  
-  return <button onClick={handleDeposit}>Deposit Funds</button>
-}
+const { depositFunds } = useBountyPay()
+
+await depositFunds({
+  amount: '1000.00',
+  chain: 'base'
+})
 ```
 
 ### 3. Create a Bounty
 
-Add a bounty to any issue:
-
 ```bash
-# Using the CLI
-bountypay create \
-  --repo owner/repo \
-  --issue 123 \
-  --amount 100
+# Using CLI
+bountypay create --repo owner/repo --issue 123 --amount 100
 
-# Or add a label on GitHub
-# Label format: bounty:$100
+# Or add label on GitHub: bounty:$100
 ```
 
-### 4. Bounty Gets Resolved
+## API Reference
 
-When a contributor's PR is merged:
-1. BountyPay verifies the PR
-2. Payment is released from escrow
-3. Contributor receives USDC
-4. Issue is updated with confirmation
-
-## Integration Guide
-
-### Installation
-
-```bash
-npm install @lucci/bountypay-sdk
-```
-
-### Basic Usage
+### Create Bounty
 
 ```typescript
 import { BountyPayClient } from '@lucci/bountypay-sdk'
@@ -97,22 +62,11 @@ const client = new BountyPayClient({
   network: 'base'
 })
 
-// Create a bounty
 const bounty = await client.createBounty({
   repository: 'owner/repo',
   issueNumber: 123,
-  amount: 100, // USDC
-  description: 'Fix the login bug'
-})
-
-// Check bounty status
-const status = await client.getBountyStatus(bounty.id)
-console.log(status) // 'open', 'claimed', 'paid', 'cancelled'
-
-// List all bounties
-const bounties = await client.listBounties({
-  repository: 'owner/repo',
-  status: 'open'
+  amount: 100,
+  description: 'Fix the bug'
 })
 ```
 
@@ -128,9 +82,6 @@ app.post('/webhooks/bountypay', async (req, res) => {
     case 'bounty.created':
       console.log('New bounty:', event.bounty)
       break
-    case 'bounty.claimed':
-      console.log('Bounty claimed by:', event.contributor)
-      break
     case 'bounty.paid':
       console.log('Payment sent:', event.transaction)
       break
@@ -140,285 +91,64 @@ app.post('/webhooks/bountypay', async (req, res) => {
 })
 ```
 
-## Configuration
+## Smart Contract
 
-### Environment Variables
-
-```bash
-# Required
-BOUNTYPAY_API_KEY=your_api_key_here
-BOUNTYPAY_NETWORK=base
-
-# Optional
-BOUNTYPAY_WEBHOOK_URL=https://your-app.com/webhooks
-BOUNTYPAY_MIN_AMOUNT=10
-BOUNTYPAY_MAX_AMOUNT=10000
-```
-
-### GitHub App Permissions
-
-BountyPay requires the following permissions:
-- **Issues:** Read & write (to label and comment)
-- **Pull requests:** Read (to verify merges)
-- **Metadata:** Read (repository information)
-
-## Smart Contract Interface
-
-The BountyEscrow contract deployed on Base:
+The BountyEscrow contract on Base:
 
 ```solidity
 interface IBountyEscrow {
-    struct Bounty {
-        uint256 id;
-        address funder;
-        address payee;
-        uint256 amount;
-        BountyStatus status;
-        string issueUrl;
-    }
-    
-    enum BountyStatus {
-        Open,
-        Claimed,
-        Paid,
-        Cancelled
-    }
-    
     function createBounty(
         address _payee,
         uint256 _amount,
         string memory _issueUrl
     ) external payable returns (uint256);
     
-    function claimBounty(uint256 _bountyId) external;
-    
     function releaseBounty(uint256 _bountyId) external;
-    
-    function cancelBounty(uint256 _bountyId) external;
-    
-    function getBounty(uint256 _bountyId) 
-        external 
-        view 
-        returns (Bounty memory);
 }
 ```
 
-### Contract Address
+**Contract Address**
 
-**Base Mainnet:** `0x...` (coming soon)  
-**Base Sepolia:** `0x...`
+- Base Mainnet: Coming soon
+- Base Sepolia: `0x...`
 
-## API Reference
+## Configuration
 
-### Create Bounty
+### Environment Variables
 
-```http
-POST /api/v1/bounties
-Content-Type: application/json
-Authorization: Bearer {api_key}
-
-{
-  "repository": "owner/repo",
-  "issue_number": 123,
-  "amount": "100.00",
-  "currency": "USDC"
-}
+```bash
+BOUNTYPAY_API_KEY=your_api_key
+BOUNTYPAY_NETWORK=base
+BOUNTYPAY_WEBHOOK_URL=https://your-app.com/webhooks
 ```
 
-**Response:**
-```json
-{
-  "id": "bty_123abc",
-  "status": "open",
-  "amount": "100.00",
-  "issue_url": "https://github.com/owner/repo/issues/123",
-  "escrow_tx": "0x...",
-  "created_at": "2024-01-01T00:00:00Z"
-}
-```
+### GitHub Permissions
 
-### Get Bounty
-
-```http
-GET /api/v1/bounties/{bounty_id}
-Authorization: Bearer {api_key}
-```
-
-### List Bounties
-
-```http
-GET /api/v1/bounties?repo=owner/repo&status=open
-Authorization: Bearer {api_key}
-```
-
-## Example Use Cases
-
-### Open Source Maintenance
-
-Incentivize contributors to fix bugs and add features:
-
-```typescript
-// Automatically create bounties for high-priority issues
-const issues = await github.getIssues({
-  labels: ['priority:high', 'help-wanted']
-})
-
-for (const issue of issues) {
-  await bountypay.createBounty({
-    issue: issue.number,
-    amount: 200 // $200 for high priority
-  })
-}
-```
-
-### Hackathon Prizes
-
-Distribute prizes automatically:
-
-```typescript
-// Create bounties for hackathon challenges
-const challenges = [
-  { name: 'Best DeFi Integration', prize: 1000 },
-  { name: 'Most Innovative Use of AI', prize: 750 },
-  { name: 'Best Mobile App', prize: 500 }
-]
-
-for (const challenge of challenges) {
-  await bountypay.createBounty({
-    issue: challenge.issueNumber,
-    amount: challenge.prize
-  })
-}
-```
-
-### Community Contributions
-
-Reward community members for documentation:
-
-```typescript
-// Bounty for documentation improvements
-await bountypay.createBounty({
-  repository: 'org/docs',
-  issue: 456,
-  amount: 50,
-  description: 'Improve API documentation'
-})
-```
+BountyPay requires:
+- Issues: Read & write
+- Pull requests: Read
+- Metadata: Read
 
 ## Troubleshooting
 
 ### Payment Not Releasing
 
-**Issue:** PR was merged but payment hasn't been sent.
-
-**Solutions:**
-1. Verify the PR author matches the bounty claimer
-2. Check that the PR was merged (not just closed)
-3. Ensure the contributor's wallet is configured
-4. Check transaction status on Base explorer
+Verify:
+- PR author matches bounty claimer
+- PR was merged (not just closed)
+- Contributor wallet is configured
+- Check transaction on Base explorer
 
 ### Bounty Creation Failed
 
-**Issue:** Unable to create bounty on GitHub issue.
-
-**Solutions:**
-1. Verify BountyPay app has correct permissions
-2. Check your account has sufficient USDC balance
-3. Ensure issue exists and is open
-4. Verify network connection to Base
-
-### Webhook Not Received
-
-**Issue:** Your app isn't receiving BountyPay webhooks.
-
-**Solutions:**
-1. Verify webhook URL is publicly accessible
-2. Check webhook signature verification
-3. Ensure endpoint returns 200 OK quickly
-4. Check webhook logs in BountyPay dashboard
-
-## Best Practices
-
-### Setting Bounty Amounts
-
-- **Small bugs:** $10-50
-- **Medium features:** $50-200
-- **Major features:** $200-1000
-- **Critical security issues:** $1000+
-
-### Issue Guidelines
-
-Always include:
-- Clear description of the problem
-- Steps to reproduce
-- Expected vs actual behavior
-- Acceptance criteria
-
-### Managing Contributors
-
-- Respond promptly to questions
-- Review PRs within 48 hours
-- Provide constructive feedback
-- Update bounty status if requirements change
-
-## Security Considerations
-
-### Smart Contract Audits
-
-The BountyEscrow contract has been internally audited. Full audit report coming soon.
-
-### Private Key Management
-
-Never expose your API keys:
-```typescript
-// ❌ Bad
-const client = new BountyPayClient({
-  apiKey: 'sk_live_abc123'
-})
-
-// ✅ Good
-const client = new BountyPayClient({
-  apiKey: process.env.BOUNTYPAY_API_KEY
-})
-```
-
-### Contributor Verification
-
-BountyPay verifies contributors through:
-- GitHub account age (> 30 days)
-- Previous contributions
-- PR review status
-
-## Pricing
-
-**Free during Alpha:**
-- Unlimited bounties
-- No platform fees
-- Gas fees only
-
-**Future Pricing:**
-- 2.5% platform fee on bounty payouts
-- Volume discounts available
-- Enterprise plans with custom features
-
-## Roadmap
-
-- [x] Alpha launch on Base
-- [ ] Multi-chain support (Ethereum, Optimism)
-- [ ] Recurring bounties
-- [ ] Team bounties (split payments)
-- [ ] Advanced analytics dashboard
-- [ ] Mobile app
+Check:
+- BountyPay app has correct permissions
+- Sufficient USDC balance
+- Issue exists and is open
+- Network connection to Base
 
 ## Links
 
 - [GitHub App](https://github.com/apps/bountypay)
 - [Source Code](https://github.com/lucci-xyz/bounty)
 - [Dashboard](https://bountypay.xyz)
-- [Discord Community](https://discord.gg/lucci)
-
-## Support
-
-- **Issues:** [GitHub Issues](https://github.com/lucci-xyz/bounty/issues)
-- **Email:** support@bountypay.xyz
-- **Discord:** [Join our server](https://discord.gg/lucci)

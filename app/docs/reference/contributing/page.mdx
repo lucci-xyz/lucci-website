@@ -1,439 +1,95 @@
 export const metadata = { 
   title: 'Contributing — Lucci Labs',
-  description: 'Learn how to contribute to Lucci Labs projects'
+  description: 'Contribute to Lucci Labs'
 }
 
-# Contributing Guide
+# Contributing
 
-We welcome contributions from the community! This guide will help you get started with contributing to Lucci Labs projects.
-
-## Code of Conduct
-
-Be respectful, constructive, and collaborative. We're here to build cool things together.
+We welcome contributions! This guide helps you get started.
 
 ## Ways to Contribute
 
-### 1. Report Bugs
-
-Found a bug? Open an issue with:
-- Clear description of the problem
-- Steps to reproduce
-- Expected vs actual behavior
-- Environment details (OS, Node version, etc.)
-- Screenshots or logs if applicable
-
-### 2. Suggest Features
-
-Have an idea? Open a feature request with:
-- Clear use case
-- Expected behavior
-- Why it would be valuable
-- Willingness to implement it
-
-### 3. Improve Documentation
-
-Documentation improvements are always welcome:
-- Fix typos or unclear explanations
-- Add examples or tutorials
-- Improve API documentation
-- Translate to other languages
-
-### 4. Write Code
-
-Submit pull requests for:
-- Bug fixes
-- New features
-- Performance improvements
-- Test coverage
+- Report bugs with clear reproduction steps
+- Suggest features with use cases
+- Improve documentation
+- Submit code via pull requests
 
 ## Getting Started
 
-### Fork and Clone
-
 ```bash
-# Fork the repository on GitHub, then:
+# Fork and clone
 git clone https://github.com/your-username/[repo-name]
 cd [repo-name]
 
-# Add upstream remote
-git remote add upstream https://github.com/lucci-xyz/[repo-name]
-```
-
-### Install Dependencies
-
-```bash
+# Install dependencies
 npm install
 
-# or
-pnpm install
-```
-
-### Create a Branch
-
-```bash
+# Create a branch
 git checkout -b feature/your-feature-name
-# or
-git checkout -b fix/your-bug-fix
 ```
 
 ## Development Workflow
 
-### 1. Make Changes
+1. Make your changes
+2. Write tests
+3. Run linter: `npm run lint`
+4. Build: `npm run build`
+5. Commit with clear messages
+6. Push and create PR
 
-Keep changes focused and atomic:
-- One feature/fix per PR
-- Write clear, commented code
-- Follow existing code style
-
-### 2. Write Tests
-
-```bash
-# Add tests for your changes
-npm test
-
-# Check coverage
-npm run test:coverage
-```
-
-### 3. Run Linter
+### Commit Format
 
 ```bash
-npm run lint
-
-# Auto-fix issues
-npm run lint:fix
-```
-
-### 4. Build
-
-```bash
-npm run build
-
-# Verify it works
-npm start
-```
-
-### 5. Commit
-
-Write clear commit messages:
-
-```bash
-# Format: type(scope): description
 git commit -m "feat(bounty): add cancellation feature"
 git commit -m "fix(api): handle rate limit errors"
 git commit -m "docs: update integration guide"
 ```
 
-**Commit types:**
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation
-- `style`: Formatting
-- `refactor`: Code restructuring
-- `test`: Adding tests
-- `chore`: Maintenance
-
-### 6. Push and Create PR
-
-```bash
-git push origin feature/your-feature-name
-```
-
-Then create a Pull Request on GitHub with:
-- Clear title and description
-- Reference related issues
-- Screenshots/videos for UI changes
-- Checklist of what was done
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 ## Pull Request Guidelines
 
-### PR Template
-
-```markdown
-## Description
-Brief description of what this PR does
-
-## Related Issues
-Fixes #123
-
-## Changes Made
-- Added X feature
-- Fixed Y bug
-- Updated Z documentation
-
-## Testing
-- [ ] Unit tests added/updated
-- [ ] Integration tests pass
-- [ ] Manual testing completed
-
-## Screenshots
-(if applicable)
-
-## Checklist
-- [ ] Code follows project style guide
-- [ ] Tests added and passing
-- [ ] Documentation updated
-- [ ] No breaking changes (or documented)
-- [ ] Commit messages are clear
-```
-
-### Review Process
-
-1. **Automated Checks:** CI must pass
-2. **Code Review:** Maintainer reviews code
-3. **Revisions:** Address feedback
-4. **Approval:** Maintainer approves
-5. **Merge:** Squash and merge to main
+- Keep changes focused and atomic
+- Write clear descriptions
+- Reference related issues
+- Include tests
+- Ensure CI passes
 
 ## Code Style
 
 ### TypeScript
 
 ```typescript
-// ✅ Good
-export interface BountyParams {
-  repository: string
-  issueNumber: number
-  amount: number
-}
-
+// Good
 export async function createBounty(
   params: BountyParams
 ): Promise<Bounty> {
   // Implementation
-}
-
-// ❌ Avoid
-export async function createBounty(repo, issue, amt) {
-  // No types
-}
-```
-
-### React
-
-```typescript
-// ✅ Good
-interface BountyCardProps {
-  bounty: Bounty
-  onClaim: (bountyId: string) => void
-}
-
-export function BountyCard({ bounty, onClaim }: BountyCardProps) {
-  return (
-    <div className="bounty-card">
-      <h3>{bounty.title}</h3>
-      <button onClick={() => onClaim(bounty.id)}>
-        Claim
-      </button>
-    </div>
-  )
-}
-
-// ❌ Avoid
-export function BountyCard(props) {
-  return <div>{props.bounty.title}</div>
 }
 ```
 
 ### Solidity
 
 ```solidity
-// ✅ Good
+// Good
 contract BountyEscrow {
     /// @notice Creates a new bounty
     /// @param payee Address to receive bounty
-    /// @param amount Bounty amount in wei
     /// @return bountyId Unique identifier
     function createBounty(
         address payee,
         uint256 amount
     ) external payable returns (uint256 bountyId) {
-        require(payee != address(0), "Invalid payee");
-        require(amount > 0, "Invalid amount");
         // Implementation
     }
 }
-
-// ❌ Avoid
-contract BountyEscrow {
-    function createBounty(address a, uint256 b) external payable returns (uint256) {
-        // No documentation
-    }
-}
 ```
-
-## Testing Guidelines
-
-### Unit Tests
-
-```typescript
-import { describe, it, expect } from 'vitest'
-import { BountyPayClient } from '../src'
-
-describe('BountyPayClient', () => {
-  describe('createBounty', () => {
-    it('should create a bounty with valid params', async () => {
-      const client = new BountyPayClient({ apiKey: 'test' })
-      
-      const bounty = await client.createBounty({
-        repository: 'owner/repo',
-        issueNumber: 123,
-        amount: 100
-      })
-      
-      expect(bounty.id).toBeDefined()
-      expect(bounty.status).toBe('open')
-      expect(bounty.amount).toBe('100.00')
-    })
-    
-    it('should reject invalid repository format', async () => {
-      const client = new BountyPayClient({ apiKey: 'test' })
-      
-      await expect(
-        client.createBounty({
-          repository: 'invalid',
-          issueNumber: 123,
-          amount: 100
-        })
-      ).rejects.toThrow('Invalid repository format')
-    })
-  })
-})
-```
-
-### Integration Tests
-
-```typescript
-import { test, expect } from '@playwright/test'
-
-test.describe('Bounty Creation Flow', () => {
-  test('should create bounty from UI', async ({ page }) => {
-    await page.goto('/bounties/new')
-    
-    await page.fill('[name="repository"]', 'owner/repo')
-    await page.fill('[name="issueNumber"]', '123')
-    await page.fill('[name="amount"]', '100')
-    
-    await page.click('button[type="submit"]')
-    
-    await expect(page.locator('.success-message')).toBeVisible()
-    await expect(page.locator('.bounty-id')).toContainText('bty_')
-  })
-})
-```
-
-### Smart Contract Tests
-
-```solidity
-// test/BountyEscrow.t.sol
-pragma solidity ^0.8.0;
-
-import "forge-std/Test.sol";
-import "../src/BountyEscrow.sol";
-
-contract BountyEscrowTest is Test {
-    BountyEscrow bountyEscrow;
-    address payee = address(0x123);
-    
-    function setUp() public {
-        bountyEscrow = new BountyEscrow();
-    }
-    
-    function testCreateBounty() public {
-        uint256 amount = 1 ether;
-        
-        uint256 bountyId = bountyEscrow.createBounty{value: amount}(
-            payee,
-            amount
-        );
-        
-        assertEq(bountyId, 0);
-        
-        BountyEscrow.Bounty memory bounty = bountyEscrow.getBounty(bountyId);
-        assertEq(bounty.payee, payee);
-        assertEq(bounty.amount, amount);
-        assertEq(uint(bounty.status), uint(BountyEscrow.BountyStatus.Open));
-    }
-    
-    function testRevertInvalidPayee() public {
-        vm.expectRevert("Invalid payee");
-        bountyEscrow.createBounty{value: 1 ether}(address(0), 1 ether);
-    }
-}
-```
-
-## Documentation
-
-### Code Comments
-
-```typescript
-/**
- * Creates a new bounty for a GitHub issue
- * 
- * @param params - Bounty creation parameters
- * @param params.repository - GitHub repository (format: owner/repo)
- * @param params.issueNumber - GitHub issue number
- * @param params.amount - Bounty amount in USDC
- * @returns Promise resolving to created bounty
- * @throws {ValidationError} If parameters are invalid
- * @throws {InsufficientFundsError} If account balance is too low
- * 
- * @example
- * ```typescript
- * const bounty = await client.createBounty({
- *   repository: 'aave/aave-v3-core',
- *   issueNumber: 123,
- *   amount: 100
- * })
- * console.log(bounty.id) // 'bty_...'
- * ```
- */
-export async function createBounty(
-  params: BountyParams
-): Promise<Bounty> {
-  // Implementation
-}
-```
-
-### README Updates
-
-When adding features, update README:
-- Installation instructions
-- Usage examples
-- API changes
-- Breaking changes
 
 ## Community
 
-### Discord
-
-Join our [Discord server](https://discord.gg/lucci) for:
-- Questions and discussion
-- Contribution coordination
-- Community hangouts
-
-### GitHub Discussions
-
-Use [GitHub Discussions](https://github.com/lucci-xyz/bounty/discussions) for:
-- Feature proposals
-- Architecture discussions
-- General questions
-
-## Recognition
-
-Contributors are recognized:
-- Listed in CONTRIBUTORS.md
-- Mentioned in release notes
-- Featured on our website (for major contributions)
+- **Discord:** [Join our server](https://discord.gg/lucci)
+- **GitHub:** [Discussions](https://github.com/lucci-xyz/bounty/discussions)
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the same license as the project (typically MIT).
-
-## Questions?
-
-- **Discord:** [Join our server](https://discord.gg/lucci)
-- **Discussions:** [GitHub Discussions](https://github.com/lucci-xyz/bounty/discussions)
-- **Email:** contributors@lucci.xyz
-
-Thank you for contributing to Lucci Labs! 🚀
+By contributing, you agree your contributions will be licensed under the project's license (typically MIT).

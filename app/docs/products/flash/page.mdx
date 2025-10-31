@@ -1,75 +1,28 @@
 export const metadata = { 
   title: 'Flash Loans — Lucci Labs',
-  description: 'Flash loan arbitrage between decentralized exchanges'
+  description: 'Flash loan arbitrage for DeFi'
 }
 
 # Flash Loans
 
-A decentralized application facilitating flash loan arbitrage opportunities between decentralized exchanges (DEXs).
-
-## Overview
-
-Flash is an experimental DeFi tool that enables traders to execute arbitrage strategies using flash loans—uncollateralized loans that must be repaid within a single transaction.
+Decentralized application for flash loan arbitrage between DEXs.
 
 **Status:** Experimental  
-**Use Case:** DeFi arbitrage, MEV capture
+**Use Case:** DeFi arbitrage
 
-⚠️ **Warning:** This is experimental software. Use at your own risk. Flash loans can result in loss of funds if not executed properly.
+⚠️ **Warning:** Experimental software. Use at your own risk.
 
 ## What are Flash Loans?
 
-Flash loans are a unique DeFi primitive that allows you to borrow assets without collateral, as long as the loan is repaid within the same transaction. If the loan isn't repaid, the entire transaction reverts.
+Flash loans allow you to borrow assets without collateral, as long as the loan is repaid within the same transaction.
 
 ### Use Cases
 
-1. **Arbitrage:** Buy low on one DEX, sell high on another
-2. **Collateral Swap:** Change collateral in lending protocols
-3. **Liquidations:** Liquidate undercollateralized positions
-4. **Debt Refinancing:** Move debt between protocols
-
-## How It Works
-
-```
-┌─────────────┐
-│ Flash Loan  │
-│  Provider   │
-└──────┬──────┘
-       │ 1. Borrow 100 ETH
-       ▼
-┌─────────────┐
-│   Your      │
-│  Contract   │
-└──────┬──────┘
-       │ 2. Trade on DEX A
-       ▼
-┌─────────────┐
-│   DEX A     │  Buy token at $1000
-└──────┬──────┘
-       │ 3. Move tokens
-       ▼
-┌─────────────┐
-│   DEX B     │  Sell token at $1010
-└──────┬──────┘
-       │ 4. Return loan + fee
-       ▼
-┌─────────────┐
-│ Flash Loan  │  Repay 100 ETH + 0.09 ETH
-│  Provider   │
-└─────────────┘
-       │
-       └─► Keep profit: $10 per ETH - fees
-```
+- **Arbitrage:** Buy low on one DEX, sell high on another
+- **Collateral Swap:** Change collateral in lending protocols
+- **Liquidations:** Liquidate undercollateralized positions
 
 ## Getting Started
-
-### Prerequisites
-
-- Solidity knowledge
-- Understanding of DEX mechanics
-- Familiarity with Uniswap/Sushiswap
-- Gas optimization skills
-
-### Installation
 
 ```bash
 git clone https://github.com/natalie-a-1/Flash
@@ -77,37 +30,10 @@ cd Flash
 npm install
 ```
 
-### Environment Setup
-
-```bash
-# .env
-PRIVATE_KEY=your_private_key
-INFURA_KEY=your_infura_key
-ETHERSCAN_KEY=your_etherscan_key
-
-# Network settings
-NETWORK=mainnet
-GAS_PRICE=auto
-```
-
-## Smart Contract
-
-### FlashLoanArbitrage Contract
+## Smart Contract Example
 
 ```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-import "@aave/protocol-v2/contracts/flashloan/base/FlashLoanReceiverBase.sol";
-import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-
 contract FlashLoanArbitrage is FlashLoanReceiverBase {
-    address private constant UNISWAP_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
-    address private constant SUSHISWAP_ROUTER = 0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F;
-    
-    constructor(ILendingPoolAddressesProvider _provider) 
-        FlashLoanReceiverBase(_provider) {}
-    
     function executeOperation(
         address[] calldata assets,
         uint256[] calldata amounts,
@@ -115,12 +41,8 @@ contract FlashLoanArbitrage is FlashLoanReceiverBase {
         address initiator,
         bytes calldata params
     ) external override returns (bool) {
-        // Decode parameters
-        (address tokenIn, address tokenOut, uint256 deadline) = 
-            abi.decode(params, (address, address, uint256));
-        
         // Execute arbitrage
-        _executeArbitrage(assets[0], amounts[0], tokenIn, tokenOut);
+        _executeArbitrage(assets[0], amounts[0]);
         
         // Approve repayment
         uint256 amountOwed = amounts[0] + premiums[0];
@@ -128,83 +50,12 @@ contract FlashLoanArbitrage is FlashLoanReceiverBase {
         
         return true;
     }
-    
-    function _executeArbitrage(
-        address asset,
-        uint256 amount,
-        address tokenIn,
-        address tokenOut
-    ) internal {
-        // 1. Buy on Uniswap
-        IUniswapV2Router02 uniswap = IUniswapV2Router02(UNISWAP_ROUTER);
-        address[] memory path = new address[](2);
-        path[0] = tokenIn;
-        path[1] = tokenOut;
-        
-        IERC20(tokenIn).approve(UNISWAP_ROUTER, amount);
-        uint[] memory amounts = uniswap.swapExactTokensForTokens(
-            amount,
-            0, // Accept any amount (UNSAFE - for demo only)
-            path,
-            address(this),
-            block.timestamp
-        );
-        
-        // 2. Sell on Sushiswap
-        IUniswapV2Router02 sushiswap = IUniswapV2Router02(SUSHISWAP_ROUTER);
-        path[0] = tokenOut;
-        path[1] = tokenIn;
-        
-        uint256 amountOut = amounts[amounts.length - 1];
-        IERC20(tokenOut).approve(SUSHISWAP_ROUTER, amountOut);
-        sushiswap.swapExactTokensForTokens(
-            amountOut,
-            amount, // Must get back at least what we borrowed
-            path,
-            address(this),
-            block.timestamp
-        );
-    }
-    
-    function requestFlashLoan(
-        address _token,
-        uint256 _amount,
-        address _tokenIn,
-        address _tokenOut
-    ) external onlyOwner {
-        address receiverAddress = address(this);
-        address[] memory assets = new address[](1);
-        assets[0] = _token;
-        
-        uint256[] memory amounts = new uint256[](1);
-        amounts[0] = _amount;
-        
-        uint256[] memory modes = new uint256[](1);
-        modes[0] = 0; // No debt
-        
-        bytes memory params = abi.encode(_tokenIn, _tokenOut, block.timestamp);
-        
-        LENDING_POOL.flashLoan(
-            receiverAddress,
-            assets,
-            amounts,
-            modes,
-            address(this),
-            params,
-            0
-        );
-    }
 }
 ```
 
 ## Finding Opportunities
 
-### Price Monitoring
-
 ```typescript
-import { ethers } from 'ethers'
-import { formatUnits } from 'ethers/lib/utils'
-
 async function findArbitrage() {
   const uniswapPrice = await getUniswapPrice('WETH', 'DAI')
   const sushiswapPrice = await getSushiswapPrice('WETH', 'DAI')
@@ -212,268 +63,25 @@ async function findArbitrage() {
   const priceDiff = Math.abs(uniswapPrice - sushiswapPrice)
   const diffPercent = (priceDiff / uniswapPrice) * 100
   
-  if (diffPercent > 1) { // 1% threshold
-    console.log('Arbitrage opportunity found!')
-    console.log(`Price difference: ${diffPercent.toFixed(2)}%`)
+  if (diffPercent > 1) {
     return {
       profitable: true,
       buyDex: uniswapPrice < sushiswapPrice ? 'Uniswap' : 'Sushiswap',
-      sellDex: uniswapPrice < sushiswapPrice ? 'Sushiswap' : 'Uniswap',
-      expectedProfit: calculateProfit(priceDiff)
+      sellDex: uniswapPrice < sushiswapPrice ? 'Sushiswap' : 'Uniswap'
     }
-  }
-  
-  return { profitable: false }
-}
-
-// Run every block
-provider.on('block', async (blockNumber) => {
-  const opportunity = await findArbitrage()
-  if (opportunity.profitable) {
-    await executeFlashLoan(opportunity)
-  }
-})
-```
-
-### Gas Calculation
-
-```typescript
-function estimateProfit(
-  priceDifference: number,
-  loanAmount: number,
-  gasPrice: number
-): number {
-  // Flash loan fee (typically 0.09%)
-  const flashLoanFee = loanAmount * 0.0009
-  
-  // DEX swap fees (0.3% per swap)
-  const swapFees = loanAmount * 0.003 * 2
-  
-  // Gas cost
-  const estimatedGas = 400000 // Typical for flash loan arbitrage
-  const gasCost = (estimatedGas * gasPrice) / 1e9 // Convert to ETH
-  
-  // Calculate profit
-  const revenue = loanAmount * (priceDifference / 100)
-  const totalCosts = flashLoanFee + swapFees + gasCost
-  
-  return revenue - totalCosts
-}
-```
-
-## Execution Strategy
-
-### 1. Mempool Monitoring
-
-```typescript
-// Watch for large trades that might cause price impact
-provider.on('pending', async (txHash) => {
-  const tx = await provider.getTransaction(txHash)
-  
-  if (isLargeDEXTrade(tx)) {
-    // Estimate price impact
-    const impact = await estimatePriceImpact(tx)
-    
-    // If significant, prepare arbitrage
-    if (impact > 0.5) {
-      await prepareArbitrage(tx)
-    }
-  }
-})
-```
-
-### 2. Atomic Execution
-
-```typescript
-async function executeArbitrage(opportunity) {
-  try {
-    // Estimate gas
-    const gasEstimate = await contract.estimateGas.requestFlashLoan(
-      opportunity.token,
-      opportunity.amount,
-      opportunity.tokenIn,
-      opportunity.tokenOut
-    )
-    
-    // Add 20% buffer
-    const gasLimit = Math.floor(gasEstimate * 1.2)
-    
-    // Execute with high gas price for fast inclusion
-    const tx = await contract.requestFlashLoan(
-      opportunity.token,
-      opportunity.amount,
-      opportunity.tokenIn,
-      opportunity.tokenOut,
-      {
-        gasLimit,
-        gasPrice: ethers.utils.parseUnits('50', 'gwei')
-      }
-    )
-    
-    console.log('Transaction sent:', tx.hash)
-    const receipt = await tx.wait()
-    
-    if (receipt.status === 1) {
-      console.log('Arbitrage successful!')
-      calculateProfitFromReceipt(receipt)
-    }
-  } catch (error) {
-    console.error('Arbitrage failed:', error)
   }
 }
 ```
 
 ## Risk Management
 
-### Common Risks
-
-1. **Front-running:** MEV bots may front-run your arbitrage
-2. **Price Slippage:** Prices may change before execution
-3. **Gas Costs:** High gas prices can eliminate profits
-4. **Smart Contract Bugs:** Errors can lock funds
-5. **Failed Transactions:** Waste gas without profit
-
-### Mitigation Strategies
-
-```typescript
-// 1. Set minimum profit threshold
-const MIN_PROFIT = ethers.utils.parseEther('0.1') // 0.1 ETH
-
-// 2. Use Flashbots for private transactions
-import { FlashbotsBundleProvider } from '@flashbots/ethers-provider-bundle'
-
-// 3. Implement circuit breakers
-let consecutiveFailures = 0
-const MAX_FAILURES = 3
-
-if (consecutiveFailures >= MAX_FAILURES) {
-  console.log('Too many failures, pausing bot')
-  return
-}
-
-// 4. Set maximum gas price
-const MAX_GAS_PRICE = ethers.utils.parseUnits('100', 'gwei')
-```
-
-## Advanced Techniques
-
-### Multi-Hop Arbitrage
-
-```solidity
-// Trade through multiple DEXs
-function executeMultiHopArbitrage(
-    address[] memory dexRouters,
-    address[] memory path,
-    uint256 amount
-) internal {
-    uint256 currentAmount = amount;
-    
-    for (uint i = 0; i < dexRouters.length; i++) {
-        currentAmount = _swapOnDEX(
-            dexRouters[i],
-            path[i],
-            path[i + 1],
-            currentAmount
-        );
-    }
-}
-```
-
-### Triangle Arbitrage
-
-```typescript
-// Example: ETH -> DAI -> USDC -> ETH
-async function triangleArbitrage() {
-  const path = ['WETH', 'DAI', 'USDC', 'WETH']
-  
-  // Calculate expected output
-  let amount = ethers.utils.parseEther('10')
-  for (let i = 0; i < path.length - 1; i++) {
-    amount = await getExpectedOutput(path[i], path[i + 1], amount)
-  }
-  
-  // Profit if final amount > initial amount + fees
-  const initialAmount = ethers.utils.parseEther('10')
-  if (amount.gt(initialAmount.mul(1001).div(1000))) {
-    await executeTriangleArbitrage(path, initialAmount)
-  }
-}
-```
-
-## Deployment
-
-### Mainnet Deployment
-
-```bash
-# Compile contracts
-npx hardhat compile
-
-# Run tests
-npx hardhat test
-
-# Deploy to mainnet
-npx hardhat run scripts/deploy.ts --network mainnet
-
-# Verify on Etherscan
-npx hardhat verify --network mainnet DEPLOYED_ADDRESS
-```
-
-### Monitoring
-
-```typescript
-// Set up alerts
-import { Webhook } from 'discord-webhook-node'
-
-const hook = new Webhook(process.env.DISCORD_WEBHOOK)
-
-async function monitorBot() {
-  // Check bot health
-  const balance = await contract.getBalance()
-  
-  if (balance.lt(ethers.utils.parseEther('0.1'))) {
-    hook.error('Low balance warning', `Balance: ${formatEther(balance)} ETH`)
-  }
-  
-  // Report daily profits
-  const dailyProfit = await calculateDailyProfit()
-  hook.info('Daily Report', `Profit: ${formatEther(dailyProfit)} ETH`)
-}
-```
-
-## Performance Optimization
-
-### Gas Optimization
-
-1. Use `calldata` instead of `memory` for external functions
-2. Pack struct variables efficiently
-3. Cache storage reads
-4. Use `unchecked` for safe math operations
-5. Avoid redundant SLOAD operations
-
-### Execution Speed
-
-```typescript
-// Use WebSocket for faster event detection
-const provider = new ethers.providers.WebSocketProvider(
-  `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_KEY}`
-)
-
-// Pre-approve tokens to save gas
-await token.approve(router.address, ethers.constants.MaxUint256)
-
-// Use multicall for batched reads
-import { Contract } from 'ethers-multicall'
-```
+Common risks:
+- Front-running by MEV bots
+- Price slippage
+- High gas costs
+- Smart contract bugs
 
 ## Resources
 
 - [Aave Flash Loans](https://docs.aave.com/developers/guides/flash-loans)
-- [Uniswap V2 Docs](https://docs.uniswap.org/protocol/V2/introduction)
-- [MEV Resources](https://github.com/flashbots/mev-research)
-
-## Support
-
-⚠️ **Disclaimer:** Flash loans involve significant risk. This tool is for educational purposes. Always test thoroughly on testnets before deploying to mainnet.
-
-- **Code:** [GitHub Repository](https://github.com/natalie-a-1/Flash)
-- **Issues:** [Report bugs](https://github.com/natalie-a-1/Flash/issues)
+- [Source Code](https://github.com/natalie-a-1/Flash)

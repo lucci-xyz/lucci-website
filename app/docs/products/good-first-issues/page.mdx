@@ -1,237 +1,62 @@
 export const metadata = { 
   title: 'Good First Issues — Lucci Labs',
-  description: 'Discover beginner-friendly issues in Web3 projects'
+  description: 'Discover beginner-friendly Web3 issues'
 }
 
 # Good First Issues
 
-A curated platform helping newcomers discover beginner-friendly issues from the most exciting projects in Crypto, Web3, Blockchain, and DeFi.
-
-## Overview
-
-Good First Issues aggregates and categorizes beginner-friendly issues from leading Web3 projects, making it easy for new contributors to find their first open-source contribution.
+Curated platform for discovering beginner-friendly issues from Web3, Crypto, and DeFi projects.
 
 **Status:** Live  
 **Website:** [good-first-issues-three.vercel.app](https://good-first-issues-three.vercel.app/)
 
-## Features
+## Overview
 
-### Curated Issues
-Hand-picked issues from high-quality Web3 projects with active communities.
+Good First Issues helps newcomers find their first open-source contribution by aggregating and categorizing beginner-friendly issues from leading Web3 projects.
 
-### Technology Filtering
-Filter by language and technology stack:
-- Solidity
-- Rust
-- TypeScript
-- Python
-- Go
+### Features
 
-### Difficulty Ratings
-Issues tagged by estimated time and complexity to help you choose appropriate challenges.
-
-### Real-Time Updates
-Issues refreshed hourly to ensure you're seeing the latest opportunities.
+- Curated issues from high-quality projects
+- Filter by language and technology
+- Difficulty ratings
+- Real-time updates
 
 ## Using the Platform
 
-### Browse Issues
-
-Visit [the platform](https://good-first-issues-three.vercel.app/) and explore issues by category:
-
-```typescript
-// Issues are structured like this
-interface Issue {
-  id: string
-  title: string
-  repository: string
-  url: string
-  labels: string[]
-  created_at: string
-  technology: string[]
-  difficulty: 'easy' | 'medium'
-}
-```
-
-### Filter by Technology
-
-Use the filter bar to narrow down issues:
-- **Language:** JavaScript, TypeScript, Solidity, Rust, Python
-- **Project Type:** DeFi, NFT, Infrastructure, Tools
+Visit the [platform](https://good-first-issues-three.vercel.app/) and filter by:
+- **Language:** Solidity, Rust, TypeScript, Python
+- **Project Type:** DeFi, NFT, Infrastructure
 - **Status:** Open, Recently Updated
-
-### Start Contributing
-
-1. Find an issue that interests you
-2. Read the issue description and requirements
-3. Check if anyone is already working on it
-4. Comment on the issue to claim it
-5. Fork the repository and start coding
-6. Submit a PR when ready
 
 ## For Project Maintainers
 
-Want your project featured on Good First Issues?
-
-### Requirements
-
-Your project should:
+Want your project featured? Your project should:
 - Be open source and Web3-related
-- Have clear contribution guidelines
-- Use the `good first issue` label on GitHub
-- Have active maintainers who review PRs
+- Have contribution guidelines
+- Use the `good first issue` label
+- Have active maintainers
 
-### Adding Your Project
+### Add Your Project
 
 ```bash
-# Fork the repository
 git clone https://github.com/natalie-a-1/GoodFirstIssues
+cd GoodFirstIssues
 
-# Add your project to config
-# Edit src/config/projects.json
+# Add to src/config/projects.json
 {
   "name": "Your Project",
   "github": "owner/repo",
   "description": "Brief description",
-  "technologies": ["typescript", "solidity"],
-  "website": "https://yourproject.com"
+  "technologies": ["typescript", "solidity"]
 }
 
-# Submit a PR
+# Submit PR
 git add .
 git commit -m "Add YourProject"
 git push origin add-your-project
 ```
 
-### Best Practices
-
-Create great first issues:
-
-```markdown
-## Issue Title: Add validation to user input
-
-**Description:**
-Currently, the user input form doesn't validate email addresses.
-We need to add email validation using a standard library.
-
-**Steps:**
-1. Find the UserForm component in `src/components/UserForm.tsx`
-2. Import a validation library (we recommend `validator.js`)
-3. Add email validation before form submission
-4. Show error message if email is invalid
-
-**Acceptance Criteria:**
-- [ ] Invalid emails show error message
-- [ ] Valid emails pass validation
-- [ ] Tests added for validation logic
-
-**Helpful Resources:**
-- [validator.js docs](https://github.com/validatorjs/validator.js)
-- Our [Contributing Guide](./CONTRIBUTING.md)
-
-**Estimated Time:** 1-2 hours
-**Skills Required:** TypeScript, React basics
-```
-
-## Architecture
-
-### Issue Crawler
-
-```typescript
-// Simplified crawler logic
-async function crawlIssues() {
-  const projects = await getProjectList()
-  const issues = []
-  
-  for (const project of projects) {
-    const repoIssues = await github.getIssues({
-      repo: project.github,
-      labels: 'good first issue',
-      state: 'open'
-    })
-    
-    issues.push(...repoIssues)
-  }
-  
-  await database.saveIssues(issues)
-}
-
-// Run every hour
-schedule.every(1).hour(crawlIssues)
-```
-
-### Frontend
-
-```typescript
-// Issue list component
-export function IssueList() {
-  const [issues, setIssues] = useState([])
-  const [filters, setFilters] = useState({})
-  
-  useEffect(() => {
-    fetchIssues(filters).then(setIssues)
-  }, [filters])
-  
-  return (
-    <div>
-      <FilterBar onChange={setFilters} />
-      {issues.map(issue => (
-        <IssueCard key={issue.id} issue={issue} />
-      ))}
-    </div>
-  )
-}
-```
-
-## Contributing to Good First Issues
-
-Want to improve the platform itself?
-
-### Local Development
-
-```bash
-# Clone the repository
-git clone https://github.com/natalie-a-1/GoodFirstIssues
-cd GoodFirstIssues
-
-# Install dependencies
-npm install
-
-# Set up environment
-cp .env.example .env
-# Add your GitHub token to .env
-
-# Run development server
-npm run dev
-```
-
-### Adding Features
-
-Popular feature requests:
-- Email notifications for new issues
-- Browser extension
-- Discord bot integration
-- Advanced search filters
-- Project statistics
-
-### Testing
-
-```bash
-# Run tests
-npm test
-
-# Check coverage
-npm run test:coverage
-
-# Lint code
-npm run lint
-```
-
 ## API Access
-
-### Public API
-
-Access the issue database programmatically:
 
 ```bash
 # Get all issues
@@ -239,67 +64,9 @@ curl https://api.goodfirstissues.dev/issues
 
 # Filter by technology
 curl https://api.goodfirstissues.dev/issues?tech=solidity
-
-# Get specific project
-curl https://api.goodfirstissues.dev/projects/aave
 ```
-
-**Response:**
-```json
-{
-  "issues": [
-    {
-      "id": "issue_123",
-      "title": "Add validation to deposit function",
-      "repository": "aave/aave-v3-core",
-      "url": "https://github.com/aave/aave-v3-core/issues/123",
-      "labels": ["good first issue", "solidity"],
-      "created_at": "2024-01-01T00:00:00Z",
-      "difficulty": "easy"
-    }
-  ],
-  "total": 150,
-  "page": 1
-}
-```
-
-### Rate Limits
-
-- **Public:** 100 requests/hour
-- **Authenticated:** 1000 requests/hour
-
-## Success Stories
-
-### Contributor Testimonials
-
-> "Good First Issues helped me land my first Web3 job. Started with small PRs and built my portfolio." - Sarah, Smart Contract Developer
-
-> "Found amazing projects I didn't know existed. Now I'm a core contributor to three of them!" - Alex, Full Stack Engineer
-
-### Statistics
-
-- **15,000+ issues** curated since launch
-- **500+ projects** featured
-- **3,000+ contributors** onboarded
-- **200+ pull requests** merged monthly
-
-## Roadmap
-
-- [x] Launch v1 with basic filtering
-- [x] Add difficulty ratings
-- [ ] Email notifications
-- [ ] Browser extension
-- [ ] Mobile app
-- [ ] Advanced analytics
-- [ ] Mentor matching program
 
 ## Links
 
 - [Website](https://good-first-issues-three.vercel.app/)
 - [Source Code](https://github.com/natalie-a-1/GoodFirstIssues)
-- [Submit a Project](https://github.com/natalie-a-1/GoodFirstIssues/issues/new)
-
-## Support
-
-- **Issues:** [GitHub Issues](https://github.com/natalie-a-1/GoodFirstIssues/issues)
-- **Twitter:** [@GoodFirstIssues](https://twitter.com/GoodFirstIssues)
