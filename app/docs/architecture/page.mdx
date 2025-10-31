@@ -1,0 +1,367 @@
+export const metadata = { 
+  title: 'Architecture — Lucci Labs',
+  description: 'Technical architecture overview of Lucci Labs products'
+}
+
+# Architecture Overview
+
+Lucci Labs builds on modern Web3 infrastructure with a focus on modularity, security, and developer experience. This document outlines our architectural principles and technical stack.
+
+## Design Principles
+
+### 1. Modularity First
+Every component is designed to work independently and be composable with other tools. This allows developers to integrate only what they need.
+
+### 2. Security by Default
+All smart contracts undergo internal audits and follow established security patterns. We prioritize safe defaults over flexibility.
+
+### 3. Developer Experience
+Clear APIs, comprehensive documentation, and helpful error messages make integration straightforward.
+
+### 4. Chain Agnostic
+Where possible, we build solutions that work across multiple blockchains with minimal configuration changes.
+
+## Technology Stack
+
+### Smart Contracts
+
+**Language:** Solidity ^0.8.0  
+**Framework:** Hardhat / Foundry  
+**Testing:** Foundry tests with fuzzing  
+**Deployment:** Base, Ethereum, Optimism (varies by product)
+
+```solidity
+// Example: BountyEscrow contract structure
+contract BountyEscrow {
+    mapping(uint256 => Bounty) public bounties;
+    
+    struct Bounty {
+        address funder;
+        address payee;
+        uint256 amount;
+        BountyStatus status;
+    }
+    
+    function createBounty(
+        address _payee,
+        uint256 _amount
+    ) external payable returns (uint256) {
+        // Implementation
+    }
+    
+    function releaseBounty(uint256 _bountyId) external {
+        // Implementation with security checks
+    }
+}
+```
+
+### Backend Services
+
+**Runtime:** Node.js 18+  
+**Language:** TypeScript  
+**Framework:** Express / Next.js API routes  
+**Database:** PostgreSQL (when needed)  
+**Caching:** Redis (for high-traffic services)
+
+```typescript
+// Example: API service structure
+import express from 'express'
+import { createBountyHandler } from './handlers'
+
+const app = express()
+
+app.post('/api/bounties', async (req, res) => {
+  try {
+    const bounty = await createBountyHandler(req.body)
+    res.json({ success: true, data: bounty })
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    })
+  }
+})
+```
+
+### Frontend Applications
+
+**Framework:** React 18+ / Next.js 15  
+**Styling:** Tailwind CSS  
+**Web3:** viem, wagmi  
+**State:** React Context / Zustand (as needed)
+
+```typescript
+// Example: Web3 integration
+import { useAccount, useWriteContract } from 'wagmi'
+
+export function BountyCreator() {
+  const { address } = useAccount()
+  const { writeContract } = useWriteContract()
+  
+  const createBounty = async (amount: bigint) => {
+    await writeContract({
+      address: BOUNTY_CONTRACT,
+      abi: BountyABI,
+      functionName: 'createBounty',
+      args: [amount],
+      value: amount
+    })
+  }
+  
+  return <BountyForm onSubmit={createBounty} />
+}
+```
+
+## System Architecture
+
+### BountyPay Architecture
+
+```
+┌─────────────────┐
+│  GitHub Issues  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐       ┌──────────────┐
+│   GitHub App    │◄─────►│  API Server  │
+│   (Webhook)     │       │  (Node.js)   │
+└─────────────────┘       └──────┬───────┘
+                                 │
+                                 ▼
+                          ┌─────────────┐
+                          │  Database   │
+                          │ (PostgreSQL)│
+                          └─────────────┘
+                                 │
+                                 ▼
+                          ┌─────────────┐
+                          │   Wallet    │
+                          │   Service   │
+                          └──────┬──────┘
+                                 │
+                                 ▼
+                          ┌─────────────┐
+                          │   Smart     │
+                          │  Contract   │
+                          │   (Base)    │
+                          └─────────────┘
+```
+
+**Flow:**
+1. Developer creates GitHub issue with bounty label
+2. GitHub webhook triggers BountyPay
+3. API validates request and stores bounty details
+4. Smart contract escrows USDC on Base
+5. When PR is merged, payment is released automatically
+6. Transaction confirmed and issue updated
+
+### Good First Issues Architecture
+
+```
+┌─────────────────┐
+│  GitHub API     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐       ┌──────────────┐
+│  Issue Crawler  │──────►│   Database   │
+│  (Scheduled)    │       │  (SQLite)    │
+└─────────────────┘       └──────┬───────┘
+                                 │
+                                 ▼
+                          ┌─────────────┐
+                          │  Next.js    │
+                          │   Web App   │
+                          └─────────────┘
+```
+
+**Flow:**
+1. Scheduled job crawls Web3 repos for "good first issue" labels
+2. Issues are categorized by language and difficulty
+3. Data is stored in database with metadata
+4. Web app queries database for filtered results
+5. Users browse and click through to GitHub
+
+## Security Considerations
+
+### Smart Contract Security
+
+**Access Control:** All privileged functions use OpenZeppelin's AccessControl  
+**Reentrancy Protection:** ReentrancyGuard on all state-changing functions  
+**Integer Overflow:** Solidity 0.8+ built-in overflow protection  
+**External Calls:** Check-Effects-Interactions pattern
+
+```solidity
+function withdraw(uint256 amount) external nonReentrant {
+    // Checks
+    require(balances[msg.sender] >= amount, "Insufficient balance");
+    
+    // Effects
+    balances[msg.sender] -= amount;
+    
+    // Interactions
+    (bool success, ) = msg.sender.call{value: amount}("");
+    require(success, "Transfer failed");
+}
+```
+
+### API Security
+
+**Authentication:** JWT tokens with short expiration  
+**Rate Limiting:** Redis-based rate limiting per IP/key  
+**Input Validation:** Zod schemas for all inputs  
+**CORS:** Strict origin whitelisting
+
+```typescript
+import { z } from 'zod'
+
+const createBountySchema = z.object({
+  issueUrl: z.string().url(),
+  amount: z.number().positive().max(10000),
+  chain: z.enum(['base', 'ethereum', 'optimism'])
+})
+```
+
+## Data Flow
+
+### Creating a Bounty (BountyPay)
+
+1. **User Input:** Developer specifies bounty amount and issue
+2. **Validation:** API validates issue exists and amount is reasonable
+3. **Smart Contract:** Funds are escrowed on-chain with issue metadata
+4. **Database:** Bounty ID and metadata stored for tracking
+5. **GitHub:** Issue labeled with bounty amount
+6. **Event Emission:** Contract emits BountyCreated event
+7. **Indexing:** Event is indexed for quick lookups
+
+### Resolving a Bounty
+
+1. **PR Merged:** GitHub webhook notifies API
+2. **Verification:** System verifies PR author and merge status
+3. **Payment:** Smart contract releases funds to contributor
+4. **Confirmation:** Transaction confirmed on-chain
+5. **Update:** Issue updated with payment confirmation
+6. **Notification:** Contributor notified via GitHub comment
+
+## Deployment Strategy
+
+### Smart Contracts
+
+**Testnet First:** All contracts deployed to testnets for validation  
+**Upgradeable Proxies:** Where needed, using OpenZeppelin UUPS pattern  
+**Multi-sig Control:** Admin functions require multi-sig approval  
+**Monitoring:** On-chain monitoring for suspicious activity
+
+### Services
+
+**Infrastructure:** Vercel / Railway for hosting  
+**CI/CD:** GitHub Actions for automated deployments  
+**Monitoring:** Sentry for error tracking, DataDog for metrics  
+**Database:** Managed PostgreSQL with automated backups
+
+## Performance Optimization
+
+### Caching Strategy
+
+**Redis Cache:** API responses cached for 60 seconds  
+**CDN:** Static assets served via CDN  
+**Database Indexing:** Proper indexes on frequently queried fields  
+**Query Optimization:** N+1 query prevention, pagination
+
+### Gas Optimization
+
+**Batch Operations:** Multiple bounties can be created in one transaction  
+**Storage Packing:** Struct members ordered to minimize storage slots  
+**Events vs Storage:** Events used for historical data vs expensive storage
+
+## Integration Patterns
+
+### SDK Usage
+
+We provide SDKs for common languages:
+
+```typescript
+// TypeScript SDK
+import { BountyPayClient } from '@lucci/bountypay'
+
+const client = new BountyPayClient({
+  apiKey: process.env.API_KEY,
+  network: 'base'
+})
+
+await client.createBounty({
+  issue: 'owner/repo#123',
+  amount: '100.00'
+})
+```
+
+### Direct API Integration
+
+```bash
+curl -X POST https://api.bountypay.xyz/v1/bounties \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "issue_url": "https://github.com/owner/repo/issues/123",
+    "amount": "100.00",
+    "currency": "USDC"
+  }'
+```
+
+### Smart Contract Integration
+
+```solidity
+// External contract calling BountyEscrow
+interface IBountyEscrow {
+    function createBounty(
+        address payee,
+        uint256 amount
+    ) external payable returns (uint256);
+}
+
+contract MyContract {
+    IBountyEscrow public bountyEscrow;
+    
+    function fundBounty(address contributor) external payable {
+        uint256 bountyId = bountyEscrow.createBounty{
+            value: msg.value
+        }(contributor, msg.value);
+    }
+}
+```
+
+## Monitoring and Observability
+
+### Metrics We Track
+
+- Transaction success rates
+- API response times
+- Smart contract gas usage
+- User conversion funnel
+- Error rates by endpoint
+
+### Logging Strategy
+
+```typescript
+import { logger } from './logger'
+
+logger.info('Bounty created', {
+  bountyId: 123,
+  amount: '100.00',
+  issueUrl: 'owner/repo#123',
+  userId: 'abc123'
+})
+```
+
+## Future Architecture Plans
+
+- **Cross-chain messaging:** Integrate LayerZero for cross-chain bounties
+- **Decentralized storage:** IPFS for bounty metadata
+- **DAO governance:** Community governance for protocol parameters
+- **Privacy features:** zk-proofs for anonymous bounties
+
+## Resources
+
+- [Smart Contract Repository](https://github.com/lucci-xyz/bounty)
+- [API Documentation](https://api.bountypay.xyz/docs)
+- [Security Best Practices](/docs/guides/security)
