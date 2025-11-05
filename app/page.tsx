@@ -15,21 +15,20 @@ export default function HomePage() {
             <div className="flex flex-col lg:flex-row items-center gap-8">
               <div className="max-w-3xl">
                 <h1 className="text-xl md:text-4xl font-semibold tracking-tight text-ink">
-                  Web3 research and development playground.
-                  {/* A playground for Web3, Crypto & DeFi R&D. */}
+                  Money, made intelligently.
                 </h1>
                 <p className="mt-6 text-lg text-ink/70">
-                  Open-source tool development for DeFi, Crypto, Blockchain, and more.
+                  Powering a new generation of creators, builders, and businesses.
                 </p>
                 <div className="mt-8 flex gap-4">
-                  <Link href="/products" className="rounded-xl bg-ink text-white px-5 py-3 text-sm hover:opacity-90">Explore Products</Link>
-                  <Link href="/docs" className="rounded-xl border border-black/10 px-5 py-3 text-sm text-ink hover:bg-black/5">Read Docs</Link>
+                  <Link href="/products" className="rounded-xl bg-ink text-white px-5 py-3 text-sm hover:opacity-90">Explore Lucci</Link>
+                  <Link href="/docs" className="rounded-xl border border-black/10 px-5 py-3 text-sm text-ink hover:bg-black/5">Get Started</Link>
                 </div>
               </div>
               <div className="flex-shrink-0">
                 <Image
                   src="/og.png"
-                  alt="Lucci Labs"
+                  alt="Lucci"
                   width={300}
                   height={300}
                   className="rounded-2xl animate-breathe hover:animate-none transition-all duration-300 hover:scale-110"
@@ -44,19 +43,15 @@ export default function HomePage() {
 
       <Container>
         <Section>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
-                title: 'Open‑source tools',
-                body: 'Contracts and services for builders: escrow, fee vaults, risk registries.'
+                title: 'BountyPay',
+                body: 'The economic layer for open source.'
               },
               {
-                title: 'zk & cryptography',
-                body: 'We poke at proofs and privacy like it owes us lunch.'
-              },
-              {
-                title: 'Token design experiments',
-                body: 'Mechanisms that might work. Or explode. Measured both ways.'
+                title: 'Pilot',
+                body: 'Where AI pilots your economy and Crypto makes it real.'
               }
             ].map((c) => (
               <div key={c.title} className="rounded-2xl border border-black/5 p-6 bg-white/70">

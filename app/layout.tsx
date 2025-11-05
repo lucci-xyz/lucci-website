@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Lucci Labs',
-  description: 'A playground for Web3 / Crypto / DeFi R&D.',
+  title: 'Lucci — The Economic Layer for Open Source',
+  description: 'The economic layer for open source. Pay contributors in stablecoins with BountyPay and automate everything outside the repo with Pilot.',
   openGraph: {
-    title: 'Lucci Labs',
-    description: 'A playground for Web3 / Crypto / DeFi R&D.',
+    title: 'Lucci — The Economic Layer for Open Source',
+    description: 'The economic layer for open source. Pay contributors in stablecoins with BountyPay and automate everything outside the repo with Pilot.',
     images: ['/og.png']
   },
   icons: { icon: '/og.png' }

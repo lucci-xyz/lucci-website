@@ -4,9 +4,9 @@ import { usePathname } from 'next/navigation'
 import Container from './Container'
 
 const links = [
-  { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
-  { href: '/docs', label: 'Docs' },
+  // { href: '/docs', label: 'Docs' },
+  { href: 'https://discord.gg/MWxWzRVSx', label: 'Discord', external: true },
   { href: 'https://github.com/LucciCapital', label: 'GitHub', external: true }
 ]
 
