@@ -15,11 +15,10 @@ export default function HomePage() {
             <div className="flex flex-col lg:flex-row items-center gap-8">
               <div className="max-w-3xl">
                 <h1 className="text-xl md:text-4xl font-semibold tracking-tight text-ink">
-                  Web3 research and development playground.
-                  {/* A playground for Web3, Crypto & DeFi R&D. */}
+                  The economic layer for open source.
                 </h1>
                 <p className="mt-6 text-lg text-ink/70">
-                  Open-source tool development for DeFi, Crypto, Blockchain, and more.
+                  Pay contributors in stablecoins with BountyPay. Automate marketing, coordination, and token allocation with Pilot. Let developers focus on code.
                 </p>
                 <div className="mt-8 flex gap-4">
                   <Link href="/products" className="rounded-xl bg-ink text-white px-5 py-3 text-sm hover:opacity-90">Explore Products</Link>
@@ -44,19 +43,15 @@ export default function HomePage() {
 
       <Container>
         <Section>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
-                title: 'Open‑source tools',
-                body: 'Contracts and services for builders: escrow, fee vaults, risk registries.'
+                title: 'BountyPay',
+                body: 'Get paid in stablecoins for completed work. Fund with USDC on Base and let contributors receive automated payments when issues are resolved.'
               },
               {
-                title: 'zk & cryptography',
-                body: 'We poke at proofs and privacy like it owes us lunch.'
-              },
-              {
-                title: 'Token design experiments',
-                body: 'Mechanisms that might work. Or explode. Measured both ways.'
+                title: 'Pilot',
+                body: 'An AI agent that automates everything outside the repo—marketing, coordination, token allocation—so developers can focus on code.'
               }
             ].map((c) => (
               <div key={c.title} className="rounded-2xl border border-black/5 p-6 bg-white/70">

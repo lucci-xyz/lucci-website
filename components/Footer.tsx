@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="mt-24 border-t border-black/5">
       <Container>
         <div className="py-10 text-sm text-mute flex flex-col md:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} Lucci Labs. Open source, some rights snarked.</p>
+          <p>© {new Date().getFullYear()} Lucci. The economic layer for open source.</p>
           <div className="flex gap-6">
             <a href="https://github.com/LucciCapital" className="hover:text-ink">GitHub</a>
             <a href="/docs" className="hover:text-ink">Docs</a>

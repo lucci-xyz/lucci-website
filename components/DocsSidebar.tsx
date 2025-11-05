@@ -24,9 +24,7 @@ const docSections: DocSection[] = [
     title: 'Products',
     links: [
       { label: 'BountyPay', href: '/docs/products/bountypay' },
-      { label: 'Good First Issues', href: '/docs/products/good-first-issues' },
-      { label: 'Flash Loans', href: '/docs/products/flash' },
-      { label: 'Chain Trace', href: '/docs/products/chain-trace' }
+      { label: 'Pilot', href: '/docs/products/pilot' }
     ]
   },
   {
