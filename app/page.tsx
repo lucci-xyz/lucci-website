@@ -15,14 +15,14 @@ export default function HomePage() {
             <div className="flex flex-col lg:flex-row items-center gap-8">
               <div className="max-w-3xl">
                 <h1 className="text-xl md:text-4xl font-semibold tracking-tight text-ink">
-                  The economic layer for open source.
+                  Money, made intelligently.
                 </h1>
                 <p className="mt-6 text-lg text-ink/70">
-                  Pay contributors in stablecoins with BountyPay. Automate marketing, coordination, and token allocation with Pilot. Let developers focus on code.
+                  Powering a new generation of creators, builders, and businesses.
                 </p>
                 <div className="mt-8 flex gap-4">
-                  <Link href="/products" className="rounded-xl bg-ink text-white px-5 py-3 text-sm hover:opacity-90">Explore Products</Link>
-                  <Link href="/docs" className="rounded-xl border border-black/10 px-5 py-3 text-sm text-ink hover:bg-black/5">Read Docs</Link>
+                  <Link href="/products" className="rounded-xl bg-ink text-white px-5 py-3 text-sm hover:opacity-90">Explore Lucci</Link>
+                  <Link href="/docs" className="rounded-xl border border-black/10 px-5 py-3 text-sm text-ink hover:bg-black/5">Get Started</Link>
                 </div>
               </div>
               <div className="flex-shrink-0">
@@ -47,11 +47,11 @@ export default function HomePage() {
             {[
               {
                 title: 'BountyPay',
-                body: 'Get paid in stablecoins for completed work. Fund with USDC on Base and let contributors receive automated payments when issues are resolved.'
+                body: 'The economic layer for open source.'
               },
               {
                 title: 'Pilot',
-                body: 'An AI agent that automates everything outside the repo—marketing, coordination, token allocation—so developers can focus on code.'
+                body: 'Where AI pilots your economy and Crypto makes it real.'
               }
             ].map((c) => (
               <div key={c.title} className="rounded-2xl border border-black/5 p-6 bg-white/70">

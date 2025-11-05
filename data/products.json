@@ -1,7 +1,7 @@
 [
   {
     "name": "BountyPay",
-    "blurb": "Pay contributors in stablecoins for completed work. Fund with USDC on Base and let BountyPay handle automated payments when issues are resolved.",
+    "blurb": "The economic layer for open source.",
     "tags": [
       "payments",
       "stablecoins",
@@ -23,7 +23,7 @@
   },
   {
     "name": "Pilot",
-    "blurb": "An AI agent that automates everything outside the repo—marketing, coordination, token allocation—so developers can focus on code.",
+    "blurb": "Where AI pilots your economy and Crypto makes it real.",
     "tags": [
       "ai",
       "automation",
