@@ -28,7 +28,7 @@ export default function HomePage() {
               <div className="flex-shrink-0">
                 <Image
                   src="/og.png"
-                  alt="Lucci Labs"
+                  alt="Lucci"
                   width={300}
                   height={300}
                   className="rounded-2xl animate-breathe hover:animate-none transition-all duration-300 hover:scale-110"
