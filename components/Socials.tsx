@@ -85,7 +85,12 @@ export default function Socials() {
       
       {/* Gradient Line */}
       <div className="w-full max-w-2xl">
-        <div className="h-1 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 via-pink-500 via-orange-500 via-yellow-500 to-green-500" />
+        <div 
+          className="h-1 rounded-full" 
+          style={{
+            background: 'linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #fde047, #22c55e)'
+          }}
+        />
       </div>
     </div>
   )
