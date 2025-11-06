@@ -3,7 +3,7 @@ import Footer from '@/components/Footer'
 import Container from '@/components/Container'
 import Section from '@/components/Section'
 import Link from 'next/link'
-import Image from 'next/image'
+import AnimatedHero from '@/components/AnimatedHero'
 
 export default function HomePage() {
   return (
@@ -30,13 +30,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="flex-shrink-0">
-                <Image
-                  src="/og.png"
-                  alt="Lucci"
-                  width={300}
-                  height={300}
-                  className="rounded-2xl animate-breathe hover:animate-none transition-all duration-300 hover:scale-110"
-                />
+                <AnimatedHero />
               </div>
             </div>
           </Section>
