@@ -32,10 +32,10 @@ export default function ProductsPage() {
       {/* BountyPay Product - Featured with Phone */}
       <Container>
         <Section>
-          <Link 
+          {/* <Link 
             href="/docs/products/bountypay"
             className="block group"
-          >
+          > */}
             <div className="relative rounded-2xl border border-bounty/10 p-8 lg:p-12 hover:-translate-y-0.5 transition-all duration-500 bg-white hover:border-bounty/20 overflow-hidden cursor-pointer">
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -106,7 +106,7 @@ export default function ProductsPage() {
                 </div>
               </div>
             </div>
-          </Link>
+          {/* </Link> */}
         </Section>
       </Container>
 
@@ -116,12 +116,12 @@ export default function ProductsPage() {
           <h2 className="text-xl md:text-2xl font-light text-ink mb-8">Other Products</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {products.slice(1).map((product) => (
-              <Link
-                key={product.name}
-                href={(product.links?.[0]?.url || '#') as any}
-                className="group block"
-              >
-                <div className="relative rounded-2xl border border-black/5 p-8 hover:-translate-y-0.5 transition-all duration-500 bg-white hover:border-primary/10 overflow-hidden">
+              // <Link
+              //   key={product.name}
+              //   href={(product.links?.[0]?.url || '#') as any}
+              //   className="group block"
+              // >
+                <div key={product.name} className="relative rounded-2xl border border-black/5 p-8 hover:-translate-y-0.5 transition-all duration-500 bg-white hover:border-primary/10 overflow-hidden">
                   
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-2xl font-light text-ink group-hover:text-primary transition-colors">{product.name}</h3>
@@ -150,7 +150,7 @@ export default function ProductsPage() {
                     </svg>
                   </div>
                 </div>
-              </Link>
+              // </Link>
             ))}
           </div>
         </Section>
