@@ -30,7 +30,7 @@ export default function Socials() {
   ]
 
   return (
-    <div className="flex flex-col items-center gap-6 py-8">
+    <div className="flex flex-col items-center gap-4 py-6">
       {/* Social Icons */}
       <div className="flex gap-8 items-center">
         {socials.map((social) => (
