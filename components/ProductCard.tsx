@@ -49,13 +49,10 @@ export default function ProductCard({ name, blurb, tags, status, href, links }: 
       )}
       
       <div className="flex flex-wrap gap-2">
-        {tags.map((t, idx) => (
+        {tags.map((t) => (
           <span 
             key={t} 
             className="text-xs px-3 py-1.5 rounded-lg border border-black/10 text-ink/70 bg-white/50 hover:bg-primary/5 hover:border-primary/20 transition-colors"
-            style={{
-              animationDelay: `${idx * 50}ms`
-            }}
           >
             {t}
           </span>

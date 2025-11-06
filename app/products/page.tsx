@@ -16,7 +16,7 @@ export default function ProductsPage() {
       
       {/* Hero Section with Gradient Background */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-purple-50/50 to-white">
-        <div className="absolute inset-0 bg-hero-gradient opacity-40" />
+        <div className="absolute inset-0 bg-hero-gradient" />
         <Container>
           <Section>
             <div className="relative z-10 text-center max-w-4xl mx-auto">
