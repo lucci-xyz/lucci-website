@@ -157,7 +157,7 @@ export default function ProductsPage() {
       </Container>
 
       {/* Vision Statement */}
-      <div className="bg-gradient-to-r from-bounty-50/30 via-white to-white py-16">
+      <div className="bg-gradient-to-r from-bounty-50/30 via-white to-white py-12">
         <Container>
           <Section>
             <div className="max-w-4xl mx-auto text-center">
