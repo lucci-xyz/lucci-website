@@ -20,7 +20,6 @@ export default function Navbar() {
         <nav className="flex h-14 items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5">
             <img src="/logo.svg" alt="Lucci" className="h-5" />
-            <span className="text-lg font-medium text-ink">Lucci</span>
             <img src="/og.png" alt="Lucci" className="h-6 w-6 rounded-md" />
           </Link>
           
