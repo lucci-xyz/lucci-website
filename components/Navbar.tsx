@@ -18,9 +18,10 @@ export default function Navbar() {
     <div className="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-black/5">
       <Container>
         <nav className="flex h-14 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-1.5">
             <img src="/logo.svg" alt="Lucci" className="h-5" />
-            <img src="/og.png" alt="Lucci" className="h-8 w-8 rounded-md" />
+            <span className="text-lg font-medium text-ink">Lucci</span>
+            <img src="/og.png" alt="Lucci" className="h-6 w-6 rounded-md" />
           </Link>
           
           {/* Desktop Navigation */}
