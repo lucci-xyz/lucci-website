@@ -21,8 +21,12 @@ export default function HomePage() {
                   Powering a new generation of creators, builders, and businesses.
                 </p>
                 <div className="mt-8 flex gap-4">
-                  <Link href="/products" className="rounded-xl bg-ink text-white px-5 py-3 text-sm hover:opacity-90">Explore Lucci</Link>
-                  <Link href="/docs" className="rounded-xl border border-black/10 px-5 py-3 text-sm text-ink hover:bg-black/5">Get Started</Link>
+                  <Link href="/products" className="rounded-xl bg-ink text-white px-5 py-3 text-sm hover:opacity-90 flex items-center gap-2">
+                    Explore Lucci
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
                 </div>
               </div>
               <div className="flex-shrink-0">
