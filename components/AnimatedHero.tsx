@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 
 export default function AnimatedHero() {
   const [mounted, setMounted] = useState(false)
@@ -8,6 +8,16 @@ export default function AnimatedHero() {
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Generate stable random values for particles
+  const particles = useMemo(() => 
+    Array.from({ length: 8 }, (_, i) => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }))
+  , [])
 
   return (
     <div className="relative w-[300px] h-[300px] rounded-2xl overflow-hidden bg-gradient-to-br from-primary-100 via-bounty-100 to-purple-100">
@@ -95,15 +105,15 @@ export default function AnimatedHero() {
       </svg>
 
       {/* Floating particles - representing transactions/data */}
-      {[...Array(8)].map((_, i) => (
+      {particles.map((particle, i) => (
         <div
           key={i}
           className="absolute w-2 h-2 rounded-full bg-primary-400"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animation: `float ${3 + Math.random() * 2}s ease-in-out infinite`,
-            animationDelay: `${Math.random() * 2}s`,
+            left: `${particle.left}%`,
+            top: `${particle.top}%`,
+            animation: `float ${particle.duration}s ease-in-out infinite`,
+            animationDelay: `${particle.delay}s`,
             opacity: 0.6,
           }}
         />
