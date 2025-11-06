@@ -20,7 +20,7 @@ export default function Navbar() {
         <nav className="flex h-14 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/logo.svg" alt="Lucci" className="h-5" />
-            <span className="text-lg font-medium text-ink">Lucci</span>
+            <img src="/og.png" alt="Lucci" className="h-8 w-8 rounded-md" />
           </Link>
           
           {/* Desktop Navigation */}
