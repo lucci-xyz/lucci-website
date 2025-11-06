@@ -27,7 +27,7 @@ export default function PhoneNotification() {
             </div>
           </div>
 
-          {/* Notification Content */}
+          {/* Notification Content - Fixed height to maintain iPhone proportions */}
           <div className="px-4 pb-8 pt-32 min-h-[580px]">
             <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-lg p-4 border border-black/5 animate-slide-in">
               <div className="flex items-start gap-3">
