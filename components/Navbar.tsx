@@ -6,7 +6,7 @@ import Container from './Container'
 
 const links = [
   { href: '/products', label: 'Products' },
-  { href: '/docs', label: 'Explore' },
+  // { href: '/docs', label: 'Explore' },
   { href: '/team', label: 'Team' }
 ]
 
