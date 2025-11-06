@@ -17,6 +17,21 @@
   animation: breathe 3s ease-in-out infinite;
 }
 
+@keyframes slide-in {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.5s ease-out;
+}
+
 /* Code block syntax highlighting - IDE style with light background */
 .prose pre {
   @apply bg-gray-50 text-gray-900 border border-gray-200;
