@@ -6,9 +6,8 @@ import Container from './Container'
 
 const links = [
   { href: '/products', label: 'Products' },
-  // { href: '/docs', label: 'Docs' },
-  { href: 'https://discord.gg/MWxWzRVSx', label: 'Discord', external: true },
-  { href: 'https://github.com/LucciCapital', label: 'GitHub', external: true }
+  { href: '/docs', label: 'Explore' },
+  { href: '/team', label: 'Team' }
 ]
 
 export default function Navbar() {
@@ -21,21 +20,16 @@ export default function Navbar() {
         <nav className="flex h-14 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/logo.svg" alt="Lucci" className="h-5" />
+            <span className="text-lg font-medium text-ink">Lucci</span>
           </Link>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6 text-sm">
-            {links.map((l) =>
-              l.external ? (
-                <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="text-ink/70 hover:text-ink transition">
-                  {l.label}
-                </a>
-              ) : (
-                <Link key={l.href} href={l.href as any} className={`transition ${pathname === l.href ? 'text-ink' : 'text-ink/70 hover:text-ink'}`}>
-                  {l.label}
-                </Link>
-              )
-            )}
+            {links.map((l) => (
+              <Link key={l.href} href={l.href as any} className={`transition ${pathname === l.href ? 'text-ink' : 'text-ink/70 hover:text-ink'}`}>
+                {l.label}
+              </Link>
+            ))}
           </div>
 
           {/* Mobile Hamburger Menu Button */}
@@ -54,29 +48,16 @@ export default function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-black/5">
             <div className="flex flex-col gap-4 text-sm">
-              {links.map((l) =>
-                l.external ? (
-                  <a
-                    key={l.href}
-                    href={l.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-ink/70 hover:text-ink transition"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {l.label}
-                  </a>
-                ) : (
-                  <Link
-                    key={l.href}
-                    href={l.href as any}
-                    className={`transition ${pathname === l.href ? 'text-ink' : 'text-ink/70 hover:text-ink'}`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {l.label}
-                  </Link>
-                )
-              )}
+              {links.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href as any}
+                  className={`transition ${pathname === l.href ? 'text-ink' : 'text-ink/70 hover:text-ink'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {l.label}
+                </Link>
+              ))}
             </div>
           </div>
         )}
