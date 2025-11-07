@@ -45,6 +45,11 @@ export default function AnimatedHero() {
     setMounted(true)
   }, [])
 
+  // Layout constants
+  const CENTER_OFFSET = 150
+  const ICON_ORBIT_RADIUS = 110
+  const ICON_HALF_SIZE = 12
+
   return (
     <div className="relative w-[300px] h-[300px]">
       {/* Central og.png image */}
@@ -60,22 +65,22 @@ export default function AnimatedHero() {
 
       {/* Abstract minimalist icons - no backgrounds */}
       {[
-        { Icon: AIIcon, label: 'AI', delay: '0s', rotation: 0, radius: 110 },
-        { Icon: PaymentIcon, label: 'Pay', delay: '0.1s', rotation: 72, radius: 110 },
-        { Icon: DocsIcon, label: 'Docs', delay: '0.2s', rotation: 144, radius: 110 },
-        { Icon: CodeIcon, label: 'Code', delay: '0.3s', rotation: 216, radius: 110 },
-        { Icon: MarketingIcon, label: 'Market', delay: '0.4s', rotation: 288, radius: 110 },
+        { Icon: AIIcon, label: 'AI', delay: '0s', rotation: 0 },
+        { Icon: PaymentIcon, label: 'Pay', delay: '0.1s', rotation: 72 },
+        { Icon: DocsIcon, label: 'Docs', delay: '0.2s', rotation: 144 },
+        { Icon: CodeIcon, label: 'Code', delay: '0.3s', rotation: 216 },
+        { Icon: MarketingIcon, label: 'Market', delay: '0.4s', rotation: 288 },
       ].map((node, i) => {
-        const x = Math.cos((node.rotation * Math.PI) / 180) * node.radius + 150
-        const y = Math.sin((node.rotation * Math.PI) / 180) * node.radius + 150
+        const x = Math.cos((node.rotation * Math.PI) / 180) * ICON_ORBIT_RADIUS + CENTER_OFFSET
+        const y = Math.sin((node.rotation * Math.PI) / 180) * ICON_ORBIT_RADIUS + CENTER_OFFSET
         
         return (
           <div
             key={i}
             className={`absolute transition-all duration-1000 hover:scale-125`}
             style={{
-              left: `${x - 12}px`,
-              top: `${y - 12}px`,
+              left: `${x - ICON_HALF_SIZE}px`,
+              top: `${y - ICON_HALF_SIZE}px`,
               transitionDelay: node.delay,
               opacity: mounted ? 1 : 0,
               transform: mounted ? 'scale(1)' : 'scale(0)',
@@ -91,10 +96,10 @@ export default function AnimatedHero() {
       {/* Animated connection lines - very subtle */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
         {[0, 72, 144, 216, 288].map((rotation, i) => {
-          const x1 = 150
-          const y1 = 150
-          const x2 = Math.cos((rotation * Math.PI) / 180) * 110 + 150
-          const y2 = Math.sin((rotation * Math.PI) / 180) * 110 + 150
+          const x1 = CENTER_OFFSET
+          const y1 = CENTER_OFFSET
+          const x2 = Math.cos((rotation * Math.PI) / 180) * ICON_ORBIT_RADIUS + CENTER_OFFSET
+          const y2 = Math.sin((rotation * Math.PI) / 180) * ICON_ORBIT_RADIUS + CENTER_OFFSET
           
           return (
             <line
