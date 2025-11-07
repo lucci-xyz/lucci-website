@@ -145,28 +145,28 @@ export default function AnimatedHero() {
           style={{
             left: `${particle.left}%`,
             top: `${particle.top}%`,
-            animation: `float ${particle.duration}s ease-in-out infinite`,
+            animation: `floatParticle ${particle.duration}s ease-in-out infinite`,
             animationDelay: `${particle.delay}s`,
           }}
         />
       ))}
 
       {/* Minimalist crypto symbols with softer styling */}
-      <div className="absolute top-8 right-8 text-lg text-primary-400/60 animate-float" style={{ animationDuration: '4s', animationDelay: '0.5s' }}>
+      <div className="absolute top-8 right-8 text-lg text-primary-400/60" style={{ animation: 'floatIcon 4s ease-in-out infinite', animationDelay: '0.5s' }}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M12 2L2 7l10 5 10-5-10-5z" />
           <path d="M2 17l10 5 10-5" />
           <path d="M2 12l10 5 10-5" />
         </svg>
       </div>
-      <div className="absolute bottom-10 left-10 text-base text-bounty-400/60 animate-float" style={{ animationDuration: '3.5s', animationDelay: '1s' }}>
+      <div className="absolute bottom-10 left-10 text-base text-bounty-400/60" style={{ animation: 'floatIcon 3.5s ease-in-out infinite', animationDelay: '1s' }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="12" cy="12" r="10" />
           <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
           <path d="M12 18V6" />
         </svg>
       </div>
-      <div className="absolute top-16 left-12 text-sm text-primary-300/60 animate-float" style={{ animationDuration: '5s', animationDelay: '1.5s' }}>
+      <div className="absolute top-16 left-12 text-sm text-primary-300/60" style={{ animation: 'floatIcon 5s ease-in-out infinite', animationDelay: '1.5s' }}>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="12" cy="12" r="10" />
           <path d="M12 6v6l4 2" />
@@ -174,18 +174,21 @@ export default function AnimatedHero() {
       </div>
 
       <style jsx>{`
-        @keyframes float {
+        @keyframes floatParticle {
           0%, 100% {
             transform: translateY(0) translateX(0);
-            opacity: 0.6;
           }
           50% {
             transform: translateY(-8px) translateX(4px);
-            opacity: 0.4;
           }
         }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
+        @keyframes floatIcon {
+          0%, 100% {
+            transform: translateY(0) translateX(0);
+          }
+          50% {
+            transform: translateY(-6px) translateX(3px);
+          }
         }
       `}</style>
     </div>
