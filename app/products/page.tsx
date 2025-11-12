@@ -5,19 +5,22 @@ import Section from '@/components/Section'
 import PhoneNotification from '@/components/PhoneNotification'
 import Link from 'next/link'
 import products from '@/data/products.json'
+import ScrollAnimations from '@/components/ScrollAnimations'
 
 export const metadata = { title: 'Products — Lucci' }
 
 export default function ProductsPage() {
+
   return (
     <>
+      <ScrollAnimations />
       <div className="bg-white">
         <Navbar />
         
         {/* Hero Section */}
         <Container>
           <Section>
-            <div className="text-center max-w-4xl mx-auto py-12 lg:py-20">
+            <div className="text-center max-w-4xl mx-auto py-20 lg:py-32">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight animate-fade-in-up" style={{ color: '#00827B' }}>
                 Build the future of open source, so you can build your success.
               </h1>
@@ -36,12 +39,28 @@ export default function ProductsPage() {
             </div>
           </Section>
         </Container>
+        
+        {/* Secondary Hero Section */}
+        <div style={{ backgroundColor: '#00827B' }}>
+          <Container>
+            <Section>
+              <div className="text-center max-w-4xl mx-auto py-16 lg:py-28">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight animate-fade-in-up text-white">
+                  We believe shipping should be seamless, visible, and rewarded. Connect your team's Github today to get started!
+                </h2>
+              </div>
+            </Section>
+          </Container>
+        </div>
+        
+        {/* Spacer Section */}
+        <div className="bg-white py-16 lg:py-24"></div>
       </div>
 
       {/* BountyPay Product Card */}
       <div className="py-4 lg:py-6 bg-white">
         <Container>
-          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:mr-auto animate-slide-in-left">
+          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:mr-auto animate-on-scroll animate-slide-in-left-scroll" data-animate="bounty-pay">
             <div className="rounded-xl lg:rounded-2xl p-6 sm:p-8 md:p-10 lg:p-12 py-12 sm:py-16 md:py-20 lg:py-24" style={{ backgroundColor: '#D4F6F4' }}>
               <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
                 {/* Illustration - Left */}
@@ -80,7 +99,7 @@ export default function ProductsPage() {
       {/* Pilot Product Card - Reversed Layout */}
       <div className="py-4 lg:py-6 bg-white">
         <Container>
-          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:ml-auto animate-slide-in-right">
+          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:ml-auto animate-on-scroll animate-slide-in-right-scroll" data-animate="pilot">
             <div className="rounded-xl lg:rounded-2xl p-6 sm:p-8 md:p-10 lg:p-12 py-12 sm:py-16 md:py-20 lg:py-24" style={{ backgroundColor: '#D4F6F4' }}>
               <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
                 {/* Content - Left */}

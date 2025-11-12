@@ -7,7 +7,7 @@ interface FooterProps {
 
 export default function Footer({ bgColor = '#83EEE8' }: FooterProps) {
   return (
-    <footer className="border-t" style={{ backgroundColor: bgColor, borderColor: 'rgba(0, 130, 123, 0.1)' }}>
+    <footer className="mt-8" style={{ backgroundColor: bgColor, borderColor: 'rgba(0, 130, 123, 0.1)' }}>
       <Container>
         <Socials />
         <div className="py-10 text-sm text-center" style={{ color: '#00827B' }}>
