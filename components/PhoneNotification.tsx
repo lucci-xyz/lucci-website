@@ -1,60 +1,69 @@
 'use client'
 
-export default function PhoneNotification() {
-  return (
-    <div className="relative mx-auto w-full max-w-[320px]">
-      {/* iPhone Frame */}
-      <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-[3rem] p-3 shadow-xl">
-        {/* Notch */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-3xl z-10" />
-        
-        {/* Screen */}
-        <div className="relative bg-gradient-to-b from-bounty-50/50 to-white rounded-[2.5rem] overflow-hidden">
-          {/* Status Bar */}
-          <div className="flex items-center justify-between px-8 pt-4 pb-2 text-xs font-light text-gray-700">
-            <span>9:41</span>
-            <div className="flex items-center gap-1">
-              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-              </svg>
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.077 13.308-5.077 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zM12.12 13.88a3 3 0 00-4.242 0 1 1 0 01-1.415-1.415 5 5 0 017.072 0 1 1 0 01-1.415 1.415zM9 16a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd" />
-              </svg>
-              <svg className="w-6 h-3" fill="currentColor" viewBox="0 0 24 24">
-                <rect x="1" y="4" width="18" height="13" rx="2" />
-                <path d="M21 9v6a1.5 1.5 0 001.5 0V9a1.5 1.5 0 00-1.5 0z" />
-              </svg>
-            </div>
-          </div>
+import { useEffect, useState } from 'react'
 
-          {/* Notification Content - Fixed height to maintain iPhone proportions */}
-          <div className="px-4 pb-8 pt-32 min-h-[580px]">
-            <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm p-4 border border-black/5 animate-slide-in">
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-9 h-9 bg-bounty/10 rounded-lg flex items-center justify-center border border-bounty/10">
-                  <svg className="w-5 h-5 text-bounty/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-sm font-normal text-gray-900">BountyPay</p>
-                    <span className="text-xs text-gray-400 font-light">now</span>
-                  </div>
-                  <p className="text-sm font-light text-gray-900 mb-1">Payment Received</p>
-                  <p className="text-sm text-gray-500 font-light">You received $250 USDC for PR #1234</p>
-                </div>
-              </div>
+export default function PhoneNotification() {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
+  return (
+    <div className="relative w-full max-w-[340px]">
+      {/* Spotlight glow effect */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="h-48 w-48 rounded-full bg-cyan-500/8 blur-3xl" />
+      </div>
+
+      <div
+        role="alert"
+        aria-live="polite"
+        className={[
+          "relative w-full rounded-2xl border border-black/5 bg-white backdrop-blur-sm",
+          "shadow-[0_24px_80px_-16px_rgba(0,0,0,0.32),0_10px_32px_-8px_rgba(0,0,0,0.18)]",
+          "p-4",
+          mounted ? "animate-[slideDown_400ms_ease-out,fadeIn_300ms_ease-out]" : "opacity-0 -translate-y-4"
+        ].join(' ')}
+      >
+        <div className="mb-2 flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-900 text-white shadow-lg">
+            {/* GitHub mark */}
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12a12 12 0 008.21 11.39c.58.1.79-.25.79-.57v-2.24c-3.34.73-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.31.76-1.61-2.66-.31-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23.96-.26 1.98-.4 3-.4s2.04.14 3 .4c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.84 1.1.84 2.22v3.29c0 .32.19.7.8.58A12 12 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-baseline gap-2 mb-0.5">
+              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wide">GitHub • now</span>
             </div>
-            
-            {/* Background apps blur */}
-            <div className="mt-6 space-y-3 opacity-20">
-              <div className="bg-white/50 backdrop-blur-sm rounded-lg p-3 h-14 border border-black/5" />
-              <div className="bg-white/50 backdrop-blur-sm rounded-lg p-3 h-14 border border-black/5" />
-            </div>
+            <p className="line-clamp-2 text-base leading-snug font-semibold text-gray-900">
+              @Ethereum just paid you $100 bounty
+            </p>
           </div>
         </div>
+        <div className="text-xs text-gray-500 pl-14">
+          Payment received via USDC for PR #1337
+        </div>
+        
+        {/* Subtle accent border */}
+        <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-cyan-500/10" />
       </div>
+
+      {/* keyframes */}
+      <style jsx>{`
+        @keyframes fadeIn { 
+          from { opacity: 0 } 
+          to { opacity: 1 } 
+        }
+        @keyframes slideDown { 
+          from { transform: translateY(-12px) scale(0.96) } 
+          to { transform: translateY(0) scale(1) } 
+        }
+        @media (prefers-reduced-motion: reduce) {
+          div[role="alert"] { 
+            animation: none !important;
+            transform: none !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }
