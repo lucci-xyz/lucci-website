@@ -134,6 +134,25 @@
   opacity: 0;
 }
 
+/* Scroll-triggered animations */
+.animate-on-scroll {
+  opacity: 0;
+  transition: all 0.6s ease-out;
+}
+
+.animate-on-scroll.animate-slide-in-left-scroll {
+  transform: translateX(-100px);
+}
+
+.animate-on-scroll.animate-slide-in-right-scroll {
+  transform: translateX(100px);
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 /* Code block syntax highlighting - IDE style with light background */
 .prose pre {
   @apply bg-gray-50 text-gray-900 border border-gray-200;
