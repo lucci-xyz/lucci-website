@@ -1,17 +1,17 @@
 import Container from './Container'
 import Socials from './Socials'
 
-export default function Footer() {
+interface FooterProps {
+  bgColor?: string
+}
+
+export default function Footer({ bgColor = '#83EEE8' }: FooterProps) {
   return (
-    <footer className="mt-12 border-t border-black/5">
+    <footer className="border-t" style={{ backgroundColor: bgColor, borderColor: 'rgba(0, 130, 123, 0.1)' }}>
       <Container>
         <Socials />
-        <div className="py-10 text-sm text-mute flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="py-10 text-sm text-center" style={{ color: '#00827B' }}>
           <p>© {new Date().getFullYear()} Lucci. The economic layer for open source.</p>
-          <div className="flex gap-6">
-            <a href="https://github.com/lucci-xyz" className="hover:text-ink">GitHub</a>
-            {/* <a href="/docs" className="hover:text-ink">Docs</a> */}
-          </div>
         </div>
       </Container>
     </footer>
