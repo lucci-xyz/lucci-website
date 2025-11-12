@@ -64,7 +64,7 @@ export default function ProductsPage() {
             <div className="rounded-xl lg:rounded-2xl p-6 sm:p-8 md:p-10 lg:p-12 py-12 sm:py-16 md:py-20 lg:py-24" style={{ backgroundColor: '#D4F6F4' }}>
               <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
                 {/* Notification - Left */}
-                <div className="flex-shrink-0 order-2 lg:order-1 w-full sm:w-auto flex justify-center">
+                <div className="flex-shrink-0 order-2 lg:order-1 w-full max-w-md flex justify-center lg:justify-start">
                   <PhoneNotification />
                 </div>
                 
@@ -74,7 +74,7 @@ export default function ProductsPage() {
                     BountyPay
                   </h2>
                   <p className="text-sm sm:text-base font-light leading-relaxed mb-6 sm:mb-8 md:mb-10" style={{ color: '#00827B' }}>
-                    The economic layer for open source. Get paid instantly in USDC for your contributions with seamless GitHub integration.
+                    The economic layer for open source. Get paid instantly in cryptocurrency for your contributions with seamless GitHub integration.
                   </p>
                   <div className="flex flex-wrap gap-1 justify-center lg:justify-start">
                     {products[0].tags.map((tag) => (
