@@ -11,174 +11,112 @@ export const metadata = { title: 'Products — Lucci' }
 export default function ProductsPage() {
   return (
     <>
-      <Navbar />
-      
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-bounty-50/50 via-white to-white">
+      <div className="bg-white">
+        <Navbar />
+        
+        {/* Hero Section */}
         <Container>
           <Section>
-            <div className="relative z-10 text-center max-w-4xl mx-auto">
-              <h1 className="text-4xl md:text-5xl font-light tracking-wide text-ink">
-                Build the Future of <span className="text-transparent bg-clip-text bg-gradient-to-r from-bounty via-bounty-light to-bounty-lighter font-normal">Open Source</span>
+            <div className="text-center max-w-4xl mx-auto py-12 lg:py-20">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight" style={{ color: '#00827B' }}>
+                Build the future of open source, so you can build your success.
               </h1>
-              <p className="mt-6 text-base md:text-lg text-ink/60 max-w-2xl mx-auto font-light leading-relaxed">
+              <p className="mt-6 text-base md:text-lg font-light leading-relaxed" style={{ color: '#00827B' }}>
                 The economic layer for open source. Pay contributors in stablecoins and automate coordination with AI.
               </p>
+              <div className="mt-8">
+                <Link 
+                  href="/team"
+                  className="inline-block rounded-full px-6 py-3 text-sm font-normal transition-all hover:opacity-90"
+                  style={{ backgroundColor: '#00827B', color: 'white' }}
+                >
+                  Contact us
+                </Link>
+              </div>
             </div>
           </Section>
         </Container>
       </div>
 
-      {/* BountyPay Product - Featured with Phone */}
-      <Container>
-        <Section>
-          {/* <Link 
-            href="/docs/products/bountypay"
-            className="block group"
-          > */}
-            <div className="relative rounded-2xl border border-bounty/10 p-8 lg:p-12 hover:-translate-y-0.5 transition-all duration-500 bg-white hover:border-bounty/20 overflow-hidden cursor-pointer">
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                {/* Content */}
-                <div>
-                  <div className="flex items-center gap-3 mb-6">
-                    <h2 className="text-3xl md:text-4xl font-light text-ink group-hover:text-bounty transition-colors">
-                      BountyPay
-                    </h2>
-                    <span className="text-xs px-2.5 py-1 rounded-full bg-bounty/5 text-bounty/70 font-normal border border-bounty/10">
-                      alpha
-                    </span>
-                  </div>
-                  
-                  <p className="text-lg text-ink/60 leading-relaxed mb-8 font-light">
-                    The economic layer for open source. Get paid instantly in USDC for your contributions.
-                  </p>
-                  
-                  <div className="space-y-3 mb-8">
-                    <div className="flex items-start gap-3">
-                      <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <svg className="w-4 h-4 text-bounty/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <p className="text-ink/60 text-sm font-light">Instant USDC payments on Base blockchain</p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <svg className="w-4 h-4 text-bounty/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <p className="text-ink/60 text-sm font-light">Seamless GitHub integration</p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <svg className="w-4 h-4 text-bounty/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <p className="text-ink/60 text-sm font-light">Real-time payment notifications</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {products[0].tags.map((tag) => (
-                      <span 
-                        key={tag}
-                        className="text-xs px-2.5 py-1 rounded-md border border-bounty/10 text-bounty/70 bg-white font-light"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  <div className="mt-8 flex items-center gap-2 text-bounty/70 font-light text-sm group-hover:text-bounty group-hover:gap-3 transition-all">
-                    <span>Learn more</span>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
+      {/* BountyPay Product Card */}
+      <div className="py-4 lg:py-6 bg-white">
+        <Container>
+          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:mr-auto">
+            <div className="rounded-xl lg:rounded-2xl p-6 sm:p-8 md:p-10 lg:p-12 py-12 sm:py-16 md:py-20 lg:py-24" style={{ backgroundColor: '#D4F6F4' }}>
+              <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
+                {/* Illustration - Left */}
+                <div className="flex-shrink-0 order-2 lg:order-1">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-lg lg:rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(0, 130, 123, 0.1)' }}>
+                    <span className="text-xl sm:text-2xl md:text-3xl">💰</span>
                   </div>
                 </div>
                 
-                {/* Phone Mockup */}
-                <div className="flex justify-center lg:justify-end">
-                  <PhoneNotification />
-                </div>
-              </div>
-            </div>
-          {/* </Link> */}
-        </Section>
-      </Container>
-
-      {/* Other Products */}
-      <Container>
-        <Section>
-          <h2 className="text-xl md:text-2xl font-light text-ink mb-8">Other Products</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {products.slice(1).map((product) => (
-              // <Link
-              //   key={product.name}
-              //   href={(product.links?.[0]?.url || '#') as any}
-              //   className="group block"
-              // >
-                <div key={product.name} className="relative rounded-2xl border border-black/5 p-8 hover:-translate-y-0.5 transition-all duration-500 bg-white hover:border-primary/10 overflow-hidden">
-                  
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-light text-ink group-hover:text-primary transition-colors">{product.name}</h3>
-                    <span className="text-xs px-2.5 py-1 rounded-full bg-primary/5 text-primary/70 font-normal border border-primary/10">
-                      {product.status}
-                    </span>
-                  </div>
-                  
-                  <p className="text-base text-ink/60 leading-relaxed mb-6 font-light">{product.blurb}</p>
-                  
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {product.tags.map((tag) => (
+                {/* Content - Right */}
+                <div className="flex-1 text-center lg:text-left order-1 lg:order-2">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-4 sm:mb-6 md:mb-8 lg:mb-10 tracking-wider" style={{ color: '#00827B' }}>
+                    BountyPay
+                  </h2>
+                  <p className="text-sm sm:text-base font-light leading-relaxed mb-6 sm:mb-8 md:mb-10" style={{ color: '#00827B' }}>
+                    The economic layer for open source. Get paid instantly in USDC for your contributions with seamless GitHub integration.
+                  </p>
+                  <div className="flex flex-wrap gap-1 justify-center lg:justify-start">
+                    {products[0].tags.map((tag) => (
                       <span 
                         key={tag}
-                        className="text-xs px-2.5 py-1 rounded-md border border-black/10 text-ink/60 bg-white font-light"
+                        className="text-xs px-2 mx-1 py-2 rounded-md bg-white font-normal"
+                        style={{ color: '#00827B' }}
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-                  
-                  <div className="flex items-center gap-2 text-primary/70 font-light text-sm group-hover:text-primary group-hover:gap-3 transition-all">
-                    <span>Learn more</span>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </div>
                 </div>
-              // </Link>
-            ))}
-          </div>
-        </Section>
-      </Container>
-
-      {/* Vision Statement */}
-      <div className="bg-gradient-to-r from-bounty-50/30 via-white to-white py-12">
-        <Container>
-          <Section>
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-bounty/5 mb-6 border border-bounty/10">
-                <svg className="w-5 h-5 text-bounty/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
               </div>
-              <h2 className="text-2xl md:text-3xl font-light text-ink mb-6">
-                The Future is <span className="text-transparent bg-clip-text bg-gradient-to-r from-bounty to-bounty-light font-normal">Intelligent & Decentralized</span>
-              </h2>
-              <p className="text-base text-ink/60 mb-8 leading-relaxed font-light max-w-2xl mx-auto">
-                We're building infrastructure where AI pilots economic coordination and crypto makes it real. 
-                Open source shouldn't just be sustainable—it should be thriving.
-              </p>
             </div>
-          </Section>
+          </div>
         </Container>
       </div>
 
-      <Footer />
+      {/* Pilot Product Card - Reversed Layout */}
+      <div className="py-4 lg:py-6 bg-white">
+        <Container>
+          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:ml-auto">
+            <div className="rounded-xl lg:rounded-2xl p-6 sm:p-8 md:p-10 lg:p-12 py-12 sm:py-16 md:py-20 lg:py-24" style={{ backgroundColor: '#D4F6F4' }}>
+              <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
+                {/* Content - Left */}
+                <div className="flex-1 text-center lg:text-left order-1">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-4 sm:mb-6 md:mb-8 lg:mb-10 tracking-wider" style={{ color: '#00827B' }}>
+                    Pilot
+                  </h2>
+                  <p className="text-sm sm:text-base font-light leading-relaxed mb-6 sm:mb-8 md:mb-10" style={{ color: '#00827B' }}>
+                    Where AI pilots your economy and Crypto makes it real. Automate coordination and let intelligence drive your open source project.
+                  </p>
+                  <div className="flex flex-wrap gap-1 justify-center lg:justify-start">
+                    {products[1].tags.map((tag) => (
+                      <span 
+                        key={tag}
+                        className="text-xs px-2 mx-1 py-2 rounded-md bg-white font-normal"
+                        style={{ color: '#00827B' }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Illustration - Right */}
+                <div className="flex-shrink-0 order-2">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-lg lg:rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(0, 130, 123, 0.1)' }}>
+                    <span className="text-xl sm:text-2xl md:text-3xl">🤖</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </div>
+
+      <Footer bgColor="white" />
     </>
   )
 }

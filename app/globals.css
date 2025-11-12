@@ -32,6 +32,75 @@
   animation: slide-in 0.5s ease-out;
 }
 
+/* Homepage animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slide-up {
+  animation: slideUpFromBottom 1.2s ease-out forwards;
+  opacity: 0;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+/* Floating glow animation for homepage image */
+@keyframes floatGlow {
+  0%, 100% {
+    transform: translateY(0px);
+    filter: drop-shadow(0 10px 30px rgba(0, 130, 123, 0.3));
+  }
+  50% {
+    transform: translateY(-15px);
+    filter: drop-shadow(0 20px 40px rgba(0, 130, 123, 0.5));
+  }
+}
+
+.animate-float-glow {
+  animation: floatGlow 4s ease-in-out infinite;
+}
+
 /* Code block syntax highlighting - IDE style with light background */
 .prose pre {
   @apply bg-gray-50 text-gray-900 border border-gray-200;

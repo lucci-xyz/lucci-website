@@ -39,7 +39,8 @@ export default function Socials() {
             href={social.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-mute hover:text-ink transition-colors"
+            className="transition-opacity hover:opacity-70"
+            style={{ color: '#00827B' }}
             aria-label={social.name}
           >
             {social.icon}

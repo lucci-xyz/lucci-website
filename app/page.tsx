@@ -8,64 +8,44 @@ import Image from 'next/image'
 export default function HomePage() {
   return (
     <>
-      <div className="relative backdrop-blur bg-white/70">
+      <div className="relative min-h-screen flex flex-col" style={{ backgroundColor: '#83EEE8' }}>
         <Navbar />
         <Container>
-          <Section>
-            <div className="flex flex-col lg:flex-row items-center gap-8">
-              <div className="max-w-3xl">
-                <h1 className="text-xl md:text-4xl font-semibold tracking-tight text-ink">
-                  Money, made intelligently.
-                </h1>
-                <p className="mt-6 text-lg text-ink/70">
-                  Powering a new generation of creators, builders, and businesses.
-                </p>
-                <div className="mt-8 flex gap-4">
-                  <Link href="/products" className="rounded-xl bg-ink text-white px-5 py-3 text-sm hover:opacity-90 flex items-center gap-2">
-                    Explore Lucci
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </Link>
+          <div className="flex-1 flex items-center pt-20 pb-12 lg:pt-24 lg:pb-20">
+            <div className="w-full">
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+                <div className="flex-1 lg:pr-8">
+                  <h1 className="text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-light leading-tight animate-fade-in-up" style={{ color: '#00827B' }}>
+                    Powering the Next Generation of Builders
+                  </h1>
+                  <p className="mt-10 text-base md:text-lg font-light leading-relaxed animate-fade-in-up delay-200" style={{ color: '#00827B' }}>
+                    Autonomous payouts and operations for open source developers
+                  </p>
+                  <div className="mt-12 animate-fade-in-up delay-400">
+                    <Link 
+                      href="/products" 
+                      className="inline-block rounded-full px-6 py-3 text-sm font-normal transition-all hover:opacity-90"
+                      style={{ backgroundColor: '#00827B', color: '#83EEE8' }}
+                    >
+                      Explore Products
+                    </Link>
+                  </div>
+                </div>
+                <div className="flex-shrink-0 animate-slide-up delay-300">
+                  <Image
+                    src="/og.png"
+                    alt="Lucci"
+                    width={500}
+                    height={500}
+                    className="w-[320px] md:w-[400px] lg:w-[460px] xl:w-[520px] animate-float-glow"
+                    priority
+                  />
                 </div>
               </div>
-              <div className="flex-shrink-0">
-                <Image
-                  src="/og.png"
-                  alt="Lucci"
-                  width={300}
-                  height={300}
-                  className="rounded-2xl animate-breathe hover:animate-none transition-all duration-300 hover:scale-110"
-                />
-              </div>
             </div>
-          </Section>
+          </div>
         </Container>
       </div>
-
-      <div className="hr" />
-
-      <Container>
-        <Section>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              {
-                title: 'BountyPay',
-                body: 'The economic layer for open source.'
-              },
-              {
-                title: 'Pilot',
-                body: 'Where AI pilots your economy and Crypto makes it real.'
-              }
-            ].map((c) => (
-              <div key={c.title} className="rounded-2xl border border-black/5 p-6 bg-white/70">
-                <h3 className="text-lg font-medium text-ink">{c.title}</h3>
-                <p className="mt-2 text-sm text-ink/70">{c.body}</p>
-              </div>
-            ))}
-          </div>
-        </Section>
-      </Container>
 
       <Footer />
     </>
