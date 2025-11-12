@@ -70,22 +70,26 @@ export default function ProductsPage() {
                 
                 {/* Content - Right */}
                 <div className="flex-1 text-center lg:text-left order-1 lg:order-2">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-4 sm:mb-6 md:mb-8 lg:mb-10 tracking-wider" style={{ color: '#00827B' }}>
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-4 sm:mb-6 md:mb-8 lg:mb-10 tracking-wider flex items-center gap-3 justify-center lg:justify-start" style={{ color: '#00827B' }}>
                     BountyPay
+                    <span className="text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full bg-white/50 backdrop-blur-sm font-normal mt-2.5" style={{ color: '#00827B' }}>
+                      Alpha
+                    </span>
                   </h2>
                   <p className="text-sm sm:text-base font-light leading-relaxed mb-6 sm:mb-8 md:mb-10" style={{ color: '#00827B' }}>
                     The economic layer for open source. Get paid instantly in cryptocurrency for your contributions with seamless GitHub integration.
                   </p>
-                  <div className="flex flex-wrap gap-1 justify-center lg:justify-start">
-                    {products[0].tags.map((tag) => (
-                      <span 
-                        key={tag}
-                        className="text-xs px-2 mx-1 py-2 rounded-md bg-white font-normal"
-                        style={{ color: '#00827B' }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                  <div className="flex justify-center lg:justify-start">
+                    <Link 
+                      href="/team"
+                      className="inline-flex items-center gap-2 rounded-full px-4 py-3 text-base font-normal transition-all hover:opacity-90"
+                      style={{ backgroundColor: '#00827B', color: 'white' }}
+                    >
+                      Get Started
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -102,8 +106,11 @@ export default function ProductsPage() {
               <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
                 {/* Content - Left */}
                 <div className="flex-1 text-center lg:text-left order-1">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-4 sm:mb-6 md:mb-8 lg:mb-10 tracking-wider" style={{ color: '#00827B' }}>
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-4 sm:mb-6 md:mb-8 lg:mb-10 tracking-wider flex items-center gap-3 justify-center lg:justify-start" style={{ color: '#00827B' }}>
                     Pilot
+                    <span className="text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full bg-white/50 backdrop-blur-sm font-normal mt-2.5" style={{ color: '#00827B' }}>
+                      Coming Soon
+                    </span>
                   </h2>
                   <p className="text-sm sm:text-base font-light leading-relaxed mb-6 sm:mb-8 md:mb-10" style={{ color: '#00827B' }}>
                     Where AI pilots your economy and Crypto makes it real. Automate coordination and let intelligence drive your open source project.
