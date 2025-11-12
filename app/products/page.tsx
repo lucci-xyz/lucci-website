@@ -44,8 +44,8 @@ export default function ProductsPage() {
         <div style={{ backgroundColor: '#00827B' }}>
           <Container>
             <Section>
-              <div className="text-center max-w-4xl mx-auto py-16 lg:py-28">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight animate-fade-in-up text-white">
+              <div className="text-center max-w-5xl lg:max-w-6xl mx-auto py-16 lg:py-16">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight leading-tight lg:leading-snug tracking-normal animate-fade-in-up text-white" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
                   We believe shipping should be seamless, visible, and rewarded. Connect your team's Github today to get started!
                 </h2>
               </div>
