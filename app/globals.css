@@ -101,6 +101,39 @@
   animation: floatGlow 4s ease-in-out infinite;
 }
 
+/* Product card slide animations */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInFromLeft 1s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-right {
+  animation: slideInFromRight 1s ease-out forwards;
+  opacity: 0;
+}
+
 /* Code block syntax highlighting - IDE style with light background */
 .prose pre {
   @apply bg-gray-50 text-gray-900 border border-gray-200;
