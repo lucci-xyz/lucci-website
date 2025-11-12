@@ -18,13 +18,13 @@ export default function ProductsPage() {
         <Container>
           <Section>
             <div className="text-center max-w-4xl mx-auto py-12 lg:py-20">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight" style={{ color: '#00827B' }}>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight animate-fade-in-up" style={{ color: '#00827B' }}>
                 Build the future of open source, so you can build your success.
               </h1>
-              <p className="mt-6 text-base md:text-lg font-light leading-relaxed" style={{ color: '#00827B' }}>
+              <p className="mt-6 text-base md:text-lg font-light leading-relaxed animate-fade-in-up delay-200" style={{ color: '#00827B' }}>
                 The economic layer for open source. Pay contributors in stablecoins and automate coordination with AI.
               </p>
-              <div className="mt-8">
+              <div className="mt-8 animate-fade-in-up delay-400">
                 <Link 
                   href="/team"
                   className="inline-block rounded-full px-6 py-3 text-sm font-normal transition-all hover:opacity-90"
@@ -41,7 +41,7 @@ export default function ProductsPage() {
       {/* BountyPay Product Card */}
       <div className="py-4 lg:py-6 bg-white">
         <Container>
-          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:mr-auto">
+          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:mr-auto animate-slide-in-left">
             <div className="rounded-xl lg:rounded-2xl p-6 sm:p-8 md:p-10 lg:p-12 py-12 sm:py-16 md:py-20 lg:py-24" style={{ backgroundColor: '#D4F6F4' }}>
               <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
                 {/* Illustration - Left */}
@@ -80,7 +80,7 @@ export default function ProductsPage() {
       {/* Pilot Product Card - Reversed Layout */}
       <div className="py-4 lg:py-6 bg-white">
         <Container>
-          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:ml-auto">
+          <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:ml-auto animate-slide-in-right">
             <div className="rounded-xl lg:rounded-2xl p-6 sm:p-8 md:p-10 lg:p-12 py-12 sm:py-16 md:py-20 lg:py-24" style={{ backgroundColor: '#D4F6F4' }}>
               <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
                 {/* Content - Left */}
