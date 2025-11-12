@@ -62,12 +62,10 @@ export default function ProductsPage() {
         <Container>
           <div className="w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto lg:mx-0 lg:mr-auto animate-on-scroll animate-slide-in-left-scroll" data-animate="bounty-pay">
             <div className="rounded-xl lg:rounded-2xl p-6 sm:p-8 md:p-10 lg:p-12 py-12 sm:py-16 md:py-20 lg:py-24" style={{ backgroundColor: '#D4F6F4' }}>
-              <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
-                {/* Illustration - Left */}
-                <div className="flex-shrink-0 order-2 lg:order-1">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-lg lg:rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(0, 130, 123, 0.1)' }}>
-                    <span className="text-xl sm:text-2xl md:text-3xl">💰</span>
-                  </div>
+              <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
+                {/* Notification - Left */}
+                <div className="flex-shrink-0 order-2 lg:order-1 w-full sm:w-auto flex justify-center">
+                  <PhoneNotification />
                 </div>
                 
                 {/* Content - Right */}
