@@ -1,39 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { NOTIFICATION_DATA } from '@/lib/data/notifications'
+import { SHADOWS } from '@/lib/constants/theme'
 
-const notifications = [
-  {
-    from: '@Mezo',
-    amount: '100 mUSD',
-    detail: 'Payment received for PR #2451',
-    platform: 'Mezo',
-    bgColor: '',
-    icon: '/mezo.svg',
-    needsPadding: false,
-    iconSize: 'p-0',
-  },
-  {
-    from: '@Ethereum',
-    amount: '3 ETH',
-    detail: 'Payment received for PR #1337',
-    platform: 'Ethereum',
-    bgColor: 'bg-white',
-    icon: '/ethereum.svg',
-    needsPadding: true,
-    iconSize: 'p-3.5',
-  },
-  {
-    from: '@Uniswap',
-    amount: '50 SOL',
-    detail: 'Payment received for PR #9876',
-    platform: 'Uniswap',
-    bgColor: 'bg-white',
-    icon: '/uniswap.svg',
-    needsPadding: true,
-    iconSize: 'p-2.5',
-  }
-]
+/**
+ * Phone notification component that cycles through payment notifications
+ * Displays mock payment notifications with smooth transitions
+ */
 
 export default function PhoneNotification() {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -41,7 +15,7 @@ export default function PhoneNotification() {
   useEffect(() => {
     // Cycle through notifications every 2.5 seconds
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % notifications.length)
+      setCurrentIndex((prev) => (prev + 1) % NOTIFICATION_DATA.length)
     }, 2500)
 
     return () => clearInterval(interval)
@@ -55,7 +29,7 @@ export default function PhoneNotification() {
       </div>
 
       <div className="relative">
-        {notifications.map((notification, index) => {
+        {NOTIFICATION_DATA.map((notification, index) => {
           return (
             <div
               key={index}
@@ -63,10 +37,10 @@ export default function PhoneNotification() {
               aria-live="polite"
               className={[
                 "absolute top-0 left-0 w-full rounded-3xl border border-black/5 bg-white backdrop-blur-sm",
-                "shadow-[0_24px_80px_-16px_rgba(0,0,0,0.32),0_10px_32px_-8px_rgba(0,0,0,0.18),0_0_0_1px_rgba(0,0,0,0.05)]",
                 "p-6 transition-all duration-700 ease-in-out",
                 currentIndex === index ? "opacity-100 scale-100" : "opacity-0 scale-95"
               ].join(' ')}
+              style={{ boxShadow: SHADOWS.notification }}
             >
               <div className="mb-3 flex items-center gap-4">
                 <div className={`flex h-14 w-14 items-center justify-center rounded-xl ${notification.bgColor} ${notification.iconSize} ${notification.bgColor === 'bg-white' ? 'shadow-[0_4px_12px_rgba(0,0,0,0.15),0_2px_4px_rgba(0,0,0,0.1)]' : 'shadow-lg'} overflow-hidden`}>

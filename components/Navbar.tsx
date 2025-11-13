@@ -3,46 +3,41 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import Container from './Container'
-
-const links = [
-  { href: '/products', label: 'Products' }
-]
-
-interface NavbarProps {
-  aboutUsTextColor?: string
-}
+import { MAIN_NAV_LINKS } from '@/lib/constants/navigation'
+import { COLORS } from '@/lib/constants/theme'
+import type { NavbarProps } from '@/lib/types'
 
 export default function Navbar({ aboutUsTextColor }: NavbarProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   
   // Default to mint green text, but use white for non-homepage
-  const buttonTextColor = aboutUsTextColor || (pathname === '/' ? '#83EEE8' : 'white')
+  const buttonTextColor = aboutUsTextColor || (pathname === '/' ? COLORS.backgroundMint : COLORS.white)
 
   return (
     <div className="z-50 bg-transparent animate-fade-in-up">
       <Container>
         <nav className="flex h-20 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-normal" style={{ color: '#00827B' }}>Lucci</span>
+            <span className="text-2xl font-normal" style={{ color: COLORS.primary }}>Lucci</span>
           </Link>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-10">
-            {links.map((l) => (
+            {MAIN_NAV_LINKS.map((link) => (
               <Link 
-                key={l.href} 
-                href={l.href as any} 
+                key={link.href} 
+                href={link.href as any} 
                 className="text-base font-normal transition capitalize"
-                style={{ color: '#00827B' }}
+                style={{ color: COLORS.primary }}
               >
-                {l.label}
+                {link.label}
               </Link>
             ))}
             <Link 
               href="/team" 
               className="rounded-full px-4 py-2.5 text-sm font-normal transition-all hover:opacity-90 capitalize"
-              style={{ backgroundColor: '#00827B', color: buttonTextColor }}
+              style={{ backgroundColor: COLORS.primary, color: buttonTextColor }}
             >
               About Us
             </Link>
@@ -55,30 +50,30 @@ export default function Navbar({ aboutUsTextColor }: NavbarProps) {
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
-            <span className={`w-6 h-0.5 transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} style={{ backgroundColor: '#00827B' }} />
-            <span className={`w-6 h-0.5 transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} style={{ backgroundColor: '#00827B' }} />
+            <span className={`w-6 h-0.5 transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} style={{ backgroundColor: COLORS.primary }} />
+            <span className={`w-6 h-0.5 transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} style={{ backgroundColor: COLORS.primary }} />
           </button>
         </nav>
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t" style={{ borderColor: 'rgba(0, 130, 123, 0.1)' }}>
+          <div className="md:hidden py-4 border-t" style={{ borderColor: `${COLORS.primary}1A` }}>
             <div className="flex flex-col gap-4 text-sm">
-              {links.map((l) => (
+              {MAIN_NAV_LINKS.map((link) => (
                 <Link
-                  key={l.href}
-                  href={l.href as any}
+                  key={link.href}
+                  href={link.href as any}
                   className="transition font-normal capitalize"
-                  style={{ color: '#00827B' }}
+                  style={{ color: COLORS.primary }}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {l.label}
+                  {link.label}
                 </Link>
               ))}
               <Link 
                 href="/team" 
                 className="transition font-normal capitalize"
-                style={{ color: '#00827B' }}
+                style={{ color: COLORS.primary }}
                 onClick={() => setIsMenuOpen(false)}
               >
                 About Us

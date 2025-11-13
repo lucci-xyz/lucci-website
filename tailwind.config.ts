@@ -4,7 +4,7 @@ export default {
   content: [
     './app/**/*.{ts,tsx,mdx}',
     './components/**/*.{ts,tsx}',
-    './data/**/*.json',
+    './lib/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
