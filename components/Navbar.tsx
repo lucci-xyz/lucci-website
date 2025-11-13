@@ -15,9 +15,9 @@ export default function Navbar({ aboutUsTextColor }: NavbarProps) {
   const buttonTextColor = aboutUsTextColor || (pathname === '/' ? COLORS.backgroundMint : COLORS.white)
 
   return (
-    <div className="z-50 bg-transparent animate-fade-in-up">
+    <div className="z-50 bg-transparent animate-fade-in-up w-full max-w-[100vw]">
       <Container>
-        <nav className="flex h-20 items-center justify-between">
+        <nav className="flex h-20 items-center justify-between w-full">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl font-normal" style={{ color: COLORS.primary }}>Lucci</span>
           </Link>
@@ -57,8 +57,8 @@ export default function Navbar({ aboutUsTextColor }: NavbarProps) {
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t" style={{ borderColor: `${COLORS.primary}1A` }}>
-            <div className="flex flex-col gap-4 text-sm">
+          <div className="md:hidden py-4 border-t w-full max-w-[100vw]" style={{ borderColor: `${COLORS.primary}1A` }}>
+            <div className="flex flex-col gap-4 text-sm w-full">
               {MAIN_NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}

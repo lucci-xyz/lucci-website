@@ -7,5 +7,5 @@ import { PropsWithChildren } from 'react'
  * @param children - React children to be wrapped in the section
  */
 export default function Section({ children }: PropsWithChildren) {
-  return <section className="py-8 lg:py-12">{children}</section>
+  return <section style={{ paddingTop: 'var(--section-spacing)', paddingBottom: 'var(--section-spacing)' }}>{children}</section>
 }
