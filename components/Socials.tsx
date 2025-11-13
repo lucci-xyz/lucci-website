@@ -3,7 +3,7 @@ import { COLORS } from '@/lib/constants/theme'
 
 /**
  * Social media links component
- * Displays social media icons with gradient line separator
+ * Displays social media icons
  */
 export default function Socials() {
 
@@ -24,16 +24,6 @@ export default function Socials() {
             {social.icon}
           </a>
         ))}
-      </div>
-      
-      {/* Gradient Line */}
-      <div className="w-full max-w-2xl">
-        <div 
-          className="h-1 rounded-full" 
-          style={{
-            background: 'linear-gradient(to right, #1F807B, #3D9D98, #63BBB6, #9DEBE7, #CCFFF8)'
-          }}
-        />
       </div>
     </div>
   )

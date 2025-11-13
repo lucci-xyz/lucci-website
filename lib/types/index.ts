@@ -17,6 +17,7 @@ export interface TeamMember {
   readonly name: string
   readonly email: string
   readonly github: string
+  readonly image: string
 }
 
 // Product types
