@@ -2,21 +2,10 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Container from '@/components/Container'
 import Section from '@/components/Section'
+import { TEAM_MEMBERS } from '@/lib/data/team'
+import { COLORS } from '@/lib/constants/theme'
 
 export const metadata = { title: 'Team — Lucci' }
-
-const teamMembers = [
-  {
-    name: 'Natalie',
-    email: 'natalie@luccilabs.xyz',
-    github: 'https://github.com/natalie-a-1/'
-  },
-  {
-    name: 'Preston',
-    email: 'preston@luccilabs.xyz',
-    github: 'https://github.com/pdj555'
-  }
-] as const
 
 export default function TeamPage() {
   return (
@@ -43,7 +32,7 @@ export default function TeamPage() {
       <Container>
         <Section>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {teamMembers.map((member) => (
+            {TEAM_MEMBERS.map((member) => (
               <div
                 key={member.name}
                 className="rounded-2xl border border-black/5 p-8 bg-white hover:border-black/10 transition-all"
@@ -98,7 +87,7 @@ export default function TeamPage() {
           </div>
         </Section>
       </Container>
-      <Footer bgColor="white" />
+      <Footer bgColor={COLORS.white} />
     </>
   )
 }

@@ -2,6 +2,12 @@
 
 import { useEffect } from 'react'
 
+/**
+ * ScrollAnimations component that handles intersection observer for scroll-triggered animations
+ * Automatically adds 'in-view' class to elements with 'animate-on-scroll' class when they enter viewport
+ * 
+ * This component doesn't render anything visible - it only sets up the animation observers
+ */
 export default function ScrollAnimations() {
   useEffect(() => {
     const observerOptions = {
