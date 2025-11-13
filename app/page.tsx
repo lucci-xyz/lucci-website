@@ -45,9 +45,8 @@ export default function HomePage() {
             </div>
           </div>
         </Container>
+        <Footer />
       </div>
-
-      <Footer />
     </>
   )
 }
