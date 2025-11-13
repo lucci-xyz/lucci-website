@@ -43,11 +43,11 @@ export default function ProductsPage() {
         </Container>
         
         {/* Secondary Hero Section */}
-        <div className="w-full max-w-[100vw]" style={{ backgroundColor: COLORS.primary }}>
+        <div className="w-full max-w-[100vw]" style={{ backgroundColor: COLORS.backgroundMint }}>
           <Container>
             <Section>
               <div className="text-center max-w-5xl lg:max-w-6xl mx-auto py-12 sm:py-14 md:py-16 lg:py-16">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extralight leading-tight lg:leading-snug tracking-normal animate-fade-in-up text-white" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extralight leading-tight lg:leading-snug tracking-normal animate-fade-in-up" style={{ fontFamily: 'Georgia, "Times New Roman", serif', color: COLORS.primary }}>
                   We believe shipping should be seamless, visible, and rewarded. Connect your team's Github today to get started!
                 </h2>
               </div>
