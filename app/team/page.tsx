@@ -19,10 +19,10 @@ export default function TeamPage() {
           <Container>
           <Section>
             <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl md:text-5xl font-light tracking-wide text-ink animate-fade-in-up">
-                Meet the <span className="text-transparent bg-clip-text bg-gradient-to-r from-bounty via-bounty-light to-bounty-lighter font-normal">Team</span>
+              <h1 className="text-4xl md:text-5xl font-light tracking-wide animate-fade-in-up" style={{ color: COLORS.primary }}>
+                Meet the Team
               </h1>
-              <p className="mt-6 text-base md:text-lg text-ink/60 font-light leading-relaxed animate-fade-in-up delay-200">
+              <p className="mt-6 text-base md:text-lg font-light leading-relaxed animate-fade-in-up delay-200" style={{ color: COLORS.primary }}>
                 Building the economic layer for open source
               </p>
             </div>
