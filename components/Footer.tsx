@@ -9,10 +9,10 @@ import type { FooterProps } from '@/lib/types'
  */
 export default function Footer({ bgColor = COLORS.backgroundMint }: FooterProps) {
   return (
-    <footer className="mt-8" style={{ backgroundColor: bgColor, borderColor: `${COLORS.primary}1A` }}>
+    <footer className="mt-8 w-full max-w-[100vw]" style={{ backgroundColor: bgColor, borderColor: `${COLORS.primary}1A` }}>
       <Container>
         <Socials />
-        <div className="py-10 text-sm text-center" style={{ color: COLORS.primary }}>
+        <div className="py-10 text-sm text-center w-full" style={{ color: COLORS.primary }}>
           <p>© {new Date().getFullYear()} Lucci. The economic layer for open source.</p>
         </div>
       </Container>

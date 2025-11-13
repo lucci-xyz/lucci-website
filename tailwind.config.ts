@@ -44,7 +44,14 @@ export default {
         'hero-gradient':
           'radial-gradient(1200px 600px at 80% -10%, rgba(109,138,255,0.20), transparent), radial-gradient(800px 400px at 10% 0%, rgba(176,132,255,0.18), transparent)'
       },
-      borderRadius: { xl: '0.75rem', '2xl': '1rem' }
+      borderRadius: { xl: '0.75rem', '2xl': '1rem' },
+      spacing: {
+        'fluid-xs': 'clamp(0.25rem, 0.5vw, 0.5rem)',
+        'fluid-sm': 'clamp(0.5rem, 1vw, 1rem)',
+        'fluid-md': 'clamp(1rem, 2vw, 2rem)',
+        'fluid-lg': 'clamp(1.5rem, 3vw, 3rem)',
+        'fluid-xl': 'clamp(2rem, 4vw, 4rem)',
+      }
     }
   },
   plugins: [require('@tailwindcss/typography')]

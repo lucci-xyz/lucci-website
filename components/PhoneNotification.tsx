@@ -22,7 +22,7 @@ export default function PhoneNotification() {
   }, [])
 
   return (
-    <div className="relative w-full max-w-md">
+    <div className="relative w-full">
       {/* Spotlight glow effect */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center -z-10">
         <div className="h-64 w-64 rounded-full bg-cyan-500/8 blur-3xl" />
@@ -36,14 +36,14 @@ export default function PhoneNotification() {
               role="alert"
               aria-live="polite"
               className={[
-                "absolute top-0 left-0 w-full rounded-3xl border border-black/5 bg-white backdrop-blur-sm",
-                "p-6 transition-all duration-700 ease-in-out",
+                "absolute top-0 left-0 w-full rounded-2xl sm:rounded-3xl border border-black/5 bg-white backdrop-blur-sm",
+                "p-3 sm:p-4 md:p-5 lg:p-6 transition-all duration-700 ease-in-out",
                 currentIndex === index ? "opacity-100 scale-100" : "opacity-0 scale-95"
               ].join(' ')}
               style={{ boxShadow: SHADOWS.notification }}
             >
-              <div className="mb-3 flex items-center gap-4">
-                <div className={`flex h-14 w-14 items-center justify-center rounded-xl ${notification.bgColor} ${notification.iconSize} ${notification.bgColor === 'bg-white' ? 'shadow-[0_4px_12px_rgba(0,0,0,0.15),0_2px_4px_rgba(0,0,0,0.1)]' : 'shadow-lg'} overflow-hidden`}>
+              <div className="mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3 md:gap-4">
+                <div className={`flex h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 items-center justify-center rounded-lg sm:rounded-xl ${notification.bgColor} ${notification.iconSize} ${notification.bgColor === 'bg-white' ? 'shadow-[0_4px_12px_rgba(0,0,0,0.15),0_2px_4px_rgba(0,0,0,0.1)]' : 'shadow-lg'} overflow-hidden flex-shrink-0`}>
                   <img 
                     src={notification.icon} 
                     alt={notification.platform}
@@ -51,34 +51,34 @@ export default function PhoneNotification() {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{notification.platform} • now</span>
+                  <div className="flex items-baseline gap-1 sm:gap-2 mb-0.5 sm:mb-1">
+                    <span className="text-[10px] sm:text-xs font-medium text-gray-400 uppercase tracking-wide">{notification.platform} • now</span>
                   </div>
-                  <p className="line-clamp-2 text-lg leading-snug font-semibold text-gray-900">
+                  <p className="line-clamp-2 text-sm sm:text-base md:text-lg leading-snug font-semibold text-gray-900">
                     {notification.from} just paid you {notification.amount}
                   </p>
                 </div>
               </div>
-              <div className="text-sm text-gray-500 pl-[4.5rem]">
+              <div className="text-xs sm:text-sm text-gray-500 pl-12 sm:pl-[3.75rem] md:pl-[4.5rem]">
                 {notification.detail}
               </div>
               
               {/* Subtle accent border */}
-              <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-cyan-500/10" />
+              <div className="pointer-events-none absolute inset-0 rounded-2xl sm:rounded-3xl ring-1 ring-inset ring-cyan-500/10" />
             </div>
           )
         })}
         
         {/* Invisible spacer to maintain height */}
-        <div className="invisible rounded-3xl p-6">
-          <div className="mb-3 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-xl" />
+        <div className="invisible rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 lg:p-6">
+          <div className="mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3 md:gap-4">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-lg sm:rounded-xl flex-shrink-0" />
             <div className="flex-1">
-              <div className="h-3 mb-1" />
-              <div className="h-5" />
+              <div className="h-3 mb-0.5 sm:mb-1" />
+              <div className="h-4 sm:h-5" />
             </div>
           </div>
-          <div className="h-4 pl-[4.5rem]" />
+          <div className="h-3 sm:h-4 pl-12 sm:pl-[3.75rem] md:pl-[4.5rem]" />
         </div>
       </div>
 

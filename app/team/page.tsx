@@ -10,11 +10,12 @@ export const metadata = { title: 'Team — Lucci' }
 export default function TeamPage() {
   return (
     <>
-      <Navbar />
+      <div className="w-full max-w-[100vw] overflow-x-hidden">
+        <Navbar />
 
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-50/50 via-white to-white">
-        <Container>
+        {/* Hero Section */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-blue-50/50 via-white to-white w-full">
+          <Container>
           <Section>
             <div className="text-center max-w-3xl mx-auto">
               <h1 className="text-4xl md:text-5xl font-light tracking-wide text-ink">
@@ -26,19 +27,19 @@ export default function TeamPage() {
             </div>
           </Section>
         </Container>
-      </div>
+        </div>
 
-      {/* Team Members */}
-      <Container>
-        <Section>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {TEAM_MEMBERS.map((member) => (
-              <div
-                key={member.name}
-                className="rounded-2xl border border-black/5 p-8 bg-white hover:border-black/10 transition-all"
-              >
-                <h3 className="text-2xl font-light text-ink mb-4">{member.name}</h3>
-                <div className="space-y-2 text-sm text-ink/60">
+        {/* Team Members */}
+        <Container>
+          <Section>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full">
+              {TEAM_MEMBERS.map((member) => (
+                <div
+                  key={member.name}
+                  className="rounded-xl sm:rounded-2xl border border-black/5 p-4 sm:p-6 md:p-8 bg-white hover:border-black/10 transition-all w-full"
+                >
+                <h3 className="text-xl sm:text-2xl font-light text-ink mb-3 sm:mb-4">{member.name}</h3>
+                <div className="space-y-2 text-xs sm:text-sm text-ink/60">
                   <div className="flex items-center gap-2">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
@@ -64,30 +65,31 @@ export default function TeamPage() {
               </div>
             ))}
           </div>
-        </Section>
-      </Container>
+          </Section>
+        </Container>
 
-      {/* Contact Section */}
-      <Container>
-        <Section>
-          <div className="rounded-2xl border border-black/5 p-8 bg-white text-center">
-            <h2 className="text-2xl font-light text-ink mb-4">Get in Touch</h2>
-            <p className="text-ink/60 mb-6 font-light">
+        {/* Contact Section */}
+        <Container>
+          <Section>
+            <div className="rounded-xl sm:rounded-2xl border border-black/5 p-4 sm:p-6 md:p-8 bg-white text-center w-full">
+              <h2 className="text-xl sm:text-2xl font-light text-ink mb-3 sm:mb-4">Get in Touch</h2>
+              <p className="text-sm sm:text-base text-ink/60 mb-4 sm:mb-6 font-light">
               Have questions or want to collaborate? Reach out to us.
             </p>
             <a
               href="mailto:contact@luccilabs.xyz"
-              className="inline-flex items-center gap-2 text-ink/70 hover:text-ink transition"
+              className="inline-flex items-center gap-2 text-sm sm:text-base text-ink/70 hover:text-ink transition"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>
               contact@luccilabs.xyz
             </a>
           </div>
-        </Section>
-      </Container>
-      <Footer bgColor={COLORS.white} />
+          </Section>
+        </Container>
+        <Footer bgColor={COLORS.white} />
+      </div>
     </>
   )
 }

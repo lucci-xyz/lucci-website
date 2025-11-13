@@ -8,12 +8,12 @@ import { COLORS } from '@/lib/constants/theme'
 export default function HomePage() {
   return (
     <>
-      <div className="relative min-h-screen flex flex-col" style={{ backgroundColor: COLORS.backgroundMint }}>
+      <div className="relative min-h-screen flex flex-col w-full max-w-[100vw] overflow-x-hidden" style={{ backgroundColor: COLORS.backgroundMint }}>
         <Navbar />
         <Container>
-          <div className="flex-1 flex items-center pt-20 pb-12 lg:pt-24 lg:pb-20">
+          <div className="flex-1 flex items-center pt-20 pb-12 lg:pt-24 lg:pb-20 w-full">
             <div className="w-full">
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12 lg:gap-16 w-full">
                 <div className="flex-1 lg:pr-8">
                   <h1 className="text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-light leading-tight animate-fade-in-up" style={{ color: COLORS.primary }}>
                     Powering the Next Generation of Builders
@@ -31,13 +31,13 @@ export default function HomePage() {
                     </Link>
                   </div>
                 </div>
-                <div className="flex-shrink-0 animate-slide-up delay-300">
+                <div className="flex-shrink-0 animate-slide-up delay-300 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] lg:max-w-[460px] xl:max-w-[520px]">
                   <Image
                     src="/og.png"
                     alt="Lucci"
                     width={500}
                     height={500}
-                    className="w-[320px] md:w-[400px] lg:w-[460px] xl:w-[520px] animate-float-glow"
+                    className="w-full h-auto animate-float-glow"
                     priority
                   />
                 </div>
