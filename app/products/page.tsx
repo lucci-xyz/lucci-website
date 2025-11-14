@@ -83,7 +83,7 @@ export default function ProductsPage() {
                   </p>
                   <div className="flex justify-center lg:justify-start">
                     <Link 
-                      href="/team"
+                      href="https://bounty.luccilabs.xyz"
                       className="inline-flex items-center gap-2 rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-normal transition-all hover:opacity-90"
                       style={{ backgroundColor: COLORS.primary, color: COLORS.white }}
                     >
