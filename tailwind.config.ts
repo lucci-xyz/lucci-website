@@ -40,6 +40,10 @@ export default {
         ink: '#0A0A0A',
         mute: '#6B7280'
       },
+      fontFamily: {
+        sans: ["Georgia", "Times New Roman", "serif"],
+        serif: ["Georgia", "Times New Roman", "serif"],
+      },
       backgroundImage: {
         'hero-gradient':
           'radial-gradient(1200px 600px at 80% -10%, rgba(109,138,255,0.20), transparent), radial-gradient(800px 400px at 10% 0%, rgba(176,132,255,0.18), transparent)'
