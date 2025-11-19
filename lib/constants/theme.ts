@@ -45,7 +45,7 @@ export const COLORS = {
 // Typography
 export const TYPOGRAPHY = {
   fontFamily: {
-    sans: ['Inter', 'system-ui', 'sans-serif'],
+    sans: ['Georgia', 'Times New Roman', 'serif'],
     serif: ['Georgia', 'Times New Roman', 'serif'],
   },
   fontSize: {
