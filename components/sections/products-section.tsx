@@ -67,6 +67,8 @@ export function ProductsSection({ scrollToSection }: ProductsSectionProps) {
               }`}
               style={{ 
                 transitionDelay: `${300 + index * 150}ms`,
+                marginLeft: product.marginLeft,
+                width: product.width,
               }}
             >
               <div 
