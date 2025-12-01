@@ -33,9 +33,9 @@ export default function PilotTimeline() {
         <div className="h-48 w-48 rounded-full bg-teal-500/8 blur-3xl" />
       </div>
 
-      <div className="relative rounded-xl sm:rounded-2xl border border-black/5 bg-white backdrop-blur-sm shadow-[0_16px_48px_-8px_rgba(0,0,0,0.28),0_8px_24px_-6px_rgba(0,0,0,0.16),0_0_0_1px_rgba(0,0,0,0.05)] p-3 sm:p-4">
+      <div className="relative rounded-xl sm:rounded-2xl border border-white/20 bg-white backdrop-blur-sm shadow-[0_16px_48px_-8px_rgba(0,0,0,0.28),0_8px_24px_-6px_rgba(0,0,0,0.16),0_0_0_1px_rgba(255,255,255,0.1)] p-3 sm:p-4">
         {/* Header */}
-        <div className="mb-3 sm:mb-4 pb-2 sm:pb-3 border-b border-gray-100">
+        <div className="mb-3 sm:mb-4 pb-2 sm:pb-3 border-b border-white/20">
           <div className="flex items-center gap-1.5 sm:gap-2">
             <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center flex-shrink-0">
               <img 

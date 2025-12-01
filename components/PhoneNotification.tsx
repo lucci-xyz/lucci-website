@@ -36,7 +36,7 @@ export default function PhoneNotification() {
               role="alert"
               aria-live="polite"
               className={[
-                "absolute top-0 left-0 w-full rounded-2xl sm:rounded-3xl border border-black/5 bg-white backdrop-blur-sm",
+                "absolute top-0 left-0 w-full rounded-2xl sm:rounded-3xl border border-white/20 bg-white backdrop-blur-sm",
                 "p-3 sm:p-4 md:p-5 lg:p-6 transition-all duration-700 ease-in-out",
                 currentIndex === index ? "opacity-100 scale-100" : "opacity-0 scale-95"
               ].join(' ')}
