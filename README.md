@@ -7,73 +7,62 @@ The official website for Lucci - The Economic Layer for Open Source.
 ```
 lucci-website/
 ├── app/                    # Next.js App Router pages
-│   ├── products/          # Products showcase page
+│   ├── Work/          # Work showcase page
 │   ├── team/              # Team page
 │   ├── globals.css        # Global styles and animations
 │   ├── layout.tsx         # Root layout component
 │   └── page.tsx           # Homepage
 ├── components/            # Reusable React components
-│   ├── Container.tsx      # Layout container with max-width
-│   ├── Footer.tsx         # Site footer with social links
-│   ├── Navbar.tsx         # Main navigation component
-│   ├── PhoneNotification.tsx  # Animated notification demo
-│   ├── PilotTimeline.tsx  # Animated timeline demo
-│   ├── ScrollAnimations.tsx   # Scroll-triggered animations
-│   ├── Section.tsx        # Section wrapper with spacing
-│   └── Socials.tsx        # Social media links
+│   ├── custom-cursor.tsx  # Custom cursor component
+│   ├── grain-overlay.tsx  # Grain texture overlay
+│   ├── magnetic-button.tsx # Magnetic button interaction
+│   └── sections/          # Page sections
+│       ├── about-section.tsx
+│       ├── capabilities-section.tsx
+│       ├── contact-section.tsx
+│       ├── products-section.tsx
+│       └── team-section.tsx
+├── hooks/                 # React hooks
+│   └── use-reveal.ts      # Scroll reveal hook
 ├── lib/                   # Utilities and configuration
-│   ├── constants/         # Design system and configuration
-│   │   ├── navigation.ts  # Navigation structure
-│   │   ├── social.tsx     # Social media links
-│   │   └── theme.ts       # Design tokens and colors
+│   ├── constants/         # Configuration
+│   │   └── social.tsx     # Social media links
 │   ├── data/              # Static data and content
-│   │   ├── notifications.ts   # Mock notification data
-│   │   ├── products.ts    # Product information
-│   │   ├── team.ts        # Team member information
-│   │   └── timeline.tsx   # Mock timeline activities
-│   ├── types/             # TypeScript type definitions
-│   │   └── index.ts       # Global type definitions
-│   └── utils/             # Utility functions
-│       └── index.ts       # Utility functions
+│   │   └── team.ts        # Team member information
+│   └── types/             # TypeScript type definitions
+│       └── index.ts       # Global type definitions
 └── public/                # Static assets
-    ├── ethereum.svg       # Ethereum logo
-    ├── mezo.svg          # Mezo logo
+    ├── nat-profile.png    # Team member photo
     ├── og.png            # Open Graph image
-    └── uniswap.svg       # Uniswap logo
+    └── preston-profile.jpg # Team member photo
 ```
 
 ## 🎨 Design System
 
-The project uses a centralized design system located in `lib/constants/theme.ts`:
+The project uses Tailwind CSS with custom CSS variables defined in `app/globals.css`:
 
 ### Colors
-- **Primary**: `#00827B` (Teal)
-- **Background Mint**: `#83EEE8` (Light mint)
-- **Background Light**: `#D4F6F4` (Very light mint)
-- **Text colors**: Various shades for hierarchy
+- Uses CSS custom properties (oklch color space) for theming
+- Accent color: Teal (`oklch(0.72 0.10 175)`)
+- Dark background theme with high contrast
 
 ### Typography
-- **Font Family**: Inter (sans-serif), Georgia (serif for special cases)
-- **Font Sizes**: Responsive scale from xs to 7xl
-
-### Spacing & Layout
-- **Container**: Max-width of 7xl with responsive padding
-- **Sections**: Consistent vertical spacing (py-8 lg:py-12)
-- **Border Radius**: Consistent rounded corners
+- **Font Family**: Geist Sans (primary), Geist Mono (monospace)
+- Responsive typography using Tailwind utilities
 
 ## 🧩 Components
 
-### Layout Components
-- **Container**: Provides consistent max-width and horizontal padding
-- **Section**: Adds consistent vertical spacing between content sections
-- **Navbar**: Responsive navigation with mobile hamburger menu
-- **Footer**: Site footer with social links and copyright
+### Core Components
+- **CustomCursor**: Custom cursor with magnetic effect
+- **GrainOverlay**: Subtle grain texture overlay
+- **MagneticButton**: Button with magnetic hover effect
 
-### Interactive Components
-- **PhoneNotification**: Animated notification carousel showing payment demos
-- **PilotTimeline**: Animated timeline showing AI agent activities
-- **ScrollAnimations**: Intersection observer for scroll-triggered animations
-- **Socials**: Social media links with icons
+### Section Components
+- **AboutSection**: Company information and stats
+- **CapabilitiesSection**: Focus areas and capabilities
+- **ContactSection**: Contact form and information
+- **ProductsSection**: Featured work/products
+- **TeamSection**: Team member profiles
 
 ## 📱 Responsive Design
 
@@ -85,14 +74,14 @@ The website is fully responsive with breakpoints:
 ## 🎭 Animations
 
 ### CSS Animations (in globals.css)
-- `animate-fade-in-up`: Fade in with upward motion
-- `animate-slide-up`: Slide up from bottom
-- `animate-float-glow`: Floating animation with glow effect
-- `animate-slide-in-left/right`: Slide in from sides
+- `animate-in`: Base animation utility
+- `fade-in`: Fade in animation
+- `slide-in-from-bottom-4/8`: Slide up animations
+- Delay utilities: `delay-100` through `delay-500`
 
 ### Scroll Animations
-- Elements with `animate-on-scroll` class trigger when entering viewport
-- Managed by `ScrollAnimations` component using Intersection Observer
+- Uses `use-reveal` hook for scroll-triggered animations
+- Components reveal when entering viewport with smooth transitions
 
 ## 🛠️ Development
 
@@ -110,21 +99,30 @@ npm run dev
 
 ### Code Organization
 - **Types**: All TypeScript interfaces in `lib/types/`
-- **Constants**: Design tokens and configuration in `lib/constants/`
+- **Constants**: Configuration in `lib/constants/`
 - **Data**: Static content in `lib/data/`
-- **Components**: Reusable UI components with JSDoc documentation
+- **Components**: Reusable UI components organized by feature
+- **Hooks**: Custom React hooks in `hooks/`
 
 ## 📄 Pages
 
 ### Homepage (`/`)
+- Horizontal scroll sections with shader background
 - Hero section with main value proposition
-- Animated product showcase
-- Mint green theme with floating logo
+- Featured work/products section
+- Capabilities/focus section
+- About section with stats
+- Contact section with form
 
 ### Products (`/products`)
-- Detailed product information
-- Interactive demos (notifications, timeline)
-- BountyPay and Pilot product cards
+- Featured work showcase
+- BountyPay, Pilot, and Orbit products
+- Stair-step layout design
+
+### Team (`/team`)
+- Team member profiles
+- Contact form
+- Dark theme with gradient background
 
 ### Team (`/team`)
 - Team member profiles
@@ -134,11 +132,12 @@ npm run dev
 ## 🎯 Key Features
 
 1. **Responsive Design**: Mobile-first approach with Tailwind CSS
-2. **Smooth Animations**: CSS animations and scroll-triggered effects
+2. **Smooth Animations**: CSS animations and scroll-triggered reveal effects
 3. **Type Safety**: Comprehensive TypeScript types
-4. **Design System**: Centralized theme tokens and reusable styles
-5. **Performance**: Next.js App Router with optimized images
-6. **Accessibility**: Semantic HTML and ARIA labels
+4. **Custom Cursor**: Interactive cursor with magnetic effects
+5. **Shader Backgrounds**: Dynamic shader effects using shaders/react
+6. **Performance**: Next.js App Router with optimized images
+7. **Accessibility**: Semantic HTML and ARIA labels
 
 ## 🔧 Technical Stack
 
@@ -151,11 +150,8 @@ npm run dev
 ## 📝 Content Management
 
 - **Team Data**: Managed in `lib/data/team.ts`
-- **Products**: Managed in `lib/data/products.ts`
-- **Notifications**: Mock data in `lib/data/notifications.ts`
-- **Timeline**: Mock data in `lib/data/timeline.tsx`
-- **Navigation**: Configured in `lib/constants/navigation.ts`
 - **Social Links**: Managed in `lib/constants/social.tsx`
+- **Product Data**: Hardcoded in component files (products-section.tsx, products/page.tsx)
 
 ## 🚀 Deployment
 

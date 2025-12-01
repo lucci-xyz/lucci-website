@@ -1,26 +1,42 @@
-import type { Metadata } from 'next'
-import { Analytics } from '@vercel/analytics/react'
-import './globals.css'
+import type React from "react"
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
+import "./globals.css"
+
+const geist = Geist({ 
+  subsets: ["latin"],
+  variable: "--font-geist-sans"
+})
+const geistMono = Geist_Mono({ 
+  subsets: ["latin"],
+  variable: "--font-geist-mono"
+})
 
 export const metadata: Metadata = {
-  title: 'Lucci — The Economic Layer for Open Source',
-  description: 'The economic layer for open source. Pay contributors in stablecoins with BountyPay and automate everything outside the repo with Pilot.',
+  title: "Lucci — The Economic Layer for Open Source",
+  description: "Powering the next generation of builders with autonomous payouts and operations for open source developers.",
   openGraph: {
-    title: 'Lucci — The Economic Layer for Open Source',
-    description: 'The economic layer for open source. Pay contributors in stablecoins with BountyPay and automate everything outside the repo with Pilot.',
-    images: ['/og.png']
+    title: "Lucci — The Economic Layer for Open Source",
+    description: "Powering the next generation of builders with autonomous payouts and operations for open source developers.",
+    images: ["/og.png"],
   },
-  icons: { icon: '/og.png' }
+  twitter: {
+    card: "summary_large_image",
+    title: "Lucci — The Economic Layer for Open Source",
+    description: "Powering the next generation of builders with autonomous payouts and operations for open source developers.",
+    images: ["/og.png"],
+  },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   return (
     <html lang="en">
-      <body className="font-sans text-ink antialiased bg-white overflow-x-hidden">
-        <div className="min-h-screen flex flex-col w-full max-w-[100vw]">
-          {children}
-        </div>
-        <Analytics />
+      <body className={`${geist.variable} ${geistMono.variable} font-sans antialiased`}>
+        {children}
       </body>
     </html>
   )

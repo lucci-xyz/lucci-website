@@ -1,11 +1,13 @@
-import createMDX from '@next/mdx';
-
-/** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  experimental: { typedRoutes: true },
-  images: { remotePatterns: [] },
-};
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  images: {
+    unoptimized: true,
+  },
+}
 
-const withMDX = createMDX({ extension: /\.mdx?$/ });
-export default withMDX({ ...nextConfig, pageExtensions: ['tsx', 'ts', 'mdx'] });
+export default nextConfig

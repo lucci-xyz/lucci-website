@@ -2,101 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Layout constraints */
-  --page-max-width: 1280px;
-  --page-padding: clamp(1rem, 4vw, 3rem);
-  --section-spacing: clamp(2rem, 6vw, 6rem);
-  
-  /* Typography fluid scaling */
-  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
-  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
-  --text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.875rem);
-  --text-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
-  --text-3xl: clamp(1.875rem, 1.5rem + 1.875vw, 3rem);
-  --text-4xl: clamp(2.25rem, 1.8rem + 2.25vw, 3.75rem);
-  --text-5xl: clamp(3rem, 2.5rem + 2.5vw, 4.5rem);
+@layer base {
+  :root {
+    --font-sans: "Geist", "Geist Fallback", system-ui, sans-serif;
+    --font-mono: "Geist Mono", "Geist Mono Fallback", monospace;
+    
+    /* Lucci Dark Teal Theme - Better Contrast */
+    --color-background: oklch(0.08 0.02 180);
+    --color-foreground: oklch(0.95 0 0);
+    --color-card: oklch(0.12 0.02 180);
+    --color-card-foreground: oklch(0.95 0 0);
+    --color-popover: oklch(0.12 0.02 180);
+    --color-popover-foreground: oklch(0.95 0 0);
+    --color-primary: oklch(0.65 0.12 175);
+    --color-primary-foreground: oklch(0.08 0.02 180);
+    --color-secondary: oklch(0.18 0.02 180);
+    --color-secondary-foreground: oklch(0.95 0 0);
+    --color-muted: oklch(0.20 0.02 180);
+    --color-muted-foreground: oklch(0.70 0.03 180);
+    --color-accent: oklch(0.72 0.10 175);
+    --color-accent-foreground: oklch(0.08 0.02 180);
+    --color-destructive: oklch(0.577 0.245 27.325);
+    --color-destructive-foreground: oklch(0.95 0 0);
+    --color-border: oklch(0.22 0.02 180);
+    --color-input: oklch(0.22 0.02 180);
+    --color-ring: oklch(0.65 0.12 175);
+    --color-chart-1: oklch(0.65 0.12 175);
+    --color-chart-2: oklch(0.72 0.10 175);
+    --color-chart-3: oklch(0.6 0.15 280);
+    --color-chart-4: oklch(0.7 0.2 30);
+    --color-chart-5: oklch(0.55 0.18 200);
+    --radius-sm: calc(0.75rem - 4px);
+    --radius-md: calc(0.75rem - 2px);
+    --radius-lg: 0.75rem;
+    --radius-xl: calc(0.75rem + 4px);
+  }
 }
 
+/* Custom cursor - hide default */
 * {
-  box-sizing: border-box;
-}
-
-html {
-  overflow-x: hidden;
+  cursor: none !important;
+  border-color: var(--color-border);
 }
 
 body {
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
 
-@keyframes breathe {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
+/* Scroll container smooth scrolling */
+[data-scroll-container] {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
-.animate-breathe {
-  animation: breathe 3s ease-in-out infinite;
+section {
+  transform: translateZ(0);
+  will-change: transform;
+  contain: layout style paint;
 }
 
-@keyframes slide-in {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+button {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-.animate-slide-in {
-  animation: slide-in 0.5s ease-out;
+/* Hide scrollbars */
+div::-webkit-scrollbar {
+  display: none;
 }
 
-/* Homepage animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-@keyframes slideUpFromBottom {
-  from {
-    opacity: 0;
-    transform: translateY(100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 1s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-slide-up {
-  animation: slideUpFromBottom 1.2s ease-out forwards;
-  opacity: 0;
-}
-
+/* Animation utilities */
 .delay-100 {
   animation-delay: 0.1s;
 }
@@ -117,133 +101,39 @@ body {
   animation-delay: 0.5s;
 }
 
-/* Floating glow animation for homepage image */
-@keyframes floatGlow {
-  0%, 100% {
-    transform: translateY(0px);
-    filter: drop-shadow(0 10px 30px rgba(0, 130, 123, 0.3));
-  }
-  50% {
-    transform: translateY(-15px);
-    filter: drop-shadow(0 20px 40px rgba(0, 130, 123, 0.5));
-  }
+/* Animate-in utilities */
+.animate-in {
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
 }
 
-.animate-float-glow {
-  animation: floatGlow 4s ease-in-out infinite;
+.fade-in {
+  animation-name: fadeIn;
 }
 
-/* Product card slide animations */
-@keyframes slideInFromLeft {
+.slide-in-from-bottom-4 {
+  --tw-translate-y: 1rem;
+}
+
+.slide-in-from-bottom-8 {
+  --tw-translate-y: 1.5rem;
+}
+
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateX(-100px);
+    transform: translateY(var(--tw-translate-y, 0));
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
-@keyframes slideInFromRight {
-  from {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.duration-700 {
+  animation-duration: 700ms;
 }
 
-.animate-slide-in-left {
-  animation: slideInFromLeft 1s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-slide-in-right {
-  animation: slideInFromRight 1s ease-out forwards;
-  opacity: 0;
-}
-
-/* Scroll-triggered animations */
-.animate-on-scroll {
-  opacity: 0;
-  transition: all 0.6s ease-out;
-}
-
-.animate-on-scroll.animate-slide-in-left-scroll {
-  transform: translateX(-100px);
-}
-
-.animate-on-scroll.animate-slide-in-right-scroll {
-  transform: translateX(100px);
-}
-
-.animate-on-scroll.in-view {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* Code block syntax highlighting - IDE style with light background */
-.prose pre {
-  @apply bg-gray-50 text-gray-900 border border-gray-200;
-}
-
-.prose pre code {
-  @apply bg-transparent text-sm;
-}
-
-/* Syntax highlighting colors */
-.prose pre code .token.comment,
-.prose pre code .token.prolog,
-.prose pre code .token.doctype,
-.prose pre code .token.cdata {
-  @apply text-gray-500;
-}
-
-.prose pre code .token.punctuation {
-  @apply text-gray-700;
-}
-
-.prose pre code .token.property,
-.prose pre code .token.tag,
-.prose pre code .token.boolean,
-.prose pre code .token.number,
-.prose pre code .token.constant,
-.prose pre code .token.symbol {
-  @apply text-blue-600;
-}
-
-.prose pre code .token.selector,
-.prose pre code .token.attr-name,
-.prose pre code .token.string,
-.prose pre code .token.char,
-.prose pre code .token.builtin {
-  @apply text-green-600;
-}
-
-.prose pre code .token.operator,
-.prose pre code .token.entity,
-.prose pre code .token.url,
-.prose pre code .token.variable {
-  @apply text-orange-600;
-}
-
-.prose pre code .token.atrule,
-.prose pre code .token.attr-value,
-.prose pre code .token.keyword,
-.prose pre code .token.function,
-.prose pre code .token.class-name {
-  @apply text-purple-600;
-}
-
-.prose pre code .token.regex,
-.prose pre code .token.important {
-  @apply text-red-600;
-}
-
-/* Inline code */
-.prose code {
-  @apply bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded;
+.duration-1000 {
+  animation-duration: 1000ms;
 }
