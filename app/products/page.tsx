@@ -100,10 +100,10 @@ export default function ProductsPage() {
             <span className="absolute -bottom-1 left-0 h-px w-0 bg-white transition-all duration-300 group-hover:w-full" />
           </Link>
           <Link
-            href="/products"
+            href="/Work"
             className="group relative font-sans text-sm font-medium text-white"
           >
-            Products
+            Work
             <span className="absolute -bottom-1 left-0 h-px w-full bg-white" />
           </Link>
         </div>
@@ -114,7 +114,7 @@ export default function ProductsPage() {
             size="lg"
             className="border-none bg-white/25 text-white hover:bg-white/35"
           >
-            Get in Touch
+            Get Started
           </MagneticButton>
         </Link>
       </nav>
@@ -124,7 +124,7 @@ export default function ProductsPage() {
         {/* Hero Title */}
         <div className="mb-16 md:mb-24">
           <h1 className="mb-4 animate-in fade-in slide-in-from-bottom-8 font-sans text-6xl font-extralight tracking-tight text-white duration-1000 md:text-7xl lg:text-8xl">
-            Products
+            Work
           </h1>
           <p className="animate-in fade-in slide-in-from-bottom-4 font-mono text-sm tracking-wide text-white/60 duration-1000 delay-200">
             / Our explorations

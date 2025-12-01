@@ -7,7 +7,7 @@ The official website for Lucci - The Economic Layer for Open Source.
 ```
 lucci-website/
 ├── app/                    # Next.js App Router pages
-│   ├── products/          # Products showcase page
+│   ├── Work/          # Work showcase page
 │   ├── team/              # Team page
 │   ├── globals.css        # Global styles and animations
 │   ├── layout.tsx         # Root layout component
@@ -28,7 +28,7 @@ lucci-website/
 │   │   └── theme.ts       # Design tokens and colors
 │   ├── data/              # Static data and content
 │   │   ├── notifications.ts   # Mock notification data
-│   │   ├── products.ts    # Product information
+│   │   ├── Work.ts    # Product information
 │   │   ├── team.ts        # Team member information
 │   │   └── timeline.tsx   # Mock timeline activities
 │   ├── types/             # TypeScript type definitions
@@ -121,7 +121,7 @@ npm run dev
 - Animated product showcase
 - Mint green theme with floating logo
 
-### Products (`/products`)
+### Work (`/Work`)
 - Detailed product information
 - Interactive demos (notifications, timeline)
 - BountyPay and Pilot product cards
@@ -151,7 +151,7 @@ npm run dev
 ## 📝 Content Management
 
 - **Team Data**: Managed in `lib/data/team.ts`
-- **Products**: Managed in `lib/data/products.ts`
+- **Work**: Managed in `lib/data/Work.ts`
 - **Notifications**: Mock data in `lib/data/notifications.ts`
 - **Timeline**: Mock data in `lib/data/timeline.tsx`
 - **Navigation**: Configured in `lib/constants/navigation.ts`

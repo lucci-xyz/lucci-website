@@ -105,10 +105,10 @@ export function TeamSection({ scrollToSection }: { scrollToSection?: (index: num
           style={{ transitionDelay: "750ms" }}
         >
           <MagneticButton variant="primary" onClick={() => scrollToSection?.(4)}>
-            Get in Touch
+            Get Started
           </MagneticButton>
           <MagneticButton variant="secondary" onClick={() => scrollToSection?.(1)}>
-            Explore Products
+            Explore Work
           </MagneticButton>
         </div>
       </div>

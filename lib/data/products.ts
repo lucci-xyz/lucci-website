@@ -1,11 +1,11 @@
 /**
  * Product data
- * Information about Lucci products
+ * Information about Lucci Work
  */
 
 import type { Product } from '@/lib/types'
 
-export const PRODUCTS: readonly Product[] = [
+export const Work: readonly Product[] = [
   {
     name: 'BountyPay',
     blurb: 'The economic layer for open source.',

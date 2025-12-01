@@ -67,7 +67,7 @@ Defined in `lib/constants/theme.ts` as `ANIMATION` constant.
 ```
 /
 ├── app/                    # Next.js App Router pages
-│   ├── products/          # Products page
+│   ├── Work/          # Work page
 │   ├── team/              # Team page
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
@@ -75,7 +75,7 @@ Defined in `lib/constants/theme.ts` as `ANIMATION` constant.
 ├── components/            # React components
 ├── lib/                   # Core utilities and config
 │   ├── constants/         # Design tokens, navigation, social links
-│   ├── data/              # Static data (team, products, notifications, timeline)
+│   ├── data/              # Static data (team, Work, notifications, timeline)
 │   ├── types/             # TypeScript type definitions
 │   └── utils/             # Utility functions
 └── public/                # Static assets
@@ -225,11 +225,11 @@ export default function Footer({ bgColor = COLORS.backgroundMint }: FooterProps)
 ### Static Data Location
 **RULE:** Place data in appropriate locations:
 - Configuration: `lib/constants/` (navigation, social links, theme)
-- Static content: `lib/data/` (team members, products, mock data)
+- Static content: `lib/data/` (team members, Work, mock data)
 
 ### Data Files
 - Team members: `lib/data/team.ts` - exports `TEAM_MEMBERS` constant
-- Products: `lib/data/products.ts` - exports `PRODUCTS` array
+- Work: `lib/data/Work.ts` - exports `Work` array
 - Notifications: `lib/data/notifications.ts` - exports `NOTIFICATION_DATA` array
 - Timeline: `lib/data/timeline.tsx` - exports `TIMELINE_ACTIVITIES` array
 - Navigation: `lib/constants/navigation.ts` - exports `MAIN_NAV_LINKS`
@@ -296,7 +296,7 @@ import { TEAM_MEMBERS } from '@/lib/data/team'
 ### Button with Theme Colors
 ```typescript
 <Link 
-  href="/products" 
+  href="/Work" 
   className="inline-block rounded-full px-6 py-3 text-sm font-normal transition-all hover:opacity-90"
   style={{ backgroundColor: COLORS.primary, color: COLORS.white }}
 >
@@ -331,11 +331,11 @@ import { TEAM_MEMBERS } from '@/lib/data/team'
 
 ## Product Information
 
-### Active Products
+### Active Work
 - **BountyPay**: Alpha - Payment system for open source contributors
 - **Pilot**: Coming Soon - AI agent for automation
 
-### Removed Products (no longer in codebase)
+### Removed Work (no longer in codebase)
 - Chain Trace (removed)
 - Flash Loans (removed)
 - Good First Issues (removed)

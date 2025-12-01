@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export function CustomCursor() {
   const outerRef = useRef<HTMLDivElement>(null)
@@ -8,8 +8,23 @@ export function CustomCursor() {
   const positionRef = useRef({ x: 0, y: 0 })
   const targetPositionRef = useRef({ x: 0, y: 0 })
   const isPointerRef = useRef(false)
+  const [isTouchDevice, setIsTouchDevice] = useState(true) // Default to true to avoid flash on mobile
 
   useEffect(() => {
+    // Check if device supports touch or has no fine pointer (mouse)
+    const checkTouchDevice = () => {
+      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      const hasCoarsePointer = window.matchMedia('(pointer: coarse)').matches
+      const hasNoFinePointer = !window.matchMedia('(pointer: fine)').matches
+      return hasTouch && (hasCoarsePointer || hasNoFinePointer)
+    }
+    
+    setIsTouchDevice(checkTouchDevice())
+  }, [])
+
+  useEffect(() => {
+    if (isTouchDevice) return // Don't set up cursor tracking on touch devices
+
     let animationFrameId: number
 
     const lerp = (start: number, end: number, factor: number) => {
@@ -46,7 +61,10 @@ export function CustomCursor() {
       window.removeEventListener("mousemove", handleMouseMove)
       cancelAnimationFrame(animationFrameId)
     }
-  }, [])
+  }, [isTouchDevice])
+
+  // Don't render cursor on touch devices
+  if (isTouchDevice) return null
 
   return (
     <>

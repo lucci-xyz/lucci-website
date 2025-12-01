@@ -69,10 +69,10 @@ export default function TeamPage() {
             <span className="absolute -bottom-1 left-0 h-px w-0 bg-white transition-all duration-300 group-hover:w-full" />
           </Link>
           <Link
-            href="/products"
+            href="/Work"
             className="group relative font-sans text-xs font-medium text-white/70 transition-colors hover:text-white"
           >
-            Products
+            Work
             <span className="absolute -bottom-1 left-0 h-px w-0 bg-white transition-all duration-300 group-hover:w-full" />
           </Link>
           <Link
@@ -84,9 +84,9 @@ export default function TeamPage() {
           </Link>
         </div>
 
-        <Link href="/products">
+        <Link href="/Work">
           <MagneticButton variant="secondary">
-            Explore Products
+            Explore Work
           </MagneticButton>
         </Link>
       </nav>

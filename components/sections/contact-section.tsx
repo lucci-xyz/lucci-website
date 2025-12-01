@@ -10,7 +10,7 @@ export function ContactSection() {
   const { ref, isVisible } = useReveal(0.3)
   const [formData, setFormData] = useState({ name: "", email: "", message: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -20,37 +20,62 @@ export function ContactSection() {
     }
 
     setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    setSubmitStatus("idle")
 
-    setIsSubmitting(false)
-    setSubmitSuccess(true)
-    setFormData({ name: "", email: "", message: "" })
+    try {
+      // Using FormSubmit.co - free, no signup required
+      const response = await fetch("https://formsubmit.co/ajax/2b5a579f2eaabe6e62caecc9d31c201c", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          _subject: `New Contact from ${formData.name}`,
+        }),
+      })
 
-    setTimeout(() => setSubmitSuccess(false), 5000)
+      if (!response.ok) {
+        throw new Error("Failed to send message")
+      }
+
+      setSubmitStatus("success")
+      setFormData({ name: "", email: "", message: "" })
+      setTimeout(() => setSubmitStatus("idle"), 5000)
+    } catch {
+      setSubmitStatus("error")
+      setTimeout(() => setSubmitStatus("idle"), 5000)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <section
       ref={ref}
-      className="flex h-screen w-screen shrink-0 snap-start items-center px-4 pt-16 md:px-8 md:pt-0"
+      className="flex h-screen w-screen shrink-0 snap-start flex-col justify-center overflow-y-auto px-4 py-20 sm:px-8 sm:py-0 md:px-20 lg:px-32 xl:px-40"
     >
-      <div className="mx-auto w-full max-w-5xl">
-        <div className="grid gap-6 md:grid-cols-[1.2fr_1fr] md:gap-12">
-          <div className="flex flex-col justify-center">
+      <div className="mx-auto w-full max-w-7xl">
+        <div className="grid gap-8 md:grid-cols-[1.2fr_1fr] md:gap-16 lg:gap-24">
+          {/* Left side - Contact info (hidden on mobile, shown on desktop) */}
+          <div className="hidden flex-col justify-center md:flex">
             <div
-              className={`mb-4 transition-all duration-700 md:mb-8 ${
+              className={`mb-4 transition-all duration-700 md:mb-10 ${
                 isVisible ? "translate-x-0 opacity-100" : "-translate-x-12 opacity-0"
               }`}
             >
-              <h2 className="mb-2 font-sans text-4xl font-light leading-[1.1] tracking-tight text-white md:text-5xl lg:text-6xl xl:text-7xl">
+              <h2 className="mb-2 font-sans text-3xl font-light leading-[1.1] tracking-tight text-white sm:text-4xl md:mb-3 md:text-5xl lg:text-6xl">
                 Let's
                 <br />
-                <span className="text-white">Connect</span>
+                <span className="text-white">Talk</span>
               </h2>
-              <p className="font-mono text-[10px] text-white/50 md:text-xs">/ Start building with us</p>
+              <p className="font-mono text-xs text-white/50 md:text-sm">/ Start building with us</p>
             </div>
 
-            <div className="space-y-3 md:space-y-5">
+            <div className="space-y-3 md:space-y-6">
               <a
                 href="mailto:contact@luccilabs.xyz"
                 className={`group block transition-all duration-700 ${
@@ -58,11 +83,11 @@ export function ContactSection() {
                 }`}
                 style={{ transitionDelay: "200ms" }}
               >
-                <div className="mb-0.5 flex items-center gap-1.5">
-                  <Mail className="h-2.5 w-2.5 text-white/50" />
-                  <span className="font-mono text-[9px] text-white/50">Email</span>
+                <div className="mb-1 flex items-center gap-2">
+                  <Mail className="h-3 w-3 text-white/50" />
+                  <span className="font-mono text-xs text-white/50">Email</span>
                 </div>
-                <p className="text-sm text-white transition-colors group-hover:text-accent md:text-base">
+                <p className="text-base text-white transition-colors group-hover:text-accent sm:text-lg md:text-xl">
                   contact@luccilabs.xyz
                 </p>
               </a>
@@ -76,17 +101,17 @@ export function ContactSection() {
                 }`}
                 style={{ transitionDelay: "350ms" }}
               >
-                <div className="mb-0.5 flex items-center gap-1.5">
-                  <Github className="h-2.5 w-2.5 text-white/50" />
-                  <span className="font-mono text-[9px] text-white/50">GitHub</span>
+                <div className="mb-1 flex items-center gap-2">
+                  <Github className="h-3 w-3 text-white/50" />
+                  <span className="font-mono text-xs text-white/50">GitHub</span>
                 </div>
-                <p className="text-sm text-white transition-colors group-hover:text-accent md:text-base">
+                <p className="text-base text-white transition-colors group-hover:text-accent sm:text-lg md:text-xl">
                   github.com/lucci-xyz
                 </p>
               </a>
 
               <div
-                className={`flex gap-2 pt-1 transition-all duration-700 md:pt-2 ${
+                className={`flex gap-4 pt-2 transition-all duration-700 md:pt-4 ${
                   isVisible ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"
                 }`}
                 style={{ transitionDelay: "500ms" }}
@@ -97,7 +122,7 @@ export function ContactSection() {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="border-b border-transparent font-mono text-[10px] text-white/50 transition-all hover:border-accent hover:text-accent"
+                    className="font-mono text-xs text-white/50 transition-all hover:text-accent md:text-sm"
                   >
                     {social.name}
                   </a>
@@ -106,22 +131,37 @@ export function ContactSection() {
             </div>
           </div>
 
-          {/* Right side - Form */}
-          <div className="flex flex-col justify-center">
-            <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
+          {/* Mobile/Form side - Heading and Form */}
+          <div className="flex flex-col justify-center md:col-start-2">
+            {/* Mobile-only heading */}
+            <div
+              className={`mb-6 transition-all duration-700 md:hidden ${
+                isVisible ? "translate-x-0 opacity-100" : "-translate-x-12 opacity-0"
+              }`}
+            >
+              <h2 className="mb-2 font-sans text-3xl font-light leading-[1.1] tracking-tight text-white">
+                Let's
+                <br />
+                <span className="text-white">Talk</span>
+              </h2>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4 md:space-y-6">
               <div
                 className={`transition-all duration-700 ${
                   isVisible ? "translate-x-0 opacity-100" : "translate-x-12 opacity-0"
                 }`}
                 style={{ transitionDelay: "200ms" }}
               >
-                <label className="mb-1 block font-mono text-[9px] text-white/50">Name</label>
+                <label className="mb-2 block font-mono text-xs text-white/50 md:text-xs">Name</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  className="w-full border-b border-white/20 bg-transparent py-1 text-xs text-white placeholder:text-white/30 focus:border-accent focus:outline-none md:py-1.5 md:text-sm"
+                  className="w-full border-b-[0.5px] bg-transparent py-2.5 text-base text-white placeholder:text-white/30 focus:border-accent focus:outline-none md:text-base"
+                  style={{ borderColor: 'rgba(255, 255, 255, 0.15)' }}
                   placeholder="Your name"
                 />
               </div>
@@ -132,13 +172,14 @@ export function ContactSection() {
                 }`}
                 style={{ transitionDelay: "350ms" }}
               >
-                <label className="mb-1 block font-mono text-[9px] text-white/50">Email</label>
+                <label className="mb-2 block font-mono text-xs text-white/50 md:text-xs">Email</label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
-                  className="w-full border-b border-white/20 bg-transparent py-1 text-xs text-white placeholder:text-white/30 focus:border-accent focus:outline-none md:py-1.5 md:text-sm"
+                  className="w-full border-b-[0.5px] bg-transparent py-2.5 text-base text-white placeholder:text-white/30 focus:border-accent focus:outline-none md:text-base"
+                  style={{ borderColor: 'rgba(255, 255, 255, 0.15)' }}
                   placeholder="your@email.com"
                 />
               </div>
@@ -149,45 +190,69 @@ export function ContactSection() {
                 }`}
                 style={{ transitionDelay: "500ms" }}
               >
-                <label className="mb-1 block font-mono text-[9px] text-white/50">Message</label>
+                <label className="mb-2 block font-mono text-xs text-white/50 md:text-xs">Message</label>
                 <textarea
-                  rows={2}
+                  rows={3}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   required
-                  className="w-full border-b border-white/20 bg-transparent py-1 text-xs text-white placeholder:text-white/30 focus:border-accent focus:outline-none md:py-1.5 md:text-sm"
+                  className="w-full border-b-[0.5px] bg-transparent py-2.5 text-base text-white placeholder:text-white/30 focus:border-accent focus:outline-none md:text-base"
+                  style={{ borderColor: 'rgba(255, 255, 255, 0.15)' }}
                   placeholder="Tell us about your project..."
                 />
               </div>
 
               <div
-                className={`transition-all duration-700 ${
+                className={`pt-4 transition-all duration-700 ${
                   isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
                 }`}
                 style={{ transitionDelay: "650ms" }}
               >
                 <MagneticButton
                   variant="primary"
-                  className="w-full disabled:opacity-50"
+                  className="w-full text-sm disabled:opacity-50 md:text-sm"
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </MagneticButton>
-                {submitSuccess && (
-                  <p className="mt-2 text-center font-mono text-[10px] text-accent">Message sent successfully!</p>
+                {submitStatus === "success" && (
+                  <p className="mt-3 text-center font-mono text-[10px] text-accent md:text-xs">Message sent successfully!</p>
+                )}
+                {submitStatus === "error" && (
+                  <p className="mt-3 text-center font-mono text-[10px] text-red-400 md:text-xs">Failed to send. Please try again.</p>
                 )}
               </div>
             </form>
+
+            {/* Mobile-only social links */}
+            <div
+              className={`mt-8 flex justify-center gap-6 transition-all duration-700 md:hidden ${
+                isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+              }`}
+              style={{ transitionDelay: "800ms" }}
+            >
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-xs text-white/50 transition-all hover:text-accent"
+                >
+                  {social.name}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Footer note */}
+        {/* Footer note - Hidden on mobile */}
         <div
-          className={`mt-8 text-center transition-all duration-700 md:mt-12 ${
+          className={`hidden text-center transition-all duration-700 sm:mt-10 sm:block md:mt-16 ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
           style={{ transitionDelay: "800ms" }}
         >
-          <p className="font-mono text-[9px] text-white/30">
+          <p className="font-mono text-[10px] text-white/30 sm:text-xs">
             © {new Date().getFullYear()} Lucci. The economic layer for open source.
           </p>
         </div>

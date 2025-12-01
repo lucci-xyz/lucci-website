@@ -5,10 +5,12 @@ import { CustomCursor } from "@/components/custom-cursor"
 import { GrainOverlay } from "@/components/grain-overlay"
 import { ProductsSection } from "@/components/sections/products-section"
 import { CapabilitiesSection } from "@/components/sections/capabilities-section"
+import { AboutSection } from "@/components/sections/about-section"
 import { ContactSection } from "@/components/sections/contact-section"
 import { MagneticButton } from "@/components/magnetic-button"
 import { useRef, useEffect, useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function Home() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -79,7 +81,7 @@ export default function Home() {
       const deltaX = touchStartX.current - touchEndX
 
       if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
-        if (deltaY > 0 && currentSection < 4) {
+        if (deltaY > 0 && currentSection < 5) {
           scrollToSection(currentSection + 1)
         } else if (deltaY < 0 && currentSection > 0) {
           scrollToSection(currentSection - 1)
@@ -149,7 +151,7 @@ export default function Home() {
         const scrollLeft = scrollContainerRef.current.scrollLeft
         const newSection = Math.round(scrollLeft / sectionWidth)
 
-        if (newSection !== currentSection && newSection >= 0 && newSection <= 4) {
+        if (newSection !== currentSection && newSection >= 0 && newSection <= 5) {
           setCurrentSection(newSection)
         }
 
@@ -173,7 +175,7 @@ export default function Home() {
     }
   }, [currentSection])
 
-  const navItems = ["Home", "Products", "Capabilities", /* "Team", */ "Contact"]
+  const navItems = ["Home", "Work", "Focus", "About", "Contact"]
 
   return (
     <main className="relative h-screen w-full overflow-hidden bg-background">
@@ -219,7 +221,7 @@ export default function Home() {
 
       {/* Navigation */}
       <nav
-        className={`fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-4 py-4 transition-opacity duration-700 md:px-8 ${
+        className={`fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-4 py-4 transition-opacity duration-700 sm:px-8 sm:py-6 md:px-12 lg:px-16 ${
           isLoaded ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -227,7 +229,7 @@ export default function Home() {
           onClick={() => scrollToSection(0)}
           className="flex items-center gap-2 transition-transform hover:scale-105"
         >
-          <div className="relative h-8 w-8 overflow-hidden rounded-full transition-all duration-300 hover:scale-110">
+          <div className="relative h-9 w-9 overflow-hidden rounded-full transition-all duration-300 hover:scale-110">
             <Image
               src="/og.png"
               alt="Lucci Logo"
@@ -236,10 +238,10 @@ export default function Home() {
               priority
             />
           </div>
-          <span className="font-sans text-base font-semibold tracking-tight text-white">Lucci</span>
+          <span className="font-sans text-lg font-semibold tracking-tight text-white">Lucci</span>
         </button>
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-8 md:flex">
           {navItems.map((item, index) => (
             <button
               key={item}
@@ -261,9 +263,9 @@ export default function Home() {
         <MagneticButton
           variant="secondary"
           className="border-none bg-white/25 text-white hover:bg-white/35"
-          onClick={() => scrollToSection(4)}
+          onClick={() => scrollToSection(5)}
         >
-          Get in Touch
+          Get Started
         </MagneticButton>
       </nav>
 
@@ -277,10 +279,10 @@ export default function Home() {
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {/* Hero Section */}
-        <section className="flex min-h-screen w-screen shrink-0 flex-col justify-center px-6 py-20 md:px-12 lg:px-20">
+        <section className="flex min-h-screen w-screen shrink-0 flex-col justify-center px-4 py-20 sm:px-6 md:px-12 lg:px-20">
           <div className="max-w-4xl">
             <div className="mb-4 inline-block animate-in fade-in slide-in-from-bottom-4 rounded-full bg-white/25 px-4 py-1.5 backdrop-blur-md duration-700">
-              <p className="font-mono text-xs text-white/80">The Economic Layer for Open Source</p>
+              <p className="font-mono text-xs text-white/80">Explore the Future</p>
             </div>
             <h1 className="mb-6 animate-in fade-in slide-in-from-bottom-8 font-sans text-4xl font-light leading-[1.1] tracking-tight text-white duration-1000 md:text-5xl lg:text-6xl xl:text-7xl">
               <span className="text-balance">
@@ -292,8 +294,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="mb-8 max-w-2xl animate-in fade-in slide-in-from-bottom-4 text-base leading-relaxed text-white/80 duration-1000 delay-200 md:text-lg">
-              Autonomous payouts and operations for open source developers. 
-              Pay contributors in stablecoins and automate coordination with AI.
+            We’re a small studio working at the intersection of web3, AI, and digital product, turning complex infrastructure into clear tools that builders actually want to use.
             </p>
             <div className="flex animate-in fade-in slide-in-from-bottom-4 flex-col gap-4 duration-1000 delay-300 sm:flex-row sm:items-center">
               <MagneticButton
@@ -301,11 +302,17 @@ export default function Home() {
                 variant="primary"
                 onClick={() => scrollToSection(1)}
               >
-                Explore Products
+                Explore Work
               </MagneticButton>
-              {/* <MagneticButton size="lg" variant="secondary" onClick={() => scrollToSection(3)}>
-                Meet the Team
-              </MagneticButton> */}
+              {/* <Link href="/team">
+                <MagneticButton
+                  variant="secondary"
+                  size="lg"
+                  className="border-none bg-white/20 text-white hover:bg-white/30"
+                >
+                  Get Started
+                </MagneticButton>
+              </Link> */}
             </div>
           </div>
 
@@ -323,7 +330,7 @@ export default function Home() {
 
         <ProductsSection scrollToSection={scrollToSection} />
         <CapabilitiesSection />
-        {/* <TeamSection scrollToSection={scrollToSection} /> */}
+        <AboutSection scrollToSection={scrollToSection} />
         <ContactSection />
       </div>
     </main>
