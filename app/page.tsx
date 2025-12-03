@@ -227,7 +227,7 @@ export default function Home() {
       >
         <button
           onClick={() => scrollToSection(0)}
-          className="flex items-center gap-2 transition-transform hover:scale-105"
+          className="flex items-center gap-0 transition-transform hover:scale-105"
         >
           <div className="relative h-9 w-9 overflow-hidden rounded-full transition-all duration-300 hover:scale-110">
             <Image
@@ -238,7 +238,12 @@ export default function Home() {
               priority
             />
           </div>
-          <span className="font-sans text-lg font-semibold tracking-tight text-white">Lucci</span>
+          <span
+            className="font-sans text-lg font-light tracking-tight"
+            style={{ color: "#FEF9F0" }}
+          >
+            Lucci
+          </span>
         </button>
 
         <div className="hidden items-center gap-8 md:flex">
