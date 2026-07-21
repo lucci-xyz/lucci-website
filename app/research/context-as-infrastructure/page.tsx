@@ -8,115 +8,202 @@ export const metadata: Metadata = {
   description: "A Lucci Labs research note on context design for tool-using agent systems.",
 }
 
+const contents = [
+  ["Abstract", "#abstract"],
+  ["A prompt is not a system", "#prompt"],
+  ["Four context layers", "#layers"],
+  ["Deliver context late", "#late"],
+  ["Make context observable", "#observable"],
+  ["The interface is the product", "#interface"],
+]
+
 export default function ContextAsInfrastructurePage() {
   return (
     <div className="shell article-shell" id="top">
       <SiteHeader />
-      <main>
+      <main className="document-page">
         <article>
-          <header className="publication-header">
-            <Link className="article-back" href="/research">← Research index</Link>
-            <p className="eyebrow">Research note 01 · Draft</p>
-            <h1>Context as infrastructure</h1>
-            <p className="publication-deck">
-              Tool-using agents become more dependable when context is treated as a versioned
-              system rather than a single prompt assembled at the beginning of a run.
-            </p>
-            <div className="publication-meta">
-              <div><span className="meta-label">Published</span><span>July 2026</span></div>
-              <div><span className="meta-label">Format</span><span>Concept note</span></div>
-              <div><span className="meta-label">Status</span><span>Working draft</span></div>
+          <header className="document-masthead">
+            <Link className="document-back" href="/research">Research</Link>
+            <div className="document-heading">
+              <p className="document-kicker">Research note 01 · July 2026</p>
+              <h1>Context as infrastructure</h1>
+              <p className="document-deck">
+                Tool-using agents become more dependable when context is treated as a
+                versioned system rather than a prompt assembled once at the beginning of a run.
+              </p>
+            </div>
+            <div className="document-meta" aria-label="Publication metadata">
+              <span>Lucci Labs Research</span>
+              <span>Concept note</span>
+              <span>Working draft</span>
             </div>
           </header>
 
-          <figure className="publication-figure" aria-labelledby="context-flow-title">
-            <figcaption>
-              <div><p className="eyebrow">Figure 01</p><h2 id="context-flow-title">Context enters at three different moments.</h2></div>
-              <p>The system should decide what to provide before, during, and after a run rather than collapsing every source into one prompt.</p>
-            </figcaption>
-            <div className="context-flow">
-              <div><span>01</span><h3>Frame</h3><p>Define the task, constraints, tools, and current operating state.</p></div>
-              <div><span>02</span><h3>Retrieve</h3><p>Bring in evidence only when the next decision requires it.</p></div>
-              <div><span>03</span><h3>Record</h3><p>Persist outcomes, sources, and state changes as separate artifacts.</p></div>
-            </div>
-          </figure>
+          <nav className="document-contents" aria-label="On this page">
+            <p>On this page</p>
+            <ol>
+              {contents.map(([label, href], index) => (
+                <li key={href}>
+                  <a href={href}><span>{String(index + 1).padStart(2, "0")}</span>{label}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
 
-          <div className="publication-layout">
-            <aside className="publication-toc">
-              <p>On this page</p>
-              <a href="#prompt">A prompt is not a system</a>
-              <a href="#layers">Separate the layers</a>
-              <a href="#late">Deliver context late</a>
-              <a href="#observable">Make layers observable</a>
-              <a href="#interface">The interface is the product</a>
-            </aside>
-
-            <div className="publication-body">
-              <p className="publication-intro">
-                Many agent failures that look like model failures are interface failures. The system delivered the wrong information, delivered it too early, or made it impossible to inspect which source influenced the result.
+          <div className="document-body">
+            <section id="abstract" className="document-abstract">
+              <h2>Abstract</h2>
+              <p>
+                Many failures attributed to an agent model are failures of the system around it.
+                The agent receives stale instructions, irrelevant records, unclear permissions, or
+                evidence with no visible provenance. When all of that information is flattened into
+                one prompt, the application loses the ability to reason about what the model knew,
+                when it knew it, and why a particular source affected the result.
               </p>
+              <p>
+                This note proposes treating context as infrastructure. Stable identity, immediate
+                task instructions, retrieved evidence, and mutable state should remain separate,
+                versioned objects. Each layer should enter the run at the moment it becomes useful
+                and remain inspectable after the run is complete.
+              </p>
+            </section>
 
-              <section id="prompt">
-                <p className="section-number">01</p>
-                <h2>A prompt is not a context system.</h2>
-                <p>A prompt can describe a task. It cannot, by itself, manage changing evidence, durable state, tool permissions, or source provenance across a long-running workflow.</p>
-                <p>Context infrastructure should make those concerns explicit. Each layer should have a narrow purpose, a known owner, and a visible version history.</p>
+            <figure className="document-figure" aria-labelledby="manifest-title">
+              <div className="manifest-diagram" role="img" aria-label="Four context layers with distinct lifecycles">
+                <div><strong>Identity</strong><span>Long-lived</span><p>Operating principles, permissions, and durable behavior.</p></div>
+                <div><strong>Task</strong><span>Per run</span><p>The objective, audience, constraints, and expected output.</p></div>
+                <div><strong>Evidence</strong><span>Retrieved</span><p>Records and observations selected for the current decision.</p></div>
+                <div><strong>State</strong><span>Mutable</span><p>Actions, outcomes, and unresolved work produced during the run.</p></div>
+              </div>
+              <figcaption id="manifest-title">
+                <span>Figure 01</span>
+                A context manifest keeps information with different purposes and lifecycles from
+                collapsing into a single prompt.
+              </figcaption>
+            </figure>
+
+            <section id="prompt">
+              <p className="document-section-number">01</p>
+              <h2>A prompt is not a context system</h2>
+              <p>
+                A prompt can describe the immediate task, but it cannot manage the complete
+                information environment of a long-running agent. It does not determine which
+                records are current, which tools are permitted, which actions have already
+                occurred, or which facts should persist into the next run.
+              </p>
+              <p>
+                Applications often hide these concerns inside prompt construction code. A single
+                string quietly combines behavioral rules, user preferences, retrieved documents,
+                tool descriptions, conversation history, and intermediate state. The model sees a
+                sequence of tokens; the product team sees an increasingly difficult debugging
+                problem.
+              </p>
+              <p>
+                Treating context as a system changes the unit of design. Instead of asking how to
+                write a larger prompt, the application asks which information object is needed,
+                who owns it, how it changes, and when it should become available.
+              </p>
+            </section>
+
+            <section id="layers">
+              <p className="document-section-number">02</p>
+              <h2>Separate what the agent is, knows, sees, and does</h2>
+              <p>
+                Context becomes easier to reason about when information is divided by function.
+                Identity defines durable behavior and permissions. The task describes the current
+                objective. Evidence contains external material relevant to a decision. State records
+                what has happened and what remains open.
+              </p>
+              <p>
+                These layers may all appear in the same model request, but they should not share the
+                same lifecycle. Updating a task should not silently rewrite the agent&apos;s durable
+                operating principles. Retrieving a new document should not mutate the historical
+                record of an earlier run. A state transition should remain visible even after the
+                conversation that produced it is compressed.
+              </p>
+              <div className="document-definition-list">
+                <div><h3>Identity</h3><p>Stable behavior, operating principles, and permissions.</p></div>
+                <div><h3>Task</h3><p>The immediate objective, audience, format, and success criteria.</p></div>
+                <div><h3>Evidence</h3><p>Files, records, observations, and retrieved source material.</p></div>
+                <div><h3>State</h3><p>Completed actions, open decisions, and mutable workflow data.</p></div>
+              </div>
+            </section>
+
+            <section id="late">
+              <p className="document-section-number">03</p>
+              <h2>Deliver context late</h2>
+              <p>
+                More context is not automatically better context. Loading every available record at
+                the beginning of a run increases cost, weakens attention, and makes it harder to
+                determine which evidence influenced an action. Information should enter when the
+                system reaches a decision that can use it.
+              </p>
+              <p>
+                This makes retrieval a timing problem as much as a search problem. The application
+                must recognize the current decision, identify the evidence required for that
+                decision, and expose only the smallest useful set. A later step may require a
+                different source set even when the overall task has not changed.
+              </p>
+              <blockquote>
+                Retrieval is not simply the act of finding information. It is the design of when
+                information becomes available and what the agent is allowed to do with it.
+              </blockquote>
+            </section>
+
+            <section id="observable">
+              <p className="document-section-number">04</p>
+              <h2>Make context observable</h2>
+              <p>
+                A dependable system should make every context layer inspectable. For any run, a
+                reviewer should be able to identify the version of the identity layer, the exact task
+                instructions, the records retrieved, and the state changes produced by tools.
+              </p>
+              <p>
+                This record supports more than debugging. It allows teams to compare runs, evaluate
+                retrieval policies, reproduce failures, and understand whether an improvement came
+                from a stronger model or a better information interface.
+              </p>
+              <div className="document-table" role="table" aria-label="Example context manifest">
+                <div role="row"><span role="columnheader">Layer</span><span role="columnheader">Version</span><span role="columnheader">Lifecycle</span></div>
+                <div role="row"><span>Identity</span><span>12</span><span>Long-lived</span></div>
+                <div role="row"><span>Task</span><span>1</span><span>Per run</span></div>
+                <div role="row"><span>Evidence</span><span>7</span><span>Retrieved</span></div>
+                <div role="row"><span>State</span><span>19</span><span>Mutable</span></div>
+              </div>
+            </section>
+
+            <section id="interface">
+              <p className="document-section-number">05</p>
+              <h2>The interface around the model is the product</h2>
+              <p>
+                Model capability will continue to improve, but stronger models do not eliminate the
+                need for context design. As systems gain access to more tools and more consequential
+                actions, applications need greater control over what the model knows, which evidence
+                it can trust, and what it is permitted to change.
+              </p>
+              <p>
+                The quality of an agent product therefore depends on the interface between the model
+                and the rest of the system. That interface should be layered, versioned, observable,
+                and capable of delivering information at the moment it becomes useful.
+              </p>
+              <p>
+                Context is not supporting material around the intelligence. In a tool-using system,
+                context is part of the infrastructure that makes the intelligence usable.
+              </p>
+            </section>
+
+            <footer className="document-notes">
+              <section>
+                <h2>Citation</h2>
+                <p>Lucci Labs. “Context as Infrastructure.” Research Note 01, July 2026.</p>
               </section>
-
-              <section id="layers">
-                <p className="section-number">02</p>
-                <h2>Separate what the agent is, knows, sees, and does.</h2>
-                <div className="definition-list">
-                  <div><h3>Identity</h3><p>Long-lived behavior, operating principles, and stable permissions.</p></div>
-                  <div><h3>Task</h3><p>The immediate objective, audience, format, constraints, and success criteria.</p></div>
-                  <div><h3>Evidence</h3><p>Files, records, observations, and retrieved material relevant to a decision.</p></div>
-                  <div><h3>State</h3><p>What has already happened, what remains open, and what may be changed next.</p></div>
-                </div>
+              <section>
+                <h2>Related</h2>
+                <p><Link href="/docs">Context manifest documentation</Link></p>
+                <p><Link href="/projects">Open-source projects</Link></p>
               </section>
-
-              <section id="late">
-                <p className="section-number">03</p>
-                <h2>Good context is delivered late.</h2>
-                <p>Information should enter when the system can act on it. Loading every possible source at the start creates noise, increases cost, and makes causal inspection harder.</p>
-                <blockquote>Retrieval is not only a search problem. It is a timing and interface problem.</blockquote>
-              </section>
-
-              <section id="observable">
-                <p className="section-number">04</p>
-                <h2>Make every layer observable.</h2>
-                <p>A useful context system exposes which version of each layer was present, which records were retrieved, and which tool actions changed the state of the run.</p>
-                <div className="manifest-table" role="table" aria-label="Example context manifest">
-                  <div role="row"><span role="columnheader">Layer</span><span role="columnheader">Version</span><span role="columnheader">Lifecycle</span></div>
-                  <div role="row"><span>Identity</span><span>12</span><span>Long-lived</span></div>
-                  <div role="row"><span>Task</span><span>1</span><span>Per run</span></div>
-                  <div role="row"><span>Evidence</span><span>7</span><span>Retrieved</span></div>
-                  <div role="row"><span>State</span><span>19</span><span>Mutable</span></div>
-                </div>
-              </section>
-
-              <section id="interface">
-                <p className="section-number">05</p>
-                <h2>The interface around the model is the product.</h2>
-                <p>Model capability will continue to improve, but capable models do not remove the need for context design. The more actions a system can take, the more precisely the application must control what the model knows and what it is allowed to change.</p>
-                <p>Context should be treated as infrastructure: layered, versioned, observable, and delivered at the moment it becomes useful.</p>
-              </section>
-            </div>
-          </div>
-
-          <div className="paper-end">
-            <div>
-              <h2>Citation</h2>
-              <p>Use the following citation for this concept note.</p>
-              <div className="citation">Lucci Labs. “Context as Infrastructure.” Research Note 01, July 2026.</div>
-            </div>
-            <div>
-              <h2>Related</h2>
-              <ul>
-                <li><Link href="/research">Research index ↗</Link></li>
-                <li><Link href="/docs">Context manifest documentation ↗</Link></li>
-                <li><Link href="/projects">Open-source projects ↗</Link></li>
-              </ul>
-            </div>
+            </footer>
           </div>
         </article>
       </main>
