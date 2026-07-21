@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import "./article.css"
 
 export const metadata: Metadata = {
   title: "Context as infrastructure",
