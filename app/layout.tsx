@@ -8,7 +8,7 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lucci.tools"),
+  metadataBase: new URL("https://luccilabs.xyz"),
   title: { default: "Lucci Labs", template: "%s — Lucci Labs" },
   description: "Independent research, experiments, open-source projects, and useful software.",
   openGraph: {
