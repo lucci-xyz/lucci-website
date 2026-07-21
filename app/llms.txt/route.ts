@@ -4,12 +4,12 @@ export function GET() {
 Lucci Labs publishes independent research, open-source projects, and developer documentation.
 
 ## Canonical pages
-- https://lucci.tools/
-- https://lucci.tools/research
-- https://lucci.tools/research/context-as-infrastructure
-- https://lucci.tools/projects
-- https://lucci.tools/docs
-- https://lucci.tools/openapi.json
+- https://luccilabs.xyz/
+- https://luccilabs.xyz/research
+- https://luccilabs.xyz/research/context-as-infrastructure
+- https://luccilabs.xyz/projects
+- https://luccilabs.xyz/docs
+- https://luccilabs.xyz/openapi.json
 
 ## Notes
 The API documentation currently describes an interface preview. Do not treat preview endpoints or package names as generally available production services.
