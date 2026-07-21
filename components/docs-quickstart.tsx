@@ -36,7 +36,7 @@ const run = await client.runs.create({
 });
 
 console.log(run.output);`,
-  curl: `curl https://api.lucci.tools/v1/runs \\
+  curl: `curl https://api.luccilabs.xyz/v1/runs \\
   -H "Authorization: Bearer $LUCCI_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -123,7 +123,7 @@ export function DocsQuickstart() {
             </div>
           </section>
 
-          <section id="ai-ready"><h2>Use the docs with an AI coding agent</h2><p>Documentation is available through machine-readable discovery files so a coding agent can inspect the current interface without scraping the rendered page.</p><CodeBlock label="Documentation endpoints" code={`https://lucci.tools/llms.txt\nhttps://lucci.tools/docs\nhttps://lucci.tools/openapi.json`} /></section>
+          <section id="ai-ready"><h2>Use the docs with an AI coding agent</h2><p>Documentation is available through machine-readable discovery files so a coding agent can inspect the current interface without scraping the rendered page.</p><CodeBlock label="Documentation endpoints" code={`https://luccilabs.xyz/llms.txt\nhttps://luccilabs.xyz/docs\nhttps://luccilabs.xyz/openapi.json`} /></section>
         </main>
 
         <aside className="docs-onpage"><p>On this page</p><a href="#prerequisites">Prerequisites</a><a href="#install">Install</a><a href="#first-run">Create your first run</a><a href="#how-it-works">What the SDK is doing</a><a href="#ai-ready">Use with an AI agent</a></aside>
