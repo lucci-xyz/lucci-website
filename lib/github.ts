@@ -46,10 +46,18 @@ export async function getLucciRepositories(): Promise<LucciRepository[]> {
       homepage: string | null
       fork: boolean
       archived: boolean
+      private: boolean
+      visibility: "public" | "private" | "internal"
     }>
 
     const visible = repositories
-      .filter((repository) => !repository.fork && !repository.archived)
+      .filter(
+        (repository) =>
+          repository.private === false &&
+          repository.visibility === "public" &&
+          !repository.fork &&
+          !repository.archived,
+      )
       .map((repository) => ({
         name: repository.name,
         description: repository.description?.trim() || "An open-source experiment from Lucci Labs.",
