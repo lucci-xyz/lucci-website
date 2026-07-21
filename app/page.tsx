@@ -1,343 +1,78 @@
-"use client"
-
-import { Shader, ChromaFlow, Swirl } from "shaders/react"
-import { CustomCursor } from "@/components/custom-cursor"
-import { GrainOverlay } from "@/components/grain-overlay"
-import { ProductsSection } from "@/components/sections/products-section"
-import { CapabilitiesSection } from "@/components/sections/capabilities-section"
-import { AboutSection } from "@/components/sections/about-section"
-import { ContactSection } from "@/components/sections/contact-section"
-import { MagneticButton } from "@/components/magnetic-button"
-import { useRef, useEffect, useState } from "react"
-import Image from "next/image"
 import Link from "next/link"
+import { SiteFooter } from "@/components/site-footer"
+import { SiteHeader } from "@/components/site-header"
+import { getLucciRepositories } from "@/lib/github"
 
-export default function Home() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const [currentSection, setCurrentSection] = useState(0)
-  const [isLoaded, setIsLoaded] = useState(false)
-  const touchStartY = useRef(0)
-  const touchStartX = useRef(0)
-  const shaderContainerRef = useRef<HTMLDivElement>(null)
-  const scrollThrottleRef = useRef<number | null>(null)
+export const revalidate = 3600
 
-  useEffect(() => {
-    const checkShaderReady = () => {
-      if (shaderContainerRef.current) {
-        const canvas = shaderContainerRef.current.querySelector("canvas")
-        if (canvas && canvas.width > 0 && canvas.height > 0) {
-          setIsLoaded(true)
-          return true
-        }
-      }
-      return false
-    }
-
-    if (checkShaderReady()) return
-
-    const intervalId = setInterval(() => {
-      if (checkShaderReady()) {
-        clearInterval(intervalId)
-      }
-    }, 100)
-
-    const fallbackTimer = setTimeout(() => {
-      setIsLoaded(true)
-    }, 1500)
-
-    return () => {
-      clearInterval(intervalId)
-      clearTimeout(fallbackTimer)
-    }
-  }, [])
-
-  const scrollToSection = (index: number) => {
-    if (scrollContainerRef.current) {
-      const sectionWidth = scrollContainerRef.current.offsetWidth
-      scrollContainerRef.current.scrollTo({
-        left: sectionWidth * index,
-        behavior: "smooth",
-      })
-      setCurrentSection(index)
-    }
-  }
-
-  useEffect(() => {
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY.current = e.touches[0].clientY
-      touchStartX.current = e.touches[0].clientX
-    }
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (Math.abs(e.touches[0].clientY - touchStartY.current) > 10) {
-        e.preventDefault()
-      }
-    }
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      const touchEndY = e.changedTouches[0].clientY
-      const touchEndX = e.changedTouches[0].clientX
-      const deltaY = touchStartY.current - touchEndY
-      const deltaX = touchStartX.current - touchEndX
-
-      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
-        if (deltaY > 0 && currentSection < 5) {
-          scrollToSection(currentSection + 1)
-        } else if (deltaY < 0 && currentSection > 0) {
-          scrollToSection(currentSection - 1)
-        }
-      }
-    }
-
-    const container = scrollContainerRef.current
-    if (container) {
-      container.addEventListener("touchstart", handleTouchStart, { passive: true })
-      container.addEventListener("touchmove", handleTouchMove, { passive: false })
-      container.addEventListener("touchend", handleTouchEnd, { passive: true })
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener("touchstart", handleTouchStart)
-        container.removeEventListener("touchmove", handleTouchMove)
-        container.removeEventListener("touchend", handleTouchEnd)
-      }
-    }
-  }, [currentSection])
-
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault()
-
-        if (!scrollContainerRef.current) return
-
-        scrollContainerRef.current.scrollBy({
-          left: e.deltaY,
-          behavior: "instant",
-        })
-
-        const sectionWidth = scrollContainerRef.current.offsetWidth
-        const newSection = Math.round(scrollContainerRef.current.scrollLeft / sectionWidth)
-        if (newSection !== currentSection) {
-          setCurrentSection(newSection)
-        }
-      }
-    }
-
-    const container = scrollContainerRef.current
-    if (container) {
-      container.addEventListener("wheel", handleWheel, { passive: false })
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener("wheel", handleWheel)
-      }
-    }
-  }, [currentSection])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollThrottleRef.current) return
-
-      scrollThrottleRef.current = requestAnimationFrame(() => {
-        if (!scrollContainerRef.current) {
-          scrollThrottleRef.current = null
-          return
-        }
-
-        const sectionWidth = scrollContainerRef.current.offsetWidth
-        const scrollLeft = scrollContainerRef.current.scrollLeft
-        const newSection = Math.round(scrollLeft / sectionWidth)
-
-        if (newSection !== currentSection && newSection >= 0 && newSection <= 5) {
-          setCurrentSection(newSection)
-        }
-
-        scrollThrottleRef.current = null
-      })
-    }
-
-    const container = scrollContainerRef.current
-    if (container) {
-      container.addEventListener("scroll", handleScroll, { passive: true })
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener("scroll", handleScroll)
-      }
-      if (scrollThrottleRef.current) {
-        cancelAnimationFrame(scrollThrottleRef.current)
-        scrollThrottleRef.current = null
-      }
-    }
-  }, [currentSection])
-
-  const navItems = ["Home", "Work", "Focus", "About", "Contact"]
+export default async function HomePage() {
+  const repositories = await getLucciRepositories()
+  const selected = repositories.slice(0, 3)
 
   return (
-    <main className="relative h-screen w-full overflow-hidden bg-background">
-      <CustomCursor />
-      <GrainOverlay />
-
-      {/* Dynamic shader background with color variety - teal, blue, purple, gold */}
-      <div
-        ref={shaderContainerRef}
-        className={`fixed inset-0 z-0 transition-opacity duration-700 ${isLoaded ? "opacity-100" : "opacity-0"}`}
-        style={{ contain: "strict" }}
-      >
-        <Shader className="h-full w-full">
-          <Swirl
-            colorA="#3d9d98"
-            colorB="#5a7cbf"
-            speed={0.4}
-            detail={0.9}
-            blend={35}
-            coarseX={60}
-            coarseY={60}
-            mediumX={45}
-            mediumY={45}
-            fineX={30}
-            fineY={30}
-          />
-          <ChromaFlow
-            baseColor="#2a8a85"
-            upColor="#7b68b8"
-            downColor="#c9923a"
-            leftColor="#5a7cbf"
-            rightColor="#d4a826"
-            intensity={1.0}
-            radius={2.5}
-            momentum={30}
-            maskType="alpha"
-            opacity={1}
-          />
-        </Shader>
-        {/* Light overlay for text contrast */}
-        <div className="absolute inset-0 bg-black/20" />
-      </div>
-
-      {/* Navigation */}
-      <nav
-        className={`fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-4 py-4 transition-opacity duration-700 sm:px-8 sm:py-6 md:px-12 lg:px-16 ${
-          isLoaded ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <button
-          onClick={() => scrollToSection(0)}
-          className="flex items-center gap-0 transition-transform hover:scale-105"
-        >
-          <div className="relative h-9 w-9 overflow-hidden rounded-full transition-all duration-300 hover:scale-110">
-            <Image
-              src="/og.png"
-              alt="Lucci Logo"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-          <span
-            className="font-sans text-lg font-light tracking-tight"
-            style={{ color: "#FEF9F0" }}
-          >
-            Lucci
-          </span>
-        </button>
-
-        <div className="hidden items-center gap-8 md:flex">
-          {navItems.map((item, index) => (
-            <button
-              key={item}
-              onClick={() => scrollToSection(index)}
-              className={`group relative font-sans text-xs font-medium transition-colors ${
-                currentSection === index ? "text-white" : "text-white/70 hover:text-white"
-              }`}
-            >
-              {item}
-              <span
-                className={`absolute -bottom-1 left-0 h-px bg-white transition-all duration-300 ${
-                  currentSection === index ? "w-full" : "w-0 group-hover:w-full"
-                }`}
-              />
-            </button>
-          ))}
-        </div>
-
-        <MagneticButton
-          variant="secondary"
-          className="border-none bg-white/25 text-white hover:bg-white/35"
-          onClick={() => scrollToSection(5)}
-        >
-          Get Started
-        </MagneticButton>
-      </nav>
-
-      {/* Content */}
-      <div
-        ref={scrollContainerRef}
-        data-scroll-container
-        className={`relative z-10 flex h-screen overflow-x-auto overflow-y-hidden transition-opacity duration-700 ${
-          isLoaded ? "opacity-100" : "opacity-0"
-        }`}
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        {/* Hero Section */}
-        <section className="flex min-h-screen w-screen shrink-0 flex-col justify-center px-4 py-20 sm:px-6 md:px-12 lg:px-20">
-          <div className="max-w-4xl">
-            <div className="mb-4 inline-block animate-in fade-in slide-in-from-bottom-4 rounded-full bg-white/25 px-4 py-1.5 backdrop-blur-md duration-700">
-              <p className="font-mono text-xs text-white/80">Explore the Future</p>
-            </div>
-            <h1 className="mb-6 animate-in fade-in slide-in-from-bottom-8 font-sans text-4xl font-light leading-[1.1] tracking-tight text-white duration-1000 md:text-5xl lg:text-6xl xl:text-7xl">
-              <span className="text-balance">
-                Powering the Next
-                <br />
-                Generation of
-                <br />
-                <span className="text-white">Builders</span>
-              </span>
-            </h1>
-            <p className="mb-8 max-w-2xl animate-in fade-in slide-in-from-bottom-4 text-base leading-relaxed text-white/80 duration-1000 delay-200 md:text-lg">
-            We’re a small studio working at the intersection of web3, AI, and digital product, turning complex infrastructure into clear tools that builders actually want to use.
+    <div className="shell" id="top">
+      <SiteHeader />
+      <main>
+        <section className="hero" aria-labelledby="hero-title">
+          <h1 id="hero-title">Research, experiments, and useful software.</h1>
+          <div className="hero-bottom">
+            <p className="hero-copy">
+              Lucci Labs is an independent research and development studio. We investigate
+              emerging systems, build small products, and publish the work openly.
             </p>
-            <div className="flex animate-in fade-in slide-in-from-bottom-4 flex-col gap-4 duration-1000 delay-300 sm:flex-row sm:items-center">
-              <MagneticButton
-                size="lg"
-                variant="primary"
-                onClick={() => scrollToSection(1)}
-              >
-                Explore Work
-              </MagneticButton>
-              {/* <Link href="/team">
-                <MagneticButton
-                  variant="secondary"
-                  size="lg"
-                  className="border-none bg-white/20 text-white hover:bg-white/30"
-                >
-                  Get Started
-                </MagneticButton>
-              </Link> */}
-            </div>
+            <p className="hero-meta">
+              <span className="status-dot" /> Active research
+              <br /> Open-source by default
+            </p>
           </div>
-
         </section>
 
-        {/* Scroll indicator - fixed at bottom center */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-20 animate-in fade-in duration-1000 delay-500">
-          <div className="flex items-center gap-2">
-            <p className="font-mono text-[10px] text-white/60">Scroll to explore</p>
-            <div className="flex h-5 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md">
-              <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
-            </div>
+        <section aria-labelledby="work-title">
+          <div className="section-head">
+            <h2 id="work-title">Selected work</h2>
+            <span className="section-index">01 / 04</span>
           </div>
-        </div>
+          <div className="work-list">
+            <Link className="work-item" href="/research/context-as-infrastructure">
+              <h3 className="work-title">Context as infrastructure</h3>
+              <p className="work-copy">
+                A practical model for separating task framing, evidence, state, and durable
+                memory in tool-using agent systems.
+              </p>
+              <p className="work-meta">Research note · 2026</p>
+              <span className="arrow">↗</span>
+            </Link>
+            {selected.map((repository) => (
+              <a className="work-item" href={repository.url} key={repository.name} target="_blank" rel="noreferrer">
+                <h3 className="work-title">{repository.name}</h3>
+                <p className="work-copy">{repository.description}</p>
+                <p className="work-meta">{repository.language || "Open source"} · GitHub</p>
+                <span className="arrow">↗</span>
+              </a>
+            ))}
+          </div>
+        </section>
 
-        <ProductsSection scrollToSection={scrollToSection} />
-        <CapabilitiesSection />
-        <AboutSection scrollToSection={scrollToSection} />
-        <ContactSection />
-      </div>
-    </main>
+        <section className="research-note" aria-labelledby="direction-title">
+          <p className="label">Current direction</p>
+          <div>
+            <h2 id="direction-title">Building small systems to understand larger questions.</h2>
+            <p>
+              The work moves between research and application: studying what may become useful,
+              then building enough to learn where the idea breaks.
+            </p>
+          </div>
+        </section>
+
+        <section className="about" aria-labelledby="about-title">
+          <h2 id="about-title">About</h2>
+          <div className="about-copy">
+            <p>Lucci Labs publishes research notes, open-source software, prototypes, and technical documentation.</p>
+            <p>The studio remains intentionally small and exploratory. Projects are developed further when the work proves useful.</p>
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
   )
 }
