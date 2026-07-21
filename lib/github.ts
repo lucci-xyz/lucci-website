@@ -8,17 +8,15 @@ export type LucciRepository = {
   homepage: string | null
 }
 
-const fallbackRepositories: LucciRepository[] = [
-  {
-    name: "lucci-website",
-    description: "The public home for Lucci Labs research, projects, and documentation.",
-    language: "TypeScript",
-    stars: 0,
-    updatedAt: "2026-07-21T00:00:00Z",
-    url: "https://github.com/lucci-xyz/lucci-website",
-    homepage: null,
-  },
-]
+const hiddenRepositoryNames = new Set([
+  ".github",
+  "flex-pay",
+  "lucci-website",
+  "skill-format-vscode",
+  "stablecoin-acceptance-ledger",
+])
+
+const fallbackRepositories: LucciRepository[] = []
 
 export async function getLucciRepositories(): Promise<LucciRepository[]> {
   try {
@@ -50,13 +48,14 @@ export async function getLucciRepositories(): Promise<LucciRepository[]> {
       visibility: "public" | "private" | "internal"
     }>
 
-    const visible = repositories
+    return repositories
       .filter(
         (repository) =>
           repository.private === false &&
           repository.visibility === "public" &&
           !repository.fork &&
-          !repository.archived,
+          !repository.archived &&
+          !hiddenRepositoryNames.has(repository.name.toLowerCase()),
       )
       .map((repository) => ({
         name: repository.name,
@@ -67,8 +66,6 @@ export async function getLucciRepositories(): Promise<LucciRepository[]> {
         url: repository.html_url,
         homepage: repository.homepage,
       }))
-
-    return visible.length ? visible : fallbackRepositories
   } catch {
     return fallbackRepositories
   }
