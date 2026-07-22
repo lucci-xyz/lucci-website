@@ -18,23 +18,16 @@ export default function ResearchPage() {
           <p className="eyebrow">Research</p>
           <div className="page-hero-row">
             <div>
-              <h1>Questions, methods, and what became clear.</h1>
+              <h1>Open questions, methods, and what the work made clear.</h1>
               <p className="page-hero-copy">
-                Technical notes, studies, and working papers produced while investigating
-                intelligent systems, infrastructure, and interface design.
+                Technical notes, empirical studies, and working papers produced while
+                investigating tool-using agents, local inference, and the systems around them.
               </p>
             </div>
             <p className="page-count">{researchItems.length.toString().padStart(2, "0")} publications<br />Updated 2026</p>
           </div>
         </section>
         <ResearchIndex items={researchItems} />
-        <section className="page-note">
-          <h2>Publishing approach</h2>
-          <div className="page-note-copy">
-            <p>Research is published when the method or result is useful—not only when a project is finished.</p>
-            <p>Entries may be revised as experiments continue. Material changes are recorded in each publication.</p>
-          </div>
-        </section>
       </main>
       <SiteFooter />
     </div>

@@ -14,16 +14,17 @@ export default async function HomePage() {
       <SiteHeader />
       <main>
         <section className="hero" aria-labelledby="hero-title">
-          <h1 id="hero-title">Research, experiments, and useful software.</h1>
+          <h1 id="hero-title">Studying intelligent systems by building them.</h1>
           <div className="hero-bottom">
             <p className="hero-copy">
-              Lucci Labs is an independent research and development studio. We investigate
-              emerging systems, build small products, and publish the work openly.
+              Lucci Labs is an independent research studio working on tool-using agents,
+              local inference, and the interfaces around them. We formalize a question,
+              build the smallest system that tests it, and publish what the work reveals.
             </p>
-            <p className="hero-meta">
-              <span className="status-dot" /> Active research
-              <br /> Open-source by default
-            </p>
+            <div className="hero-meta">
+              <span className="pill"><span className="status-dot" />Active research</span>
+              <span>Open source by default</span>
+            </div>
           </div>
         </section>
 
@@ -56,19 +57,11 @@ export default async function HomePage() {
         <section className="research-note" aria-labelledby="direction-title">
           <p className="label">Current direction</p>
           <div>
-            <h2 id="direction-title">Building small systems to understand larger questions.</h2>
+            <h2 id="direction-title">We build small systems to interrogate large questions.</h2>
             <p>
-              The work moves between research and application: studying what may become useful,
-              then building enough to learn where the idea breaks.
+              The work moves between theory and implementation—formalizing a question, then
+              building the minimal system that shows where the idea holds and where it breaks.
             </p>
-          </div>
-        </section>
-
-        <section className="about" aria-labelledby="about-title">
-          <h2 id="about-title">About</h2>
-          <div className="about-copy">
-            <p>Lucci Labs publishes research notes, open-source software, prototypes, and technical documentation.</p>
-            <p>The studio remains intentionally small and exploratory. Projects are developed further when the work proves useful.</p>
           </div>
         </section>
       </main>

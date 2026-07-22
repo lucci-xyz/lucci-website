@@ -24,8 +24,8 @@ export default async function ProjectsPage() {
           <p className="eyebrow">Projects</p>
           <div className="page-hero-row">
             <div>
-              <h1>Tools made while investigating the work.</h1>
-              <p className="page-hero-copy">The site provides the context. GitHub remains the source of truth for code, releases, issues, and contribution history.</p>
+              <h1>Instruments built in the course of the research.</h1>
+              <p className="page-hero-copy">This page gives the context and intent; GitHub remains the source of truth for code, releases, and contribution history.</p>
             </div>
             <p className="page-count">Synced from GitHub<br />Hourly</p>
           </div>
@@ -54,13 +54,6 @@ export default async function ProjectsPage() {
           ))}
         </section>
 
-        <section className="page-note">
-          <h2>Project pages</h2>
-          <div className="page-note-copy">
-            <p>Only projects that need explanation beyond a README receive a dedicated page here.</p>
-            <p>Repository metadata is refreshed automatically from the public Lucci GitHub organization.</p>
-          </div>
-        </section>
       </main>
       <SiteFooter />
     </div>

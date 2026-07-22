@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { ArticleToc } from "@/components/article-toc"
 import "./article.css"
 
 export const metadata: Metadata = {
@@ -10,49 +11,47 @@ export const metadata: Metadata = {
 }
 
 const contents = [
-  ["Abstract", "#abstract"],
-  ["A prompt is not a system", "#prompt"],
-  ["Four context layers", "#layers"],
-  ["Deliver context late", "#late"],
-  ["Make context observable", "#observable"],
-  ["The interface is the product", "#interface"],
+  { id: "abstract", label: "Abstract" },
+  { id: "prompt", label: "A prompt is not a system", num: "01" },
+  { id: "layers", label: "Four context layers", num: "02" },
+  { id: "late", label: "Deliver context late", num: "03" },
+  { id: "observable", label: "Make context observable", num: "04" },
+  { id: "interface", label: "The interface is the product", num: "05" },
 ]
 
 export default function ContextAsInfrastructurePage() {
   return (
-    <div className="shell article-shell" id="top">
-      <SiteHeader />
-      <main className="document-page">
-        <article>
-          <header className="document-masthead">
-            <Link className="document-back" href="/research">Research</Link>
-            <div className="document-heading">
+    <div className="article-shell" id="top">
+      <div className="doc-frame">
+        <SiteHeader />
+        <div className="doc-layout">
+          <aside className="doc-rail">
+            <Link className="doc-back" href="/research">
+              <span className="doc-back-ico" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M8.5 3.5 5 7l3.5 3.5" />
+                </svg>
+              </span>
+              <span className="doc-back-label">Research</span>
+            </Link>
+            <ArticleToc items={contents} />
+            <div className="doc-rail-meta" aria-label="Publication metadata">
+              <span>Lucci Labs Research</span>
+              <span>Concept note · Working draft</span>
+            </div>
+          </aside>
+
+          <main className="doc-main">
+            <header className="doc-head">
               <p className="document-kicker">Research note 01 · July 2026</p>
               <h1>Context as infrastructure</h1>
               <p className="document-deck">
                 Tool-using agents become more dependable when context is treated as a
                 versioned system rather than a prompt assembled once at the beginning of a run.
               </p>
-            </div>
-            <div className="document-meta" aria-label="Publication metadata">
-              <span>Lucci Labs Research</span>
-              <span>Concept note</span>
-              <span>Working draft</span>
-            </div>
-          </header>
+            </header>
 
-          <nav className="document-contents" aria-label="On this page">
-            <p>On this page</p>
-            <ol>
-              {contents.map(([label, href], index) => (
-                <li key={href}>
-                  <a href={href}><span>{String(index + 1).padStart(2, "0")}</span>{label}</a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-
-          <div className="document-body">
+            <div className="document-body">
             <section id="abstract" className="document-abstract">
               <h2>Abstract</h2>
               <p>
@@ -205,10 +204,11 @@ export default function ContextAsInfrastructurePage() {
                 <p><Link href="/projects">Open-source projects</Link></p>
               </section>
             </footer>
-          </div>
-        </article>
-      </main>
-      <SiteFooter />
+            </div>
+          </main>
+        </div>
+        <SiteFooter />
+      </div>
     </div>
   )
 }

@@ -2,18 +2,22 @@
 
 import { useMemo, useState } from "react"
 
-type Language = "python" | "typescript" | "curl"
+type CodeFile = { name: string; lang: string; code: string }
 
-const installCommands = {
-  python: "pip install lucci",
-  typescript: "npm install @lucci/sdk",
-}
+const installFiles: CodeFile[] = [
+  { name: "Python", lang: "py", code: "pip install lucci" },
+  { name: "TypeScript", lang: "ts", code: "npm install @lucci/sdk" },
+]
 
-const examples: Record<Language, string> = {
-  python: `from lucci import Lucci
+const runFiles: CodeFile[] = [
+  {
+    name: "setup.py",
+    lang: "py",
+    code: `from lucci import Lucci
 
 client = Lucci()
 
+# Combine an instruction with a versioned context manifest
 run = client.runs.create(
     instruction="Summarize the evaluation findings",
     context={
@@ -23,10 +27,15 @@ run = client.runs.create(
 )
 
 print(run.output)`,
-  typescript: `import { Lucci } from "@lucci/sdk";
+  },
+  {
+    name: "setup.ts",
+    lang: "ts",
+    code: `import { Lucci } from "@lucci/sdk";
 
 const client = new Lucci();
 
+// Combine an instruction with a versioned context manifest
 const run = await client.runs.create({
   instruction: "Summarize the evaluation findings",
   context: {
@@ -36,33 +45,111 @@ const run = await client.runs.create({
 });
 
 console.log(run.output);`,
-  curl: `curl https://api.luccilabs.xyz/v1/runs \\
+  },
+  {
+    name: "request.sh",
+    lang: "sh",
+    code: `curl https://api.luccilabs.xyz/v1/runs \\
   -H "Authorization: Bearer $LUCCI_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
     "instruction": "Summarize the evaluation findings",
     "context": {"evidence": ["file_eval_01", "file_eval_02"]}
   }'`,
+  },
+]
+
+const endpointFiles: CodeFile[] = [
+  {
+    name: "endpoints",
+    lang: "text",
+    code: `https://luccilabs.xyz/llms.txt
+https://luccilabs.xyz/docs
+https://luccilabs.xyz/openapi.json`,
+  },
+]
+
+const KEYWORDS = new Set([
+  "import", "from", "as", "const", "let", "var", "new", "await", "async",
+  "function", "return", "export", "default", "if", "else", "elif", "for",
+  "of", "in", "while", "with", "and", "or", "not", "def", "class", "lambda",
+  "true", "false", "none", "null", "undefined", "void", "interface", "type",
+])
+
+// Lightweight tokenizer: URLs (kept plain), comments, strings, numbers, keywords.
+// URLs are matched first so "https://" is never read as a // comment.
+function highlight(code: string) {
+  const nodes: Array<string | JSX.Element> = []
+  const re = /([a-z][a-z0-9+.-]*:\/\/[^\s'"`)]+)|(\/\/[^\n]*|#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)/g
+  let last = 0
+  let key = 0
+  let match: RegExpExecArray | null
+  while ((match = re.exec(code)) !== null) {
+    if (match.index > last) nodes.push(code.slice(last, match.index))
+    const [full, url, comment, str, num, word] = match
+    if (url) nodes.push(full)
+    else if (comment) nodes.push(<span key={key++} className="tok-c">{full}</span>)
+    else if (str) nodes.push(<span key={key++} className="tok-s">{full}</span>)
+    else if (num) nodes.push(<span key={key++} className="tok-n">{full}</span>)
+    else if (word && KEYWORDS.has(word.toLowerCase())) nodes.push(<span key={key++} className="tok-k">{full}</span>)
+    else nodes.push(full)
+    last = re.lastIndex
+  }
+  if (last < code.length) nodes.push(code.slice(last))
+  return nodes
 }
 
-function CodeBlock({ label, code }: { label: string; code: string }) {
+const CopyIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="9" y="9" width="11" height="11" rx="2.4" />
+    <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+  </svg>
+)
+const CheckIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m20 6-11 11-5-5" />
+  </svg>
+)
+
+function CodeCard({ files }: { files: CodeFile[] }) {
+  const [active, setActive] = useState(0)
   const [copied, setCopied] = useState(false)
+  const file = files[active]
+
   async function copy() {
-    await navigator.clipboard?.writeText(code)
+    await navigator.clipboard?.writeText(file.code)
     setCopied(true)
-    window.setTimeout(() => setCopied(false), 1100)
+    window.setTimeout(() => setCopied(false), 1200)
   }
+
   return (
-    <div className="code-block">
-      <div className="code-head"><span>{label}</span><button className="copy-button" type="button" onClick={copy}>{copied ? "Copied" : "Copy"}</button></div>
-      <pre><code>{code}</code></pre>
+    <div className="code-card">
+      <div className="code-card-bar">
+        <span className="traffic" aria-hidden="true"><i /><i /><i /></span>
+        <div className="code-tabs" role="tablist">
+          {files.map((f, i) => (
+            <button
+              key={f.name}
+              type="button"
+              role="tab"
+              aria-selected={i === active}
+              className={`code-tab${i === active ? " active" : ""}`}
+              onClick={() => setActive(i)}
+            >
+              {f.name}
+            </button>
+          ))}
+        </div>
+        <button className="code-copy" type="button" onClick={copy} aria-label={copied ? "Copied" : "Copy code"}>
+          {copied ? <CheckIcon /> : <CopyIcon />}
+        </button>
+      </div>
+      <pre className="code-body"><code>{highlight(file.code)}</code></pre>
     </div>
   )
 }
 
 export function DocsQuickstart() {
-  const [installLanguage, setInstallLanguage] = useState<"python" | "typescript">("python")
-  const [exampleLanguage, setExampleLanguage] = useState<Language>("python")
   const [query, setQuery] = useState("")
   const searchItems = useMemo(() => [
     ["Prerequisites", "#prerequisites"],
@@ -95,22 +182,20 @@ export function DocsQuickstart() {
         <main className="docs-content" id="top">
           <p className="breadcrumbs">Docs / Getting started / Quickstart</p>
           <h1>Quickstart</h1>
-          <p className="docs-lead">Install the SDK and create a tool-using run with a versioned context manifest.</p>
+          <p className="docs-lead">Install the SDK and issue a tool-using run against a versioned context manifest.</p>
           <div className="doc-tools"><a href="/llms.txt">llms.txt</a><a href="/openapi.json">OpenAPI</a></div>
-          <div className="docs-notice"><strong>Interface preview.</strong> These examples define the intended developer experience. They are not production endpoints yet.</div>
+          <div className="docs-notice"><strong>Interface preview.</strong> These examples specify the intended developer surface. They are not live endpoints yet.</div>
 
           <section id="prerequisites"><h2>Prerequisites</h2><ul><li>Python 3.10+ or Node.js 20+</li><li>A Lucci Labs API key when the preview opens</li></ul></section>
 
           <section id="install">
             <h2>Install</h2><p>Choose the SDK that matches your project.</p>
-            <div className="tabs" role="tablist">{(["python", "typescript"] as const).map((language) => <button className={`tab${installLanguage === language ? " active" : ""}`} key={language} type="button" onClick={() => setInstallLanguage(language)}>{language === "python" ? "Python" : "TypeScript"}</button>)}</div>
-            <CodeBlock label="Terminal" code={installCommands[installLanguage]} />
+            <CodeCard files={installFiles} />
           </section>
 
           <section id="first-run">
             <h2>Create your first run</h2><p>A run combines an instruction with a context manifest. The manifest keeps task information and evidence separate so both can be inspected later.</p>
-            <div className="tabs" role="tablist">{(["python", "typescript", "curl"] as Language[]).map((language) => <button className={`tab${exampleLanguage === language ? " active" : ""}`} key={language} type="button" onClick={() => setExampleLanguage(language)}>{language === "curl" ? "cURL" : language[0].toUpperCase() + language.slice(1)}</button>)}</div>
-            <CodeBlock label={exampleLanguage === "curl" ? "cURL" : exampleLanguage} code={examples[exampleLanguage]} />
+            <CodeCard files={runFiles} />
           </section>
 
           <section id="how-it-works">
@@ -123,7 +208,7 @@ export function DocsQuickstart() {
             </div>
           </section>
 
-          <section id="ai-ready"><h2>Use the docs with an AI coding agent</h2><p>Documentation is available through machine-readable discovery files so a coding agent can inspect the current interface without scraping the rendered page.</p><CodeBlock label="Documentation endpoints" code={`https://luccilabs.xyz/llms.txt\nhttps://luccilabs.xyz/docs\nhttps://luccilabs.xyz/openapi.json`} /></section>
+          <section id="ai-ready"><h2>Use the docs with an AI coding agent</h2><p>Documentation is available through machine-readable discovery files so a coding agent can inspect the current interface without scraping the rendered page.</p><CodeCard files={endpointFiles} /></section>
         </main>
 
         <aside className="docs-onpage"><p>On this page</p><a href="#prerequisites">Prerequisites</a><a href="#install">Install</a><a href="#first-run">Create your first run</a><a href="#how-it-works">What the SDK is doing</a><a href="#ai-ready">Use with an AI agent</a></aside>
