@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
+import type React from "react"
 import Link from "next/link"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { PostToc } from "@/components/post-toc"
 import "./article.css"
 
 export const metadata: Metadata = {
@@ -10,71 +12,63 @@ export const metadata: Metadata = {
 }
 
 const contents = [
-  { id: "abstract", label: "Abstract" },
-  { id: "prompt", label: "A prompt is not a system", num: "01" },
-  { id: "layers", label: "Four context layers", num: "02" },
-  { id: "late", label: "Deliver context late", num: "03" },
-  { id: "observable", label: "Make context observable", num: "04" },
-  { id: "interface", label: "The interface is the product", num: "05" },
+  { id: "prompt", label: "A prompt is not a system" },
+  { id: "layers", label: "Four context layers" },
+  { id: "late", label: "Deliver context late" },
+  { id: "observable", label: "Make context observable" },
+  { id: "interface", label: "The interface is the product" },
 ]
+
+// Tufte-style margin note: hidden on mobile until its number is tapped.
+function Sidenote({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <>
+      <label htmlFor={id} className="sidenote-number" aria-hidden="true" />
+      <input type="checkbox" id={id} className="margin-toggle" />
+      <span className="sidenote">{children}</span>
+    </>
+  )
+}
 
 export default function ContextAsInfrastructurePage() {
   return (
     <div className="shell article-shell" id="top">
       <SiteHeader />
       <main className="post">
-        <header className="doc-head">
-          <h1>Context as infrastructure</h1>
-          <p className="post-byline">Lucci Labs · Research note 01 · July 2026</p>
-          <p className="document-deck">
+        <div className="post-heading">
+          <h1 className="post-title">Context as infrastructure</h1>
+          <p className="post-subtitle">
             Tool-using agents become more dependable when context is treated as a
             versioned system rather than a prompt assembled once at the beginning of a run.
           </p>
-          <nav className="post-contents" aria-label="Contents">
-            <ul>
-              {contents.map((item) => (
-                <li key={item.id}>
-                  <a href={`#${item.id}`}>{item.label}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </header>
+          <div className="publish-metadata">
+            <span className="author">Lucci Labs</span>
+            <span>Jul 22, 2026</span>
+          </div>
+        </div>
 
-        <div className="document-body">
-            <section id="abstract" className="document-abstract">
-              <h2>Abstract</h2>
-              <p>
-                Many failures attributed to an agent model are failures of the system around it.
-                The agent receives stale instructions, irrelevant records, unclear permissions, or
-                evidence with no visible provenance. When all of that information is flattened into
-                one prompt, the application loses the ability to reason about what the model knew,
-                when it knew it, and why a particular source affected the result.
-              </p>
-              <p>
-                This note proposes treating context as infrastructure. Stable identity, immediate
-                task instructions, retrieved evidence, and mutable state should remain separate,
-                versioned objects. Each layer should enter the run at the moment it becomes useful
-                and remain inspectable after the run is complete.
-              </p>
-            </section>
-
-            <figure className="document-figure" aria-labelledby="manifest-title">
-              <div className="manifest-diagram" role="img" aria-label="Four context layers with distinct lifecycles">
-                <div><strong>Identity</strong><span>Long-lived</span><p>Operating principles, permissions, and durable behavior.</p></div>
-                <div><strong>Task</strong><span>Per run</span><p>The objective, audience, constraints, and expected output.</p></div>
-                <div><strong>Evidence</strong><span>Retrieved</span><p>Records and observations selected for the current decision.</p></div>
-                <div><strong>State</strong><span>Mutable</span><p>Actions, outcomes, and unresolved work produced during the run.</p></div>
-              </div>
-              <figcaption id="manifest-title">
-                <span>Figure 01</span>
-                A context manifest keeps information with different purposes and lifecycles from
-                collapsing into a single prompt.
-              </figcaption>
-            </figure>
+        <div className="post-content-shell">
+          <PostToc items={contents} />
+          <article className="content">
+            <p>
+              Many failures attributed to an agent model are failures of the system around it.
+              The agent receives stale instructions, irrelevant records, unclear permissions, or
+              evidence with no visible provenance. When all of that information is flattened into
+              one prompt, the application loses the ability to reason about what the model knew,
+              when it knew it, and why a particular source affected the result.
+              <Sidenote id="sn-1">
+                Research note 01, a working draft. Revisions are tracked in the{" "}
+                <a href="https://github.com/lucci-xyz" target="_blank" rel="noreferrer">lab repository</a>.
+              </Sidenote>
+            </p>
+            <p>
+              This note proposes treating context as infrastructure. Stable identity, immediate
+              task instructions, retrieved evidence, and mutable state should remain separate,
+              versioned objects. Each layer should enter the run at the moment it becomes useful
+              and remain inspectable after the run is complete.
+            </p>
 
             <section id="prompt">
-              <p className="document-section-number">01</p>
               <h2>A prompt is not a context system</h2>
               <p>
                 A prompt can describe the immediate task, but it cannot manage the complete
@@ -97,13 +91,16 @@ export default function ContextAsInfrastructurePage() {
             </section>
 
             <section id="layers">
-              <p className="document-section-number">02</p>
               <h2>Separate what the agent is, knows, sees, and does</h2>
               <p>
                 Context becomes easier to reason about when information is divided by function.
                 Identity defines durable behavior and permissions. The task describes the current
                 objective. Evidence contains external material relevant to a decision. State records
                 what has happened and what remains open.
+                <Sidenote id="sn-2">
+                  The manifest format is specified in the{" "}
+                  <Link href="/docs">context manifest documentation</Link>.
+                </Sidenote>
               </p>
               <p>
                 These layers may all appear in the same model request, but they should not share the
@@ -112,16 +109,22 @@ export default function ContextAsInfrastructurePage() {
                 record of an earlier run. A state transition should remain visible even after the
                 conversation that produced it is compressed.
               </p>
-              <div className="document-definition-list">
-                <div><h3>Identity</h3><p>Stable behavior, operating principles, and permissions.</p></div>
-                <div><h3>Task</h3><p>The immediate objective, audience, format, and success criteria.</p></div>
-                <div><h3>Evidence</h3><p>Files, records, observations, and retrieved source material.</p></div>
-                <div><h3>State</h3><p>Completed actions, open decisions, and mutable workflow data.</p></div>
-              </div>
+
+              <figure aria-labelledby="manifest-caption">
+                <div className="manifest-diagram" role="img" aria-label="Four context layers with distinct lifecycles">
+                  <div><strong>Identity</strong><span>Long-lived</span><p>Operating principles, permissions, and durable behavior.</p></div>
+                  <div><strong>Task</strong><span>Per run</span><p>The objective, audience, constraints, and expected output.</p></div>
+                  <div><strong>Evidence</strong><span>Retrieved</span><p>Records and observations selected for the current decision.</p></div>
+                  <div><strong>State</strong><span>Mutable</span><p>Actions, outcomes, and unresolved work produced during the run.</p></div>
+                </div>
+                <figcaption id="manifest-caption">
+                  A context manifest keeps information with different purposes and lifecycles from
+                  collapsing into a single prompt.
+                </figcaption>
+              </figure>
             </section>
 
             <section id="late">
-              <p className="document-section-number">03</p>
               <h2>Deliver context late</h2>
               <p>
                 More context is not automatically better context. Loading every available record at
@@ -134,6 +137,10 @@ export default function ContextAsInfrastructurePage() {
                 must recognize the current decision, identify the evidence required for that
                 decision, and expose only the smallest useful set. A later step may require a
                 different source set even when the overall task has not changed.
+                <Sidenote id="sn-3">
+                  A framework for comparing retrieval policies appears in{" "}
+                  <em>Evaluation beyond a single score</em>, a working paper, forthcoming.
+                </Sidenote>
               </p>
               <blockquote>
                 Retrieval is not simply the act of finding information. It is the design of when
@@ -142,7 +149,6 @@ export default function ContextAsInfrastructurePage() {
             </section>
 
             <section id="observable">
-              <p className="document-section-number">04</p>
               <h2>Make context observable</h2>
               <p>
                 A dependable system should make every context layer inspectable. For any run, a
@@ -164,7 +170,6 @@ export default function ContextAsInfrastructurePage() {
             </section>
 
             <section id="interface">
-              <p className="document-section-number">05</p>
               <h2>The interface around the model is the product</h2>
               <p>
                 Model capability will continue to improve, but stronger models do not eliminate the
@@ -186,7 +191,7 @@ export default function ContextAsInfrastructurePage() {
             <footer className="document-notes">
               <section>
                 <h2>Citation</h2>
-                <p>Lucci Labs. “Context as Infrastructure.” Research Note 01, July 2026.</p>
+                <p>Lucci Labs. &ldquo;Context as Infrastructure.&rdquo; Research Note 01, July 2026.</p>
               </section>
               <section>
                 <h2>Related</h2>
@@ -194,6 +199,7 @@ export default function ContextAsInfrastructurePage() {
                 <p><Link href="/work">Open-source projects</Link></p>
               </section>
             </footer>
+          </article>
         </div>
       </main>
       <SiteFooter />

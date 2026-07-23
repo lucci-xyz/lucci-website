@@ -50,13 +50,13 @@ html.motion-ready :is(
   .hero, .home-intro, .section-head,
   .page-hero, .index-entry, .project-entry,
   .docs-content section,
-  .doc-head, .document-body > section, .document-notes
+  .post-heading, article.content section
 ):not(.is-visible) { opacity: 0; }
 html.motion-ready :is(
   .hero, .home-intro, .section-head,
   .page-hero, .index-entry, .project-entry,
   .docs-content section,
-  .doc-head, .document-body > section, .document-notes
+  .post-heading, article.content section
 ).is-visible { animation: reveal-in .6s ease-in-out backwards; }
 @keyframes reveal-in { from { opacity: 0; } to { opacity: 1; } }
 html.motion-ready :is(.index-entry, .project-entry):nth-child(2).is-visible { animation-delay: .05s; }

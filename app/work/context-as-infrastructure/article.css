@@ -1,160 +1,235 @@
-/* Research note — a centered essay, in the manner of a printed article */
+/* Research note — transcribed from thinkingmachines.ai's blog-post layout:
+   centered 30px serif title, stacked sans byline, sticky left-margin TOC,
+   660px text column, numbered Tufte sidenotes floating in the right margin. */
 .article-shell {
-  --reading: 680px;
-  --figure: 900px;
+  --page: 1280px;
+  --toc-width: 200px;
+  --toc-gap: 34px;
+  --sidenote-width: 200px;
+  --sidenote-gap: 34px;
 }
 
 .post {
-  padding: clamp(40px, 6vw, 72px) 0 40px;
+  padding-bottom: 40px;
 }
 
-/* Head — centered title, byline, deck, and contents */
-.doc-head {
-  max-width: var(--reading);
-  margin: 0 auto 56px;
-  padding-bottom: 44px;
-  border-bottom: 1px solid var(--line);
+/* Heading — everything centered, sized like a printed article, not a poster */
+.post-heading {
   text-align: center;
 }
 
-.doc-head h1 {
-  margin: 0;
+.post-title {
   font-family: var(--serif);
-  font-size: clamp(2rem, 3.8vw, 2.9rem);
-  font-weight: 500;
-  line-height: 1.18;
-  letter-spacing: -0.005em;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  max-width: 710px;
+  margin: 1.5rem auto 0;
   text-wrap: balance;
 }
 
-.post-byline {
-  margin: 16px 0 0;
+.post-subtitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0.5rem auto 1rem;
+  text-wrap: balance;
+}
+
+.publish-metadata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   color: var(--muted);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.4;
+  margin: 1rem 0 2rem;
 }
 
-.document-deck {
-  max-width: 580px;
-  margin: 26px auto 0;
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--muted);
-  font-size: clamp(1.1rem, 1.5vw, 1.25rem);
-  line-height: 1.55;
-  letter-spacing: -0.005em;
+.publish-metadata .author {
+  color: var(--ink);
 }
 
-.post-contents {
-  max-width: fit-content;
-  margin: 36px auto 0;
-  text-align: left;
+/* Shell — 660px text column with true margins either side */
+.post-content-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 660px) minmax(0, 1fr);
+  align-items: start;
 }
 
-.post-contents ul {
+.post-content-shell > article.content {
+  grid-column: 2;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Left TOC — sticky in the left margin, plain sans, current section darkened */
+.left-toc {
+  grid-column: 1;
+  justify-self: end;
+  position: sticky;
+  top: 32px;
+  width: var(--toc-width);
+  margin: 0 var(--toc-gap) 0 0;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.left-toc ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.post-contents li {
-  margin: 7px 0;
+.left-toc li {
+  margin: 0 0 0.7rem;
 }
 
-.post-contents a {
+.left-toc a {
   color: var(--muted);
-  font-family: var(--sans);
-  font-size: 14px;
-  line-height: 1.5;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease-in-out;
 }
 
-.post-contents a:hover {
+.left-toc a:hover {
   color: var(--ink);
   text-decoration: underline;
   text-decoration-color: var(--underline);
   text-underline-offset: 2px;
 }
 
-/* Body — centered reading measure */
-.document-body > section,
-.document-abstract {
-  max-width: var(--reading);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.document-body section {
-  scroll-margin-top: 30px;
-}
-
-.document-body section + section {
-  margin-top: 64px;
-}
-
-.document-body h2 {
-  margin: 0 0 20px;
-  font-family: var(--serif);
-  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
-  font-weight: 500;
-  line-height: 1.3;
-  letter-spacing: -0.005em;
-}
-
-.document-body h3 {
-  margin: 0;
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-}
-
-.document-body p,
-.document-body li {
-  font-family: var(--serif);
-  color: var(--body);
-  font-size: 18px;
-  line-height: 1.7;
-  letter-spacing: 0;
-}
-
-.document-body p {
-  margin: 0 0 22px;
-}
-
-.document-abstract {
-  padding-bottom: 52px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid var(--line);
-}
-
-.document-abstract h2 {
-  color: var(--muted);
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 400;
-}
-
-.document-abstract p:first-of-type {
-  font-size: 20px;
-  line-height: 1.6;
+.left-toc a[aria-current="location"] {
   color: var(--ink);
 }
 
-.document-section-number {
-  margin: 0 0 12px !important;
-  color: var(--muted) !important;
-  font-family: var(--sans);
-  font-size: 13px !important;
-  letter-spacing: 0 !important;
+/* Content typography — serif 17px, generous paragraph rhythm */
+.content {
+  padding-top: 0.5rem;
+  counter-reset: sidenote-counter;
 }
 
-/* Figure — breaks out wider than the reading column, centered */
-.document-figure {
-  width: 100%;
-  max-width: var(--figure);
-  margin: 72px auto 80px;
+.content section {
+  scroll-margin-top: 24px;
+}
+
+.content p,
+.content ul,
+.content ol,
+.content blockquote,
+.content figure,
+.content .document-table {
+  margin-top: 0;
+  margin-bottom: 1.333rem;
+}
+
+.content p,
+.content li {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.content h2 {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0;
+  margin: 1.6em 0 0.6em;
+}
+
+.content ul {
+  list-style: square;
+  margin-left: 1.5rem;
+  padding-left: 0;
+}
+
+.content ul > li {
+  margin-bottom: 0.2rem;
+}
+
+/* Links are always underlined, quietly */
+.content a {
+  text-decoration: underline;
+  text-decoration-color: rgba(103, 103, 103, 0.3);
+  text-underline-offset: 2px;
+  transition: color 0.3s ease-in-out, text-decoration-color 0.3s ease-in-out;
+}
+
+.content a:hover {
+  color: var(--body);
+  text-decoration-color: rgba(80, 73, 69, 0.4);
+}
+
+/* Blockquote — upright, light rule, muted */
+.content blockquote {
+  border-left: 2px solid rgba(103, 103, 103, 0.35);
+  color: var(--body);
+  font-style: normal;
+  margin: 1.6rem 0 1.6rem 1rem;
+  padding: 0.1rem 0 0.1rem 1.25rem;
+}
+
+.content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Sidenotes — numbered, floating in the right margin (Tufte style) */
+.sidenote-number {
+  counter-increment: sidenote-counter;
+  display: inline-block;
+  cursor: pointer;
+  max-height: 2rem;
+}
+
+.sidenote-number::after {
+  content: counter(sidenote-counter);
+  font-family: var(--serif);
+  font-size: 0.72em;
+  vertical-align: super;
+  color: var(--muted);
+  margin-left: 0.08em;
+}
+
+.margin-toggle {
+  display: none;
+}
+
+.sidenote {
+  float: right;
+  clear: right;
+  width: var(--sidenote-width);
+  margin-right: calc(-1 * var(--sidenote-width) - var(--sidenote-gap));
+  margin-left: var(--sidenote-gap);
+  margin-top: 0.3rem;
+  margin-bottom: 20px;
+  font-family: var(--serif);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: left;
+}
+
+.sidenote::before {
+  content: counter(sidenote-counter) ".\2009";
+  color: var(--muted);
+}
+
+/* Figure — diagram plus a small centered caption */
+.content figure {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.4rem 0;
 }
 
 .manifest-diagram {
@@ -163,15 +238,15 @@
 
 .manifest-diagram > div {
   display: grid;
-  grid-template-columns: 140px 110px minmax(0, 1fr);
-  gap: 28px;
+  grid-template-columns: 130px 100px minmax(0, 1fr);
+  gap: 24px;
   align-items: baseline;
-  padding: 18px 0;
+  padding: 15px 0;
   border-bottom: 1px solid var(--line);
 }
 
 .manifest-diagram strong {
-  font-size: 0.93rem;
+  font-size: 0.9rem;
   font-weight: 590;
 }
 
@@ -184,59 +259,21 @@
 .manifest-diagram p {
   margin: 0;
   color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.55;
-}
-
-.document-figure figcaption {
-  display: grid;
-  grid-template-columns: 70px minmax(0, 560px);
-  gap: 18px;
-  margin-top: 15px;
-  color: var(--muted);
-  font-size: 0.76rem;
+  font-size: 0.85rem;
   line-height: 1.5;
 }
 
-.document-figure figcaption span {
+.content figcaption {
+  margin-top: 0.6rem;
+  color: var(--muted);
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
 }
 
-.document-body blockquote {
-  margin: 44px 0;
-  padding: 0 0 0 22px;
-  border-left: 2px solid var(--ink);
-  color: var(--ink);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 1.3rem;
-  line-height: 1.5;
-  letter-spacing: -0.005em;
-}
-
-.document-definition-list {
-  margin: 36px 0 0;
-  border-top: 1px solid var(--line);
-}
-
-.document-definition-list > div {
-  display: grid;
-  grid-template-columns: 130px minmax(0, 1fr);
-  gap: 28px;
-  padding: 17px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.document-definition-list p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
-
+/* Small manifest table */
 .document-table {
-  margin: 38px 0 0;
   border-top: 1px solid var(--ink);
 }
 
@@ -244,7 +281,7 @@
   display: grid;
   grid-template-columns: 1fr 90px 120px;
   gap: 18px;
-  padding: 12px 0;
+  padding: 11px 0;
   border-bottom: 1px solid var(--line);
   color: var(--body);
   font-size: 0.8rem;
@@ -256,22 +293,18 @@
   font-size: 12px;
 }
 
+/* End matter */
 .document-notes {
-  max-width: var(--reading);
   display: grid;
   grid-template-columns: 1.4fr 0.8fr;
   gap: 60px;
-  margin: 88px auto 0;
-  padding-top: 34px;
+  margin-top: 72px;
+  padding-top: 30px;
   border-top: 1px solid var(--line);
 }
 
-.document-notes section + section {
-  margin-top: 0;
-}
-
 .document-notes h2 {
-  margin-bottom: 16px;
+  margin: 0 0 14px;
   color: var(--muted);
   font-family: var(--sans);
   font-size: 13px;
@@ -279,72 +312,60 @@
 }
 
 .document-notes p {
-  margin-bottom: 10px;
+  margin: 0 0 10px;
   color: var(--muted);
   font-size: 0.82rem;
   line-height: 1.55;
 }
 
-.document-notes a {
-  border-bottom: 1px solid var(--line);
-  transition: color 0.22s ease, border-color 0.22s ease;
+/* Collapse: TOC disappears, sidenotes become tap-to-reveal notes in the flow */
+@media (max-width: 1240px) {
+  .left-toc {
+    display: none;
+  }
+
+  .post-content-shell {
+    display: block;
+  }
+
+  .post-content-shell > article.content {
+    max-width: 660px;
+    margin: 0 auto;
+  }
+
+  .sidenote {
+    display: none;
+  }
+
+  .margin-toggle:checked + .sidenote {
+    display: block;
+    float: none;
+    clear: none;
+    width: auto;
+    margin: 0.6rem 0 1rem;
+    padding: 0.6rem 0.8rem;
+    background: var(--surface);
+    border-radius: 6px;
+  }
 }
 
-.document-notes a:hover {
-  border-color: var(--ink);
-  color: var(--ink);
-}
-
-@media (max-width: 900px) {
-  .post {
-    padding-top: 32px;
+@media (max-width: 800px) {
+  .post-title {
+    font-size: 26px;
   }
 
-  .doc-head {
-    margin-bottom: 44px;
-    padding-bottom: 34px;
-  }
-
-  .doc-head h1 {
-    font-size: clamp(1.7rem, 7vw, 2.3rem);
-  }
-
-  .document-figure {
-    max-width: 100%;
-  }
-
-  .document-body section + section {
-    margin-top: 56px;
-  }
-
-  .document-body p,
-  .document-body li {
-    font-size: 17px;
-    line-height: 1.65;
-  }
-
-  .document-abstract {
-    padding-bottom: 46px;
+  .post-subtitle {
+    font-size: 18px;
   }
 
   .manifest-diagram > div {
     grid-template-columns: 1fr auto;
-    gap: 7px 18px;
-    padding: 16px 0;
+    gap: 6px 16px;
+    padding: 13px 0;
   }
 
   .manifest-diagram p {
     grid-column: 1 / -1;
-  }
-
-  .document-figure figcaption {
-    grid-template-columns: 1fr;
-    gap: 5px;
-  }
-
-  .document-definition-list > div {
-    grid-template-columns: 1fr;
-    gap: 6px;
   }
 
   .document-table > div {
@@ -355,7 +376,7 @@
 
   .document-notes {
     grid-template-columns: 1fr;
-    gap: 34px;
-    margin-top: 72px;
+    gap: 30px;
+    margin-top: 56px;
   }
 }

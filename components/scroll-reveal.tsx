@@ -12,9 +12,8 @@ const SELECTOR = [
   ".index-entry",
   ".project-entry",
   ".docs-content section",
-  ".doc-head",
-  ".document-body > section",
-  ".document-notes",
+  ".post-heading",
+  "article.content section",
 ].join(",")
 
 export function ScrollReveal() {
