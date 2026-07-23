@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
-import { researchItems } from "@/lib/site-data"
+import { getWritingIndex } from "@/lib/writing"
 
 export const metadata: Metadata = {
   title: "Writing",
@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 }
 
 export default function WritingPage() {
+  const items = getWritingIndex()
+
   return (
     <div className="shell" id="top">
       <SiteHeader />
@@ -24,10 +26,10 @@ export default function WritingPage() {
         </section>
 
         <section className="index-list" aria-label="Research notes, newest first">
-          {researchItems.map((item) => {
+          {items.map((item) => {
             const content = (
               <>
-                <p className="index-date">{item.date}<br />{item.format}</p>
+                <p className="index-date">{item.dateLabel}<br />{item.format}</p>
                 <div>
                   <h2 className="index-title">{item.title}</h2>
                   <p className="index-desc">{item.description}</p>

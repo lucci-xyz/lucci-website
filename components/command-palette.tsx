@@ -2,7 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { researchItems } from "@/lib/site-data"
+
+export type PaletteNote = {
+  slug?: string
+  title: string
+  description: string
+  format: string
+  dateLabel: string
+}
 
 type Command = {
   id: string
@@ -39,7 +46,7 @@ function rank(haystack: string, query: string) {
   return 2
 }
 
-export function CommandPalette() {
+export function CommandPalette({ notes }: { notes: PaletteNote[] }) {
   const router = useRouter()
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
@@ -64,13 +71,13 @@ export function CommandPalette() {
       { id: "nav-building", group: "Navigate", title: "Building", meta: "Page", keywords: "projects open source github instruments tools systems work", run: () => router.push("/building") },
       { id: "nav-docs", group: "Navigate", title: "Docs", meta: "Page", keywords: "documentation quickstart sdk api", run: () => router.push("/docs") },
     ]
-    const research: Command[] = researchItems.map((item) => ({
+    const research: Command[] = notes.map((item) => ({
       id: `research-${item.slug ?? item.title}`,
       group: "Research",
       title: item.title,
-      meta: item.slug ? `${item.date} · ${item.format}` : "Forthcoming",
+      meta: item.slug ? `${item.dateLabel} · ${item.format}` : "Forthcoming",
       description: item.description,
-      keywords: `${item.format} ${item.category} ${item.description}`,
+      keywords: `${item.format} ${item.description}`,
       forthcoming: !item.slug,
       run: item.slug ? () => router.push(`/writing/${item.slug}`) : undefined,
     }))
@@ -116,7 +123,7 @@ export function CommandPalette() {
       },
     ]
     return [...navigate, ...research, ...actions]
-  }, [router])
+  }, [router, notes])
 
   const results = useMemo(() => {
     if (!query.trim()) return commands

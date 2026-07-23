@@ -1,0 +1,56 @@
+---
+title: Your title here
+description: One or two sentences shown on the Writing index and in the command palette.
+date: 2026-01-01
+format: Research note
+published: false
+---
+
+Open with a paragraph or two before the first heading — this is what readers see
+at the fold under the big title. No "Abstract" label needed; just start.
+
+You can attach a numbered margin note anywhere with a sidenote. Give each one a
+unique id per article.<Sidenote id="sn-1">Sidenotes float in the right margin on desktop and become tap-to-reveal notes on mobile. Links work inside them: [example](https://example.com).</Sidenote>
+
+## Section headings become the table of contents
+
+Every `##` heading automatically appears in the sticky left TOC with scrollspy.
+Use plain sentence case. Sub-points stay in prose — avoid `###` unless necessary.
+
+Standard markdown works everywhere: **bold**, *italic*, [links](/docs), and lists:
+
+- Square-bulleted lists
+- Keep items short
+
+> Blockquotes render with a light left rule — use them for the one line you want
+> remembered.
+
+## Images and figures
+
+Put image files in `public/writing/<your-slug>/` and reference them absolutely.
+Wrap anything in `<Figure>` to add a small centered caption:
+
+<Figure caption="A short caption, centered and gray, under whatever the figure holds.">
+  ![Alt text for the image](/writing/your-slug/example.png)
+</Figure>
+
+For layered/lifecycle diagrams there is a ready-made component:
+
+<Figure caption="Rows with hairlines — good for layers, lifecycles, taxonomies.">
+  <ManifestDiagram
+    label="Accessible description of the diagram"
+    rows={[
+      { name: "First", tag: "Label", desc: "One line describing this row." },
+      { name: "Second", tag: "Label", desc: "One line describing this row." },
+    ]}
+  />
+</Figure>
+
+## Tables
+
+Markdown tables render in the house style — sans headers, hairline rows:
+
+| Column   | Value | Note       |
+| -------- | ----- | ---------- |
+| First    | 12    | Long-lived |
+| Second   | 1     | Per run    |

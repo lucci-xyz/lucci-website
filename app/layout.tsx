@@ -4,6 +4,7 @@ import { Chakra_Petch, Geist, Geist_Mono, Newsreader } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { CommandPalette } from "@/components/command-palette"
+import { getWritingIndex } from "@/lib/writing"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
@@ -50,7 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           }}
         />
         {children}
-        <CommandPalette />
+        <CommandPalette notes={getWritingIndex()} />
         <ScrollReveal />
         <Analytics />
       </body>
