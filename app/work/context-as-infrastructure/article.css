@@ -3,7 +3,7 @@
    660px text column, numbered Tufte sidenotes floating in the right margin. */
 .article-shell {
   --page: 1280px;
-  --toc-width: 200px;
+  --toc-width: 220px;
   --toc-gap: 34px;
   --sidenote-width: 200px;
   --sidenote-gap: 34px;
@@ -20,24 +20,12 @@
 
 .post-title {
   font-family: var(--serif);
-  font-weight: 600;
-  font-size: 30px;
-  line-height: 1.4;
-  letter-spacing: 0;
-  max-width: 710px;
-  margin: 1.5rem auto 0;
-  text-wrap: balance;
-}
-
-.post-subtitle {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-style: italic;
-  font-size: 21px;
-  line-height: 1.5;
-  color: var(--muted);
-  max-width: 640px;
-  margin: 0.5rem auto 1rem;
+  font-weight: 500;
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
+  line-height: 1.12;
+  letter-spacing: -0.008em;
+  max-width: 900px;
+  margin: 2.5rem auto 0;
   text-wrap: balance;
 }
 
@@ -50,7 +38,7 @@
   font-family: var(--sans);
   font-size: 15px;
   line-height: 1.4;
-  margin: 1rem 0 2rem;
+  margin: 1.4rem 0 2.5rem;
 }
 
 .publish-metadata .author {
@@ -78,21 +66,26 @@
   top: 32px;
   width: var(--toc-width);
   margin: 0 var(--toc-gap) 0 0;
-  max-height: calc(100vh - 64px);
-  overflow-y: auto;
+  height: calc(100vh - 72px);
+  display: flex;
   font-family: var(--sans);
-  font-size: 13px;
-  line-height: 1.4;
+  font-size: 15px;
+  line-height: 1.45;
 }
 
 .left-toc ul {
   list-style: none;
   margin: 0;
   padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .left-toc li {
-  margin: 0 0 0.7rem;
+  margin: 0;
 }
 
 .left-toc a {
@@ -351,11 +344,8 @@
 
 @media (max-width: 800px) {
   .post-title {
-    font-size: 26px;
-  }
-
-  .post-subtitle {
-    font-size: 18px;
+    font-size: clamp(2rem, 8vw, 2.5rem);
+    margin-top: 1.6rem;
   }
 
   .manifest-diagram > div {

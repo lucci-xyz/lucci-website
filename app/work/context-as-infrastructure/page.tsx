@@ -37,10 +37,6 @@ export default function ContextAsInfrastructurePage() {
       <main className="post">
         <div className="post-heading">
           <h1 className="post-title">Context as infrastructure</h1>
-          <p className="post-subtitle">
-            Tool-using agents become more dependable when context is treated as a
-            versioned system rather than a prompt assembled once at the beginning of a run.
-          </p>
           <div className="publish-metadata">
             <span className="author">Lucci Labs</span>
             <span>Jul 22, 2026</span>
