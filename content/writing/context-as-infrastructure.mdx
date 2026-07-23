@@ -1,0 +1,106 @@
+---
+title: Context as infrastructure
+description: A practical model for separating task framing, evidence, state, and durable memory in tool-using agent systems.
+date: 2026-07-22
+format: Research note
+published: true
+---
+
+Many failures attributed to an agent model are failures of the system around it.
+The agent receives stale instructions, irrelevant records, unclear permissions, or
+evidence with no visible provenance. When all of that information is flattened into
+one prompt, the application loses the ability to reason about what the model knew,
+when it knew it, and why a particular source affected the result.<Sidenote id="sn-1">Research note 01, a working draft. Revisions are tracked in the [lab repository](https://github.com/lucci-xyz).</Sidenote>
+
+This note proposes treating context as infrastructure. Stable identity, immediate
+task instructions, retrieved evidence, and mutable state should remain separate,
+versioned objects. Each layer should enter the run at the moment it becomes useful
+and remain inspectable after the run is complete.
+
+## A prompt is not a context system
+
+A prompt can describe the immediate task, but it cannot manage the complete
+information environment of a long-running agent. It does not determine which
+records are current, which tools are permitted, which actions have already
+occurred, or which facts should persist into the next run.
+
+Applications often hide these concerns inside prompt construction code. A single
+string quietly combines behavioral rules, user preferences, retrieved documents,
+tool descriptions, conversation history, and intermediate state. The model sees a
+sequence of tokens; the product team sees an increasingly difficult debugging
+problem.
+
+Treating context as a system changes the unit of design. Instead of asking how to
+write a larger prompt, the application asks which information object is needed,
+who owns it, how it changes, and when it should become available.
+
+## Four context layers
+
+Context becomes easier to reason about when information is divided by function.
+Identity defines durable behavior and permissions. The task describes the current
+objective. Evidence contains external material relevant to a decision. State records
+what has happened and what remains open.<Sidenote id="sn-2">The manifest format is specified in the [context manifest documentation](/docs).</Sidenote>
+
+These layers may all appear in the same model request, but they should not share the
+same lifecycle. Updating a task should not silently rewrite the agent's durable
+operating principles. Retrieving a new document should not mutate the historical
+record of an earlier run. A state transition should remain visible even after the
+conversation that produced it is compressed.
+
+<Figure caption="A context manifest keeps information with different purposes and lifecycles from collapsing into a single prompt.">
+  <ManifestDiagram
+    label="Four context layers with distinct lifecycles"
+    rows={[
+      { name: "Identity", tag: "Long-lived", desc: "Operating principles, permissions, and durable behavior." },
+      { name: "Task", tag: "Per run", desc: "The objective, audience, constraints, and expected output." },
+      { name: "Evidence", tag: "Retrieved", desc: "Records and observations selected for the current decision." },
+      { name: "State", tag: "Mutable", desc: "Actions, outcomes, and unresolved work produced during the run." },
+    ]}
+  />
+</Figure>
+
+## Deliver context late
+
+More context is not automatically better context. Loading every available record at
+the beginning of a run increases cost, weakens attention, and makes it harder to
+determine which evidence influenced an action. Information should enter when the
+system reaches a decision that can use it.
+
+This makes retrieval a timing problem as much as a search problem. The application
+must recognize the current decision, identify the evidence required for that
+decision, and expose only the smallest useful set. A later step may require a
+different source set even when the overall task has not changed.<Sidenote id="sn-3">A framework for comparing retrieval policies appears in *Evaluation beyond a single score*, a working paper, forthcoming.</Sidenote>
+
+> Retrieval is not simply the act of finding information. It is the design of when
+> information becomes available and what the agent is allowed to do with it.
+
+## Make context observable
+
+A dependable system should make every context layer inspectable. For any run, a
+reviewer should be able to identify the version of the identity layer, the exact task
+instructions, the records retrieved, and the state changes produced by tools.
+
+This record supports more than debugging. It allows teams to compare runs, evaluate
+retrieval policies, reproduce failures, and understand whether an improvement came
+from a stronger model or a better information interface.
+
+| Layer    | Version | Lifecycle  |
+| -------- | ------- | ---------- |
+| Identity | 12      | Long-lived |
+| Task     | 1       | Per run    |
+| Evidence | 7       | Retrieved  |
+| State    | 19      | Mutable    |
+
+## The interface is the product
+
+Model capability will continue to improve, but stronger models do not eliminate the
+need for context design. As systems gain access to more tools and more consequential
+actions, applications need greater control over what the model knows, which evidence
+it can trust, and what it is permitted to change.
+
+The quality of an agent product therefore depends on the interface between the model
+and the rest of the system. That interface should be layered, versioned, observable,
+and capable of delivering information at the moment it becomes useful.
+
+Context is not supporting material around the intelligence. In a tool-using system,
+context is part of the infrastructure that makes the intelligence usable.
