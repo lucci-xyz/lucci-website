@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
 
 export default function ContextAsInfrastructureRedirect() {
-  redirect("/work/context-as-infrastructure")
+  redirect("/writing/context-as-infrastructure")
 }

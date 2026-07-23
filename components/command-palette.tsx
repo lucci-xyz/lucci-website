@@ -60,7 +60,8 @@ export function CommandPalette() {
   const commands = useMemo<Command[]>(() => {
     const navigate: Command[] = [
       { id: "nav-home", group: "Navigate", title: "Home", meta: "Page", keywords: "index start lucci labs", run: () => router.push("/") },
-      { id: "nav-work", group: "Navigate", title: "Work", meta: "Page", keywords: "research notes papers publications projects open source github instruments", run: () => router.push("/work") },
+      { id: "nav-writing", group: "Navigate", title: "Writing", meta: "Page", keywords: "research notes papers publications essays work", run: () => router.push("/writing") },
+      { id: "nav-building", group: "Navigate", title: "Building", meta: "Page", keywords: "projects open source github instruments tools systems work", run: () => router.push("/building") },
       { id: "nav-docs", group: "Navigate", title: "Docs", meta: "Page", keywords: "documentation quickstart sdk api", run: () => router.push("/docs") },
     ]
     const research: Command[] = researchItems.map((item) => ({
@@ -71,7 +72,7 @@ export function CommandPalette() {
       description: item.description,
       keywords: `${item.format} ${item.category} ${item.description}`,
       forthcoming: !item.slug,
-      run: item.slug ? () => router.push(`/work/${item.slug}`) : undefined,
+      run: item.slug ? () => router.push(`/writing/${item.slug}`) : undefined,
     }))
     const actions: Command[] = [
       {

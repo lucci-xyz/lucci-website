@@ -10,7 +10,7 @@ export default function HomePage() {
         <section className="hero" aria-labelledby="hero-title">
           <h1 className="hero-wordmark" id="hero-title">Lucci Labs</h1>
           <p className="hero-tagline">Studying intelligent systems by building them.</p>
-          <Link className="home-announcement" href="/work/context-as-infrastructure">
+          <Link className="home-announcement" href="/writing/context-as-infrastructure">
             <span className="pill"><span className="status-dot" />New</span>
             <span className="announcement-text">Context as infrastructure — our latest research note</span>
           </Link>
@@ -34,8 +34,10 @@ export default function HomePage() {
             The current direction centers on context as infrastructure: treating the
             information an agent receives as versioned, observable system components
             rather than a prompt assembled once at the beginning of a run. The research
-            notes and the instruments built alongside them are collected under{" "}
-            <Link className="quiet-link" href="/work">Work</Link>.
+            notes live under{" "}
+            <Link className="quiet-link" href="/writing">Writing</Link>; the instruments
+            built alongside them under{" "}
+            <Link className="quiet-link" href="/building">Building</Link>.
           </p>
           <p>
             Everything is open source by default. The code lives on{" "}

@@ -119,8 +119,8 @@ section { scroll-margin-top: 70px; }
 .section-head h2 { margin: 0; font-family: var(--sans); font-size: 1.05rem; font-weight: 500; letter-spacing: -0.02em; }
 .section-index, .eyebrow, .meta-label { color: var(--muted); font-family: var(--sans); font-size: 13px; letter-spacing: -0.005em; }
 
-/* Work page — one centered column: research list, then project blocks */
-.work-page { max-width: var(--reading); margin: 0 auto; }
+/* Index pages (Writing, Building) — one centered column */
+.index-page { max-width: var(--reading); margin: 0 auto; }
 .page-hero { padding: clamp(48px, 6.5vw, 84px) 0 clamp(32px, 4.5vw, 52px); border-bottom: 1px solid var(--line); }
 .page-hero .eyebrow { margin: 0 0 16px; }
 .page-hero h1 { margin: 0; max-width: 720px; font-family: var(--serif); font-size: clamp(1.8rem, 3.4vw, 2.5rem); font-weight: 500; line-height: 1.25; letter-spacing: -0.005em; text-wrap: balance; }
