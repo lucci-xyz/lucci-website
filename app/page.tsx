@@ -14,24 +14,26 @@ export default async function HomePage() {
       <SiteHeader />
       <main>
         <section className="hero" aria-labelledby="hero-title">
-          <h1 id="hero-title">Studying intelligent systems by building them.</h1>
-          <div className="hero-bottom">
-            <p className="hero-copy">
-              Lucci Labs is an independent research studio working on tool-using agents,
-              local inference, and the interfaces around them. We formalize a question,
-              build the smallest system that tests it, and publish what the work reveals.
-            </p>
-            <div className="hero-meta">
-              <span className="pill"><span className="status-dot" />Active research</span>
-              <span>Open source by default</span>
-            </div>
-          </div>
+          <h1 className="hero-wordmark" id="hero-title">Lucci Labs</h1>
+          <p className="hero-tagline">Studying intelligent systems by building them.</p>
+          <Link className="home-announcement" href="/research/context-as-infrastructure">
+            <span className="pill"><span className="status-dot" />New</span>
+            <span className="announcement-text">Context as infrastructure — our latest research note</span>
+          </Link>
+        </section>
+
+        <section className="home-intro" aria-label="About Lucci Labs">
+          <p>
+            Lucci Labs is an independent research studio working on tool-using agents,
+            local inference, and the interfaces around them. We formalize a question,
+            build the smallest system that tests it, and publish what the work reveals.
+          </p>
+          <p>The work is open source by default.</p>
         </section>
 
         <section aria-labelledby="work-title">
           <div className="section-head">
             <h2 id="work-title">Selected work</h2>
-            <span className="section-index">01 / 04</span>
           </div>
           <div className="work-list">
             <Link className="work-item" href="/research/context-as-infrastructure">
@@ -41,14 +43,12 @@ export default async function HomePage() {
                 memory in tool-using agent systems.
               </p>
               <p className="work-meta">Research note · 2026</p>
-              <span className="arrow">↗</span>
             </Link>
             {selected.map((repository) => (
               <a className="work-item" href={repository.url} key={repository.name} target="_blank" rel="noreferrer">
-                <h3 className="work-title">{repository.name}</h3>
+                <h3 className="work-title">{repository.name}<span className="arrow">↗</span></h3>
                 <p className="work-copy">{repository.description}</p>
                 <p className="work-meta">{repository.language || "Open source"} · GitHub</p>
-                <span className="arrow">↗</span>
               </a>
             ))}
           </div>

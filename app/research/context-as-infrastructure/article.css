@@ -1,7 +1,7 @@
-/* Full-screen research article: sticky full-height TOC rail + wide reading column */
+/* Research article: quiet sticky TOC rail + centered serif reading column */
 .article-shell {
-  --reading: 760px;
-  --figure: 1040px;
+  --reading: 680px;
+  --figure: 900px;
   width: 100%;
   font-family: var(--sans);
 }
@@ -13,60 +13,52 @@
 
 .doc-layout {
   display: grid;
-  grid-template-columns: minmax(200px, 248px) minmax(0, 1fr);
-  gap: clamp(36px, 4.5vw, 88px);
+  grid-template-columns: minmax(170px, 200px) minmax(0, 1fr);
+  gap: clamp(32px, 4vw, 72px);
   align-items: start;
   border-top: 1px solid var(--line);
 }
 
-/* Left rail — full-height sticky */
+/* Left rail — full-height sticky, no dividing rule */
 .doc-rail {
   position: sticky;
   top: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 38px;
-  padding: 40px clamp(20px, 1.6vw, 34px) 40px 0;
-  border-right: 1px solid var(--line);
+  gap: 34px;
+  padding: 40px 0;
 }
 
-/* Back button — pill with a circular arrow that slides on hover */
+/* Back link — plain and quiet */
 .doc-back {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 7px;
   width: fit-content;
-  padding: 5px 16px 5px 5px;
-  border: 1px solid var(--line-dark);
-  border-radius: 100px;
-  color: var(--body);
-  font-size: 0.8rem;
+  color: var(--muted);
+  font-size: 13px;
   letter-spacing: -0.01em;
-  transition: border-color 0.25s var(--ease), color 0.25s var(--ease), background 0.25s var(--ease);
+  transition: color 0.22s ease;
 }
 
 .doc-back-ico {
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px solid var(--line-dark);
   color: var(--muted);
-  transition: transform 0.3s var(--ease), border-color 0.25s var(--ease), color 0.25s var(--ease);
+  transition: transform 0.3s var(--ease), color 0.22s ease;
 }
 
 .doc-back:hover {
-  border-color: var(--accent);
-  color: var(--accent-ink);
-  background: var(--accent-soft);
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-underline-offset: 2px;
 }
 
 .doc-back:hover .doc-back-ico {
-  transform: translateX(-3px);
-  border-color: var(--accent);
-  color: var(--accent);
+  transform: translateX(-2px);
+  color: var(--ink);
 }
 
 /* Table of contents */
@@ -79,10 +71,8 @@
 .doc-toc > p {
   margin: 0 0 14px;
   color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.57rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-size: 13px;
 }
 
 .doc-toc ol {
@@ -97,18 +87,18 @@
 
 .doc-toc a {
   display: grid;
-  grid-template-columns: 24px 1fr;
-  gap: 10px;
+  grid-template-columns: 22px 1fr;
+  gap: 9px;
   padding: 2px 0;
   color: var(--muted);
-  font-size: 0.86rem;
-  line-height: 1.4;
+  font-size: 13px;
+  line-height: 1.45;
   transition: color 0.2s var(--ease);
 }
 
 .doc-toc a span {
   font-family: var(--mono);
-  font-size: 0.57rem;
+  font-size: 10px;
   color: var(--faint);
   padding-top: 3px;
   transition: color 0.2s var(--ease);
@@ -118,9 +108,15 @@
   color: var(--ink);
 }
 
-.doc-toc .is-active a,
+.doc-toc .is-active a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-underline-offset: 2px;
+}
+
 .doc-toc .is-active a span {
-  color: var(--accent);
+  color: var(--ink);
 }
 
 .doc-rail-meta {
@@ -128,59 +124,58 @@
   flex-direction: column;
   gap: 5px;
   color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.57rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-size: 13px;
 }
 
-/* Main column */
+/* Main column — everything reads down a centered column */
 .doc-main {
   min-width: 0;
-  padding: 44px 0 120px;
+  padding: 52px 0 120px;
 }
 
 .doc-head {
-  max-width: 940px;
+  max-width: var(--reading);
+  margin: 0 auto 52px;
   padding-bottom: 44px;
-  margin-bottom: 56px;
   border-bottom: 1px solid var(--line);
 }
 
 .document-kicker {
   margin: 0 0 20px;
   color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-size: 13px;
 }
 
 .doc-head h1 {
   margin: 0;
-  max-width: 16ch;
+  max-width: 24ch;
   font-family: var(--serif);
-  font-size: clamp(2.5rem, 4.4vw, 4.25rem);
-  font-weight: 430;
-  line-height: 1.06;
-  letter-spacing: -0.014em;
+  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
 }
 
 .document-deck {
   max-width: 640px;
-  margin: 26px 0 0;
+  margin: 22px 0 0;
   font-family: var(--serif);
   font-style: italic;
-  color: var(--body);
-  font-size: clamp(1.2rem, 1.7vw, 1.44rem);
-  line-height: 1.5;
+  color: var(--muted);
+  font-size: clamp(1.1rem, 1.5vw, 1.25rem);
+  line-height: 1.55;
   letter-spacing: -0.005em;
 }
 
-/* Body — reading measure inside the wide main column */
+/* Body — centered reading measure */
 .document-body > section,
 .document-abstract {
   max-width: var(--reading);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .document-body section {
@@ -192,33 +187,34 @@
 }
 
 .document-body h2 {
-  margin: 0 0 22px;
+  margin: 0 0 20px;
   font-family: var(--serif);
-  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-  font-weight: 460;
-  line-height: 1.16;
-  letter-spacing: -0.012em;
+  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
 }
 
 .document-body h3 {
   margin: 0;
-  font-size: 0.94rem;
+  font-family: var(--sans);
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.4;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
 }
 
 .document-body p,
 .document-body li {
   font-family: var(--serif);
-  color: #2e2f2a;
-  font-size: 1.24rem;
-  line-height: 1.68;
+  color: var(--body);
+  font-size: 18px;
+  line-height: 1.7;
   letter-spacing: 0;
 }
 
 .document-body p {
-  margin: 0 0 24px;
+  margin: 0 0 22px;
 }
 
 .document-abstract {
@@ -229,32 +225,30 @@
 
 .document-abstract h2 {
   color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.62rem;
+  font-family: var(--sans);
+  font-size: 13px;
   font-weight: 400;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
 }
 
 .document-abstract p:first-of-type {
-  font-size: 1.4rem;
-  line-height: 1.5;
+  font-size: 20px;
+  line-height: 1.6;
   color: var(--ink);
 }
 
 .document-section-number {
-  margin: 0 0 14px !important;
-  color: var(--accent) !important;
-  font-family: var(--mono);
-  font-size: 0.6rem !important;
-  letter-spacing: 0.04em !important;
+  margin: 0 0 12px !important;
+  color: var(--muted) !important;
+  font-family: var(--sans);
+  font-size: 13px !important;
+  letter-spacing: 0 !important;
 }
 
-/* Figure — breaks out wider than the reading column, left aligned */
+/* Figure — breaks out wider than the reading column, centered */
 .document-figure {
   width: 100%;
   max-width: var(--figure);
-  margin: 80px 0 88px;
+  margin: 72px auto 80px;
 }
 
 .manifest-diagram {
@@ -277,10 +271,8 @@
 
 .manifest-diagram span {
   color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.59rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-size: 12px;
 }
 
 .manifest-diagram p {
@@ -301,21 +293,19 @@
 }
 
 .document-figure figcaption span {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-size: 12px;
 }
 
 .document-body blockquote {
-  margin: 46px 0;
-  padding: 0 0 0 24px;
-  border-left: 2px solid var(--accent);
+  margin: 44px 0;
+  padding: 0 0 0 22px;
+  border-left: 2px solid var(--ink);
   color: var(--ink);
   font-family: var(--serif);
   font-style: italic;
-  font-size: 1.5rem;
-  line-height: 1.45;
+  font-size: 1.3rem;
+  line-height: 1.5;
   letter-spacing: -0.005em;
 }
 
@@ -356,18 +346,16 @@
 
 .document-table > div:first-child {
   color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.57rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-size: 12px;
 }
 
 .document-notes {
-  max-width: var(--figure);
+  max-width: var(--reading);
   display: grid;
   grid-template-columns: 1.4fr 0.8fr;
   gap: 60px;
-  margin-top: 96px;
+  margin: 88px auto 0;
   padding-top: 34px;
   border-top: 1px solid var(--line);
 }
@@ -379,11 +367,9 @@
 .document-notes h2 {
   margin-bottom: 16px;
   color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.61rem;
+  font-family: var(--sans);
+  font-size: 13px;
   font-weight: 400;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
 }
 
 .document-notes p {
@@ -447,7 +433,7 @@
   }
 
   .doc-head h1 {
-    font-size: clamp(2.05rem, 8.5vw, 3rem);
+    font-size: clamp(1.7rem, 7vw, 2.3rem);
   }
 
   .document-figure {
@@ -460,8 +446,8 @@
 
   .document-body p,
   .document-body li {
-    font-size: 1.12rem;
-    line-height: 1.66;
+    font-size: 17px;
+    line-height: 1.65;
   }
 
   .document-abstract {

@@ -1,9 +1,9 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono, Newsreader } from "next/font/google"
+import { Chakra_Petch, Geist, Geist_Mono, Newsreader } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
 import { ScrollReveal } from "@/components/scroll-reveal"
-import { ScrollProgress } from "@/components/scroll-progress"
+import { CommandPalette } from "@/components/command-palette"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
@@ -12,6 +12,12 @@ const newsreader = Newsreader({
   subsets: ["latin"],
   style: ["normal", "italic"],
   variable: "--font-serif",
+  display: "swap",
+})
+const chakraPetch = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-brand",
   display: "swap",
 })
 
@@ -35,7 +41,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable} ${newsreader.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable} ${newsreader.variable} ${chakraPetch.variable}`} suppressHydrationWarning>
       <body>
         <script
           dangerouslySetInnerHTML={{
@@ -43,8 +49,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               "try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('motion-ready')}}catch(e){}",
           }}
         />
-        <ScrollProgress />
         {children}
+        <CommandPalette />
         <ScrollReveal />
         <Analytics />
       </body>

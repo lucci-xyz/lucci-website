@@ -163,7 +163,7 @@ export function DocsQuickstart() {
   return (
     <div className="docs-page">
       <header className="docs-header">
-        <div className="docs-brand"><a className="wordmark" href="/">lucci labs</a><span className="docs-label">docs</span></div>
+        <div className="docs-brand"><a className="wordmark" href="/">Lucci Labs</a><span className="docs-label">Docs</span></div>
         <div className="docs-search">
           <input aria-label="Search documentation" placeholder="Search documentation" value={query} onChange={(event) => setQuery(event.target.value)} />
           <span className="shortcut">⌘ K</span>

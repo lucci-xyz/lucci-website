@@ -3,9 +3,10 @@
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
 
-// Elements that fade + rise into place. Kept in sync with the reveal rules in globals.css.
+// Elements that fade into place. Kept in sync with the reveal rules in globals.css.
 const SELECTOR = [
   ".hero",
+  ".home-intro",
   ".section-head",
   ".work-item",
   ".research-note",
@@ -15,11 +16,6 @@ const SELECTOR = [
   ".index-entry",
   ".project-entry",
   ".page-note",
-  ".publication-header",
-  ".publication-figure",
-  ".publication-intro",
-  ".publication-body section",
-  ".paper-end",
   ".docs-content section",
   ".doc-head",
   ".document-body > section",
