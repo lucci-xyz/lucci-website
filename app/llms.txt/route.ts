@@ -5,9 +5,8 @@ Lucci Labs publishes independent research, open-source projects, and developer d
 
 ## Canonical pages
 - https://luccilabs.xyz/
-- https://luccilabs.xyz/research
-- https://luccilabs.xyz/research/context-as-infrastructure
-- https://luccilabs.xyz/projects
+- https://luccilabs.xyz/work
+- https://luccilabs.xyz/work/context-as-infrastructure
 - https://luccilabs.xyz/docs
 - https://luccilabs.xyz/openapi.json
 

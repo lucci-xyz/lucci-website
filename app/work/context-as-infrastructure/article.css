@@ -1,173 +1,79 @@
-/* Research article: quiet sticky TOC rail + centered serif reading column */
+/* Research note — a centered essay, in the manner of a printed article */
 .article-shell {
   --reading: 680px;
   --figure: 900px;
-  width: 100%;
-  font-family: var(--sans);
 }
 
-.doc-frame {
-  width: 100%;
-  padding: 0 var(--pad);
+.post {
+  padding: clamp(40px, 6vw, 72px) 0 40px;
 }
 
-.doc-layout {
-  display: grid;
-  grid-template-columns: minmax(170px, 200px) minmax(0, 1fr);
-  gap: clamp(32px, 4vw, 72px);
-  align-items: start;
-  border-top: 1px solid var(--line);
-}
-
-/* Left rail — full-height sticky, no dividing rule */
-.doc-rail {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 34px;
-  padding: 40px 0;
-}
-
-/* Back link — plain and quiet */
-.doc-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  width: fit-content;
-  color: var(--muted);
-  font-size: 13px;
-  letter-spacing: -0.01em;
-  transition: color 0.22s ease;
-}
-
-.doc-back-ico {
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  transition: transform 0.3s var(--ease), color 0.22s ease;
-}
-
-.doc-back:hover {
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-color: var(--underline);
-  text-underline-offset: 2px;
-}
-
-.doc-back:hover .doc-back-ico {
-  transform: translateX(-2px);
-  color: var(--ink);
-}
-
-/* Table of contents */
-.doc-toc {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-}
-
-.doc-toc > p {
-  margin: 0 0 14px;
-  color: var(--muted);
-  font-family: var(--sans);
-  font-size: 13px;
-}
-
-.doc-toc ol {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.doc-toc li + li {
-  margin-top: 17px;
-}
-
-.doc-toc a {
-  display: grid;
-  grid-template-columns: 22px 1fr;
-  gap: 9px;
-  padding: 2px 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
-  transition: color 0.2s var(--ease);
-}
-
-.doc-toc a span {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--faint);
-  padding-top: 3px;
-  transition: color 0.2s var(--ease);
-}
-
-.doc-toc a:hover {
-  color: var(--ink);
-}
-
-.doc-toc .is-active a {
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-color: var(--underline);
-  text-underline-offset: 2px;
-}
-
-.doc-toc .is-active a span {
-  color: var(--ink);
-}
-
-.doc-rail-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  color: var(--muted);
-  font-family: var(--sans);
-  font-size: 13px;
-}
-
-/* Main column — everything reads down a centered column */
-.doc-main {
-  min-width: 0;
-  padding: 52px 0 120px;
-}
-
+/* Head — centered title, byline, deck, and contents */
 .doc-head {
   max-width: var(--reading);
-  margin: 0 auto 52px;
+  margin: 0 auto 56px;
   padding-bottom: 44px;
   border-bottom: 1px solid var(--line);
-}
-
-.document-kicker {
-  margin: 0 0 20px;
-  color: var(--muted);
-  font-family: var(--sans);
-  font-size: 13px;
+  text-align: center;
 }
 
 .doc-head h1 {
   margin: 0;
-  max-width: 24ch;
   font-family: var(--serif);
-  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  font-size: clamp(2rem, 3.8vw, 2.9rem);
   font-weight: 500;
   line-height: 1.18;
   letter-spacing: -0.005em;
   text-wrap: balance;
 }
 
+.post-byline {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 14px;
+}
+
 .document-deck {
-  max-width: 640px;
-  margin: 22px 0 0;
+  max-width: 580px;
+  margin: 26px auto 0;
   font-family: var(--serif);
   font-style: italic;
   color: var(--muted);
   font-size: clamp(1.1rem, 1.5vw, 1.25rem);
   line-height: 1.55;
   letter-spacing: -0.005em;
+}
+
+.post-contents {
+  max-width: fit-content;
+  margin: 36px auto 0;
+  text-align: left;
+}
+
+.post-contents ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-contents li {
+  margin: 7px 0;
+}
+
+.post-contents a {
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  transition: color 0.2s ease;
+}
+
+.post-contents a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-underline-offset: 2px;
 }
 
 /* Body — centered reading measure */
@@ -183,7 +89,7 @@
 }
 
 .document-body section + section {
-  margin-top: 72px;
+  margin-top: 64px;
 }
 
 .document-body h2 {
@@ -218,7 +124,7 @@
 }
 
 .document-abstract {
-  padding-bottom: 60px;
+  padding-bottom: 52px;
   margin-bottom: 8px;
   border-bottom: 1px solid var(--line);
 }
@@ -381,54 +287,21 @@
 
 .document-notes a {
   border-bottom: 1px solid var(--line);
-  transition: color 0.22s var(--ease), border-color 0.22s var(--ease);
+  transition: color 0.22s ease, border-color 0.22s ease;
 }
 
 .document-notes a:hover {
-  border-color: var(--accent);
-  color: var(--accent-ink);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
-/* Collapse to single column: rail becomes a top bar */
 @media (max-width: 900px) {
-  .doc-layout {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .doc-rail {
-    position: static;
-    height: auto;
-    flex-direction: column;
-    gap: 22px;
-    padding: 26px 0;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .doc-toc {
-    overflow: visible;
-  }
-
-  .doc-toc ol {
-    columns: 2;
-    column-gap: 32px;
-  }
-
-  .doc-toc li {
-    break-inside: avoid;
-  }
-
-  .doc-rail-meta {
-    display: none;
-  }
-
-  .doc-main {
-    padding: 40px 0 88px;
+  .post {
+    padding-top: 32px;
   }
 
   .doc-head {
-    margin-bottom: 40px;
+    margin-bottom: 44px;
     padding-bottom: 34px;
   }
 
@@ -441,7 +314,7 @@
   }
 
   .document-body section + section {
-    margin-top: 58px;
+    margin-top: 56px;
   }
 
   .document-body p,
@@ -451,7 +324,7 @@
   }
 
   .document-abstract {
-    padding-bottom: 52px;
+    padding-bottom: 46px;
   }
 
   .manifest-diagram > div {
@@ -483,6 +356,6 @@
   .document-notes {
     grid-template-columns: 1fr;
     gap: 34px;
-    margin-top: 76px;
+    margin-top: 72px;
   }
 }
