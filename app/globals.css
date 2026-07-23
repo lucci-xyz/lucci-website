@@ -48,21 +48,21 @@ button { border: 0; background: none; padding: 0; }
 /* Motion — a quiet fade as content settles into place. */
 html.motion-ready :is(
   .hero, .home-intro, .section-head,
-  .page-hero, .index-entry, .project-entry,
+  .page-hero, .index-entry,
   .docs-content section,
   .post-heading, article.content section
 ):not(.is-visible) { opacity: 0; }
 html.motion-ready :is(
   .hero, .home-intro, .section-head,
-  .page-hero, .index-entry, .project-entry,
+  .page-hero, .index-entry,
   .docs-content section,
   .post-heading, article.content section
 ).is-visible { animation: reveal-in .6s ease-in-out backwards; }
 @keyframes reveal-in { from { opacity: 0; } to { opacity: 1; } }
-html.motion-ready :is(.index-entry, .project-entry):nth-child(2).is-visible { animation-delay: .05s; }
-html.motion-ready :is(.index-entry, .project-entry):nth-child(3).is-visible { animation-delay: .1s; }
-html.motion-ready :is(.index-entry, .project-entry):nth-child(4).is-visible { animation-delay: .15s; }
-html.motion-ready :is(.index-entry, .project-entry):nth-child(n+5).is-visible { animation-delay: .2s; }
+html.motion-ready .index-entry:nth-child(2).is-visible { animation-delay: .05s; }
+html.motion-ready .index-entry:nth-child(3).is-visible { animation-delay: .1s; }
+html.motion-ready .index-entry:nth-child(4).is-visible { animation-delay: .15s; }
+html.motion-ready .index-entry:nth-child(n+5).is-visible { animation-delay: .2s; }
 
 .shell { width: min(100%, var(--page)); margin: 0 auto; padding: 0 var(--pad); }
 
@@ -133,24 +133,15 @@ section { scroll-margin-top: 70px; }
 .index-entry.is-forthcoming { cursor: default; }
 .index-date { margin: 0; color: var(--muted); font-family: var(--sans); font-size: 13px; line-height: 1.7; }
 .index-title { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 600; line-height: 1.4; }
-.index-entry:hover .index-title { text-decoration: underline; text-decoration-color: var(--underline); text-underline-offset: 2px; }
-.index-entry.is-forthcoming:hover .index-title { text-decoration: none; }
+a.index-entry:hover .index-title, .index-title a:hover { text-decoration: underline; text-decoration-color: var(--underline); text-underline-offset: 2px; }
 .index-entry.is-forthcoming .index-title { color: var(--muted); }
 .index-desc { margin: 5px 0 0; color: var(--body); font-size: 0.95em; line-height: 1.55; }
 .index-forthcoming { grid-column: 2; margin: 6px 0 0; color: var(--faint); font-family: var(--sans); font-size: 12px; }
-
-/* Project blocks — name, tagline, links, then an at-a-glance spec strip */
-.project-entry { padding: clamp(36px, 5vw, 52px) 0; border-top: 1px solid var(--line); }
-.project-list .project-entry:first-child { border-top: 0; }
-.project-name { margin: 0; font-family: var(--serif); font-size: clamp(1.4rem, 2.4vw, 1.7rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.005em; overflow-wrap: anywhere; }
-.project-desc { margin: 10px 0 0; max-width: var(--reading); font-size: 17px; line-height: 1.6; }
-.project-links { display: flex; gap: 22px; margin-top: 18px; font-family: var(--sans); font-size: 15px; }
-.project-links a { color: var(--body); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 2px; transition: text-decoration-color .22s ease, color .22s ease; }
-.project-links a:hover { color: var(--ink); text-decoration-color: var(--underline); }
-.project-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 26px 0 0; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.project-specs > div { display: grid; gap: 3px; }
-.project-specs dt { color: var(--muted); font-family: var(--sans); font-size: 12px; }
-.project-specs dd { margin: 0; font-family: var(--serif); font-size: 1.1rem; font-weight: 500; line-height: 1.3; }
+.index-title .arrow { margin-left: 7px; font-family: var(--sans); font-size: 13px; font-weight: 400; color: var(--faint); }
+.index-meta { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 9px 0 0; color: var(--muted); font-family: var(--sans); font-size: 13px; }
+.index-meta a { color: var(--body); }
+.index-meta a:hover { text-decoration: underline; text-decoration-color: var(--underline); text-underline-offset: 2px; }
+.index-meta:empty { display: none; }
 .project-empty { margin: 0; padding: 2rem 0 0; color: var(--body); font-size: 17px; line-height: 1.6; }
 .project-empty .quiet-link { text-decoration: underline; text-decoration-color: var(--underline); text-underline-offset: 2px; }
 

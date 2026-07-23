@@ -31,29 +31,24 @@ export default async function BuildingPage() {
           </p>
         </section>
 
-        <section className="project-list" aria-label="Open-source projects">
+        <section className="index-list" aria-label="Open-source projects, most recently updated first">
           {repositories.map((repository) => (
-            <article className="project-entry" key={repository.name}>
-              <h2 className="project-name">{repository.name}</h2>
-              <p className="project-desc">{repository.description}</p>
-              <div className="project-links">
-                <a href={repository.url} target="_blank" rel="noreferrer">View source ↗</a>
-                {repository.homepage && <a href={repository.homepage} target="_blank" rel="noreferrer">Open project ↗</a>}
+            <article className="index-entry" key={repository.name}>
+              <p className="index-date">{formatDate(repository.updatedAt)}<br />{repository.language || "Multiple"}</p>
+              <div>
+                <h2 className="index-title">
+                  <a href={repository.url} target="_blank" rel="noreferrer">
+                    {repository.name}<span className="arrow">↗</span>
+                  </a>
+                </h2>
+                <p className="index-desc">{repository.description}</p>
+                <p className="index-meta">
+                  {repository.stars > 0 && <span>{repository.stars} {repository.stars === 1 ? "star" : "stars"}</span>}
+                  {repository.homepage && (
+                    <a href={repository.homepage} target="_blank" rel="noreferrer">Open project ↗</a>
+                  )}
+                </p>
               </div>
-              <dl className="project-specs" aria-label={`${repository.name} at a glance`}>
-                <div>
-                  <dt>Language</dt>
-                  <dd>{repository.language || "Multiple"}</dd>
-                </div>
-                <div>
-                  <dt>Stars</dt>
-                  <dd>{repository.stars}</dd>
-                </div>
-                <div>
-                  <dt>Updated</dt>
-                  <dd>{formatDate(repository.updatedAt)}</dd>
-                </div>
-              </dl>
             </article>
           ))}
           {repositories.length === 0 && (

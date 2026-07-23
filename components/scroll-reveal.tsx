@@ -10,7 +10,6 @@ const SELECTOR = [
   ".section-head",
   ".page-hero",
   ".index-entry",
-  ".project-entry",
   ".docs-content section",
   ".post-heading",
   "article.content section",
