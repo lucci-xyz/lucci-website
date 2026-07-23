@@ -261,7 +261,7 @@ a.index-entry:hover .index-title, .index-title a:hover { text-decoration: underl
 }
 @media (max-width: 600px) {
   .site-nav { gap: 16px; font-size: 14px; }
-  .site-nav .external, .site-nav .kbd-chip { display: none; }
+  .site-nav .kbd-chip { display: none; }
   .home-announcement { flex-direction: column; gap: 0.5rem; }
   .index-entry { grid-template-columns: 1fr; gap: 4px; }
   .index-forthcoming { grid-column: 1; }

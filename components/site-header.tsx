@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation"
 const links = [
   { href: "/writing", label: "Writing" },
   { href: "/building", label: "Building" },
-  { href: "/docs", label: "Docs" },
 ]
 
 export function SiteHeader() {
@@ -20,7 +19,6 @@ export function SiteHeader() {
             {link.label}
           </Link>
         ))}
-        <a className="external" href="https://github.com/lucci-xyz" target="_blank" rel="noreferrer">GitHub ↗</a>
         <button
           className="kbd-chip"
           type="button"

@@ -34,7 +34,7 @@ export default async function BuildingPage() {
         <section className="index-list" aria-label="Open-source projects, most recently updated first">
           {repositories.map((repository) => (
             <article className="index-entry" key={repository.name}>
-              <p className="index-date">{formatDate(repository.updatedAt)}<br />{repository.language || "Multiple"}</p>
+              <p className="index-date">{formatDate(repository.updatedAt)}</p>
               <div>
                 <h2 className="index-title">
                   <a href={repository.url} target="_blank" rel="noreferrer">
@@ -42,12 +42,11 @@ export default async function BuildingPage() {
                   </a>
                 </h2>
                 <p className="index-desc">{repository.description}</p>
-                <p className="index-meta">
-                  {repository.stars > 0 && <span>{repository.stars} {repository.stars === 1 ? "star" : "stars"}</span>}
-                  {repository.homepage && (
+                {repository.homepage && (
+                  <p className="index-meta">
                     <a href={repository.homepage} target="_blank" rel="noreferrer">Open project ↗</a>
-                  )}
-                </p>
+                  </p>
+                )}
               </div>
             </article>
           ))}
