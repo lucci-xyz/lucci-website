@@ -1,0 +1,435 @@
+/* Research note — transcribed from thinkingmachines.ai's blog-post layout:
+   centered 30px serif title, stacked sans byline, sticky left-margin TOC,
+   660px text column, numbered Tufte sidenotes floating in the right margin. */
+.article-shell {
+  --page: 1280px;
+  --toc-width: 220px;
+  --toc-gap: 34px;
+  --sidenote-width: 200px;
+  --sidenote-gap: 34px;
+}
+
+.post {
+  padding-bottom: 40px;
+}
+
+/* Heading — a full hero: the title owns the viewport above the fold */
+.post-heading {
+  min-height: 66vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.post-title {
+  font-family: var(--serif);
+  font-weight: 275;
+  font-size: clamp(3.5rem, 7.5vw, 7rem);
+  line-height: 1.05;
+  letter-spacing: -0.005em;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-wrap: balance;
+}
+
+.publish-metadata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.4;
+  margin: 2rem 0 0;
+}
+
+.publish-metadata .author {
+  color: var(--ink);
+}
+
+/* Shell — 660px text column with true margins either side */
+.post-content-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 660px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.post-content-shell > article.content {
+  grid-column: 2;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Left TOC — sticky in the left margin, plain sans, current section darkened */
+.left-toc {
+  grid-column: 1;
+  justify-self: end;
+  position: sticky;
+  top: 40px;
+  width: var(--toc-width);
+  margin: 8px var(--toc-gap) 0 0;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.left-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 16px;
+}
+
+.left-toc li {
+  margin: 0 0 0.55rem;
+}
+
+.left-toc a {
+  position: relative;
+  color: var(--muted);
+  transition: color 0.2s ease-in-out;
+}
+
+.left-toc a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-underline-offset: 2px;
+}
+
+.left-toc a[aria-current="location"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.left-toc a[aria-current="location"]::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 0.5em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+/* Content typography — serif 17px, generous paragraph rhythm */
+.content {
+  padding-top: 0.5rem;
+  counter-reset: sidenote-counter;
+}
+
+.content section {
+  scroll-margin-top: 24px;
+}
+
+.content p,
+.content ul,
+.content ol,
+.content blockquote,
+.content figure,
+.content .document-table {
+  margin-top: 0;
+  margin-bottom: 1.333rem;
+}
+
+.content p,
+.content li {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.content h2 {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0;
+  margin: 1.6em 0 0.6em;
+}
+
+.content ul {
+  list-style: square;
+  margin-left: 1.5rem;
+  padding-left: 0;
+}
+
+.content ul > li {
+  margin-bottom: 0.2rem;
+}
+
+/* Links are always underlined, quietly */
+.content a {
+  text-decoration: underline;
+  text-decoration-color: rgba(103, 103, 103, 0.3);
+  text-underline-offset: 2px;
+  transition: color 0.3s ease-in-out, text-decoration-color 0.3s ease-in-out;
+}
+
+.content a:hover {
+  color: var(--body);
+  text-decoration-color: rgba(80, 73, 69, 0.4);
+}
+
+/* Blockquote — upright, light rule, muted */
+.content blockquote {
+  border-left: 2px solid rgba(103, 103, 103, 0.35);
+  color: var(--body);
+  font-style: normal;
+  margin: 1.6rem 0 1.6rem 1rem;
+  padding: 0.1rem 0 0.1rem 1.25rem;
+}
+
+.content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Sidenotes — numbered, floating in the right margin (Tufte style) */
+.sidenote-number {
+  counter-increment: sidenote-counter;
+  display: inline-block;
+  cursor: pointer;
+  max-height: 2rem;
+}
+
+.sidenote-number::after {
+  content: counter(sidenote-counter);
+  font-family: var(--serif);
+  font-size: 0.72em;
+  vertical-align: super;
+  color: var(--muted);
+  margin-left: 0.08em;
+}
+
+.margin-toggle {
+  display: none;
+}
+
+.sidenote {
+  float: right;
+  clear: right;
+  width: var(--sidenote-width);
+  margin-right: calc(-1 * var(--sidenote-width) - var(--sidenote-gap));
+  margin-left: var(--sidenote-gap);
+  margin-top: 0.3rem;
+  margin-bottom: 20px;
+  font-family: var(--serif);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: left;
+}
+
+.sidenote::before {
+  content: counter(sidenote-counter) ".\2009";
+  color: var(--muted);
+}
+
+/* Figure — diagram plus a small centered caption */
+.content figure {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.4rem 0;
+}
+
+.manifest-diagram {
+  border-top: 1px solid var(--ink);
+}
+
+.manifest-diagram > div {
+  display: grid;
+  grid-template-columns: 130px 100px minmax(0, 1fr);
+  gap: 24px;
+  align-items: baseline;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.manifest-diagram strong {
+  font-size: 0.9rem;
+  font-weight: 590;
+}
+
+.manifest-diagram span {
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 12px;
+}
+
+.manifest-diagram p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.content figcaption {
+  margin-top: 0.6rem;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Markdown-native elements */
+.content h2 {
+  scroll-margin-top: 24px;
+}
+
+.content h3 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  margin: 1.5em 0 0.5em;
+}
+
+.content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.content thead th {
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  padding: 0 14px 9px 0;
+  border-bottom: 1px solid var(--ink);
+}
+
+.content tbody td {
+  padding: 11px 14px 11px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--body);
+}
+
+.content pre {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  margin: 0 0 1.333rem;
+}
+
+.content pre code {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  background: none;
+  padding: 0;
+}
+
+.content code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: var(--surface);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+}
+
+.content hr {
+  border: 0;
+  height: 1px;
+  background: var(--line);
+  margin: 2.5rem 0;
+}
+
+/* End matter */
+.document-notes {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 60px;
+  margin-top: 72px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+}
+
+.document-notes h2 {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.document-notes p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+/* Collapse: TOC disappears, sidenotes become tap-to-reveal notes in the flow */
+@media (max-width: 1240px) {
+  .left-toc {
+    display: none;
+  }
+
+  .post-content-shell {
+    display: block;
+  }
+
+  .post-content-shell > article.content {
+    max-width: 660px;
+    margin: 0 auto;
+  }
+
+  .sidenote {
+    display: none;
+  }
+
+  .margin-toggle:checked + .sidenote {
+    display: block;
+    float: none;
+    clear: none;
+    width: auto;
+    margin: 0.6rem 0 1rem;
+    padding: 0.6rem 0.8rem;
+    background: var(--surface);
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 800px) {
+  .post-heading {
+    min-height: 52vh;
+  }
+
+  .post-title {
+    font-size: clamp(2.4rem, 11vw, 3.2rem);
+  }
+
+  .manifest-diagram > div {
+    grid-template-columns: 1fr auto;
+    gap: 6px 16px;
+    padding: 13px 0;
+  }
+
+  .manifest-diagram p {
+    grid-column: 1 / -1;
+  }
+
+
+  .document-notes {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-top: 56px;
+  }
+}
