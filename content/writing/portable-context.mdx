@@ -1,0 +1,70 @@
+---
+title: Portable context
+description: An investigation into whether AI assistant context can move across providers, what the incentives allow, and what a neutral layer would require.
+date: 2026-09-22
+format: Research note
+published: true
+---
+
+Every AI assistant you use starts from zero. You tell one agent about a project, a preference, an ongoing thread of your life, and the next agent knows nothing about it. So you re-explain. Every time, to every assistant.<Sidenote id="sn-1">A working paper states a thesis and shows its work. The market observations below are drawn from public product behavior and reporting; the architecture in the later sections is a proposal. Corrections are welcome.</Sidenote>
+
+The cost is hard to see because it arrives as friction rather than a bill: minutes re-briefing a new assistant on what the old one understood, preferences configured separately in each product, the ongoing threads of a project scattered across chat histories. As an assistant learns more, switching becomes more expensive. The question this paper investigates is whether that has to be true, and what would have to exist for it not to be.
+
+## What switching costs, and who pays it
+
+The switching cost is paid in attention rather than money, which makes it easy to underestimate. But it shapes behavior in a consistent way: users consolidate onto a single provider less because it performs best than because it remembers most. Familiarity is difficult to distinguish from quality, for the user and for anyone evaluating the product.
+
+This is worth stating plainly because it is the mechanism underneath everything that follows. The more an assistant knows about you, the harder it is to leave, and the party that benefits from that difficulty is the provider, not the user.
+
+## Portability is asymmetric
+
+A useful way to read provider behavior is to ask which direction context is allowed to move. In the past year, the major labs have begun shipping ways to import your history from competing products. None has shipped a comparably supported way to export it.
+
+The asymmetry is consistent with the incentives. Inbound import is customer acquisition; outbound export assists churn. Each provider, acting independently, ships the import flow and not the export flow. No coordination is required to explain the pattern.<Sidenote id="sn-2">The gap is already priced: hosted memory platforms tend to reserve bulk export for paying tiers. Portability exists today, but mostly as a feature sold back to the user.</Sidenote>
+
+## What is converging, and what isn't
+
+One thing is converging. The major labs have landed on a shared, open format for agent skills, so a skill written once can run across assistants. That is genuine portability, and it is worth noting precisely because it shows convergence is possible when incentives align.
+
+But a skill describes what an agent can do. Nothing equivalent exists for what an agent knows about its user. There is no shared schema for assistant memory, no standard export, no synchronization between vendors. Each keeps its own store, in its own format.
+
+This paper extends an earlier argument. In [Context as infrastructure](/writing/context-as-infrastructure), we described context as layered, versioned infrastructure inside a single agent system. The question here is whether those layers can move between systems.
+
+| Layer | Portable today? |
+| ----- | --------------- |
+| Agent skills | Converging on a shared format |
+| Conversation history | One-way export files |
+| Assistant memory | No |
+| Preferences and profile | No |
+
+## What a neutral layer would require
+
+Four components, in increasing order of difficulty:
+
+<Figure caption="Four components of a portable context layer, in increasing order of difficulty.">
+  <ManifestDiagram
+    label="Four components of a portable context layer"
+    rows={[
+      { name: "Portable schema", tag: "Open format", desc: "One versioned representation of memory, preferences, and open loops, independent of any provider." },
+      { name: "Sync protocol", tag: "Bidirectional", desc: "Import, export, and continuous sync, with explicit provenance and conflict rules." },
+      { name: "Provider adapters", tag: "Per vendor", desc: "Small translators between the neutral schema and each assistant's native memory." },
+      { name: "Curation engine", tag: "The research problem", desc: "Deciding what persists, what decays, what conflicts, and what gets corrected or revoked." },
+    ]}
+  />
+</Figure>
+
+The first three are engineering. The fourth is the research problem: curation and forgetting. Which facts persist, which decay, how contradictions get resolved, how a stale fact gets corrected or revoked, and who is allowed to decide. Every record needs explicit provenance, distinguishing things the user said from things an agent inferred. Without that distinction, synchronized context becomes synchronized error.
+
+The schema itself would need to be open. At present no vendor-neutral interchange format exists, which means whoever defines one has a plausible claim on the layer.
+
+## Why neutrality matters
+
+No lab can credibly operate this layer. Each lab's incentive runs inbound, and ownership by any single lab would undermine the neutrality the layer depends on. The plausible operators are an independent party or the device and OS vendors, whose business models do not depend on keeping users inside one assistant.
+
+The closest existing analogy is the password manager: sensitive personal data, useful only if it works everywhere, sustained by a direct trust relationship with the user rather than by lock-in. The open question is onboarding. It would need to feel like connecting a bank account in a fintech app: a few taps, no API keys, nothing to configure. Anything heavier selects for developers and misses the point.
+
+## Open questions
+
+We are investigating this at Lucci Labs by building the personal system first: a canonical context store with explicit provenance, per-assistant adapters, and a sync protocol used daily across the assistants we work with. The results, positive or negative, will be published here.
+
+The question that remains is who benefits when context compounds. At present the answer is whoever you talked to first. Whether it has to stay that way is what we are trying to find out.
