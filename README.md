@@ -11,7 +11,7 @@ The public research and development site for Lucci Labs.
 - `/docs` — API and SDK interface preview
 - `/llms.txt` — machine-readable documentation index
 - `/openapi.json` — preview OpenAPI schema
-- `/privacy` — privacy policy for the website and Aura
+- `/privacy` — privacy policy for the website and Taste
 
 ## Stack
 

@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/site-header"
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "How Lucci Labs handles information from this website and Aura.",
+  description: "How Lucci Labs handles information from this website and Taste.",
 }
 
 export default function PrivacyPage() {
@@ -17,7 +17,7 @@ export default function PrivacyPage() {
           <h1>Privacy policy</h1>
           <p className="page-hero-copy">
             Lucci Labs is an independent, open-source project. This policy covers this
-            website and Aura, our Pinterest-connected tool.
+            website and Taste, our Pinterest-connected tool.
           </p>
           <p className="privacy-updated">Updated September 26, 2026</p>
         </header>
@@ -34,25 +34,25 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2>Aura and Pinterest</h2>
+            <h2>Taste and Pinterest</h2>
             <p>
-              If you connect Aura to Pinterest, we store your Pinterest account ID, basic
+              If you connect Taste to Pinterest, we store your Pinterest account ID, basic
               profile details, access tokens, approved board IDs, and board details so the
-              connection works. Aura retrieves pins from approved boards when you ask it
+              connection works. Taste retrieves pins from approved boards when you ask it
               for style context; it does not store copies of those pins.
             </p>
             <p>
-              Aura sends the board and pin information requested through its tools to
+              Taste sends the board and pin information requested through its tools to
               ChatGPT to answer you. Pinterest handles account authorization. We use this
-              information to provide Aura, not for advertising, and we do not sell it.
+              information to provide Taste, not for advertising, and we do not sell it.
             </p>
           </section>
 
           <section>
             <h2>Your choices</h2>
             <p>
-              You can revoke Aura&apos;s access in Pinterest settings. To request deletion
-              of information stored by Aura, or ask about this policy, email{" "}
+              You can revoke Taste&apos;s access in Pinterest settings. To request deletion
+              of information stored by Taste, or ask about this policy, email{" "}
               <a href="mailto:contact@luccilabs.xyz">contact@luccilabs.xyz</a>. We keep
               connection details until you ask us to delete them.
             </p>
