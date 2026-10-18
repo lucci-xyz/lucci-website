@@ -1,0 +1,164 @@
+---
+title: Measuring fine-grained manual activity from the wrist
+description: A single-participant pilot study of wrist motion, synchronized video, and the limits of stitch-boundary annotation.
+date: 2026-10-18
+format: Research report
+author: Natalie Hill
+published: true
+---
+
+Fine-grained wearable sensing depends on the quality of both the motion recording and the event labels used to interpret it. A regular sensor stream can end before an activity is complete, and repeatable annotations can still disagree about the semantic boundary of an action. Loop examines these distinctions through crochet, where coordinated finger, hook and yarn movements produce only part of their motion at the wrist.
+
+This single-participant study reports capture-timing measurements, exploratory wrist-signal analyses and a ten-stitch synchronized-video annotation experiment. Its contribution is a measurement method and a set of observed limitations that matter when evaluating fine-grained manual activity.
+
+Natalie Hill · Lucci Labs · [ORCID iD: 0009-0001-3328-6549](https://orcid.org/0009-0001-3328-6549)
+
+## Abstract
+
+We investigate measurement integrity and event-label adequacy in wrist-based sensing of crochet. Eight Apple Watch recordings comprise six legacy recordings with software-assigned timestamps, one earlier hardware-timestamped recording and one synchronized-video pilot. The six legacy recordings had a median within-recording interval coefficient of variation of 40.94%. The earlier hardware-timestamped recording had 0.533% interval variation but ended 2.238 seconds before its final capture-time mark, demonstrating that regular sampling does not establish complete capture. An exploratory autocorrelation procedure selected a period within 20% of the median retained mark interval in four of seven marked recordings. Iteratively aligned signal windows had mean correlation 0.526 at actual marks versus 0.525 at randomized centers, with a standard deviation of 0.024 across 20 controls. In the video pilot, 17,026 motion samples spanned 85.259 seconds. Two reviews by the maker produced ten clear events each, with a median absolute difference of 0.102 seconds and a maximum of 0.934 seconds on the video timeline. A separate visual-only AI review proposed ten candidate completions but marked every exact boundary uncertain. The study establishes descriptive capture and annotation measurements while showing why they cannot be substituted for independently validated stitch-boundary accuracy.
+
+## Background and research question
+
+Crochet offers a compact example of a repetitive manual skill whose meaningful actions occur at several anatomical scales. Wrist motion may reveal rhythm without exposing the exact instant at which the hook completes a stitch. The relevant question is therefore whether a usable temporal event can be measured and labeled before a detector is evaluated.
+
+Three distinctions guide the study: periodic motion versus a localized semantic event; regular sampling versus complete recording; and annotation repeatability versus accuracy against an independent reference. These distinctions apply beyond crochet to other fine-grained wearable-sensing tasks.
+
+StitchFlow uses motion sensing to support crochet tracking, creative exploration and pattern sharing [1]. It is the closest domain-specific comparison, although its interaction goals and evaluation do not supply a benchmark for Loop's completion timestamps. Deep convolutional and recurrent activity-recognition models demonstrate the value of temporal structure [2], and TransfHAR transfers wrist representations to fine-grained activities with few labeled examples [3]. Recognizing an activity class does not, by itself, validate the timing of events within that activity.
+
+Annotation uncertainty includes temporal boundary jitter as well as class errors [4]. Independent device clocks introduce a further alignment problem, addressed in video–accelerometry research such as SyncWISE [5]. Video-annotation research distinguishes independent annotation and adjudication from a single observer's labels [6]. Accordingly, Loop preserves capture-time marks, reviewed video events and retrospective context as separate evidence sources. A second review by the same observer estimates intra-rater repeatability.
+
+Wrist acoustic sensing [7] and surface electromyography [8] provide complementary information for hand-gesture recognition. They establish relevant alternatives without demonstrating that either modality is necessary for crochet.
+
+## Study design
+
+The author was the sole participant, crocheter and human annotator. The study is descriptive and concerns instrumentation and annotation methods; it does not estimate population performance.
+
+| Evidence group | Recordings | Measurement role |
+| --- | ---: | --- |
+| Legacy wrist recordings | Six | Software-timestamp timing quality and exploratory signal analysis |
+| Earlier batched wrist recording | One | Hardware-timestamp timing and coverage relative to capture marks |
+| Synchronized single-crochet pilot | One | Capture feasibility, two human annotation passes and a separate AI visual review |
+
+The first seven recordings contained capture-time marks and were analyzed together only for the specified exploratory procedures. The synchronized pilot is a separate evidence group. Its ten intended stitches and twenty human review events are not twenty independent stitches or multiple independent recording sessions.
+
+## Capture and measurement methods
+
+Loop comprises an Apple Watch motion recorder and a macOS recording and review application. The recorded channels include user acceleration, gravity, angular velocity and attitude quaternion. Capture-time marks and activity/context metadata are stored separately from reviewed event labels.
+
+The legacy capture path requested 50 Hz updates and assigned timestamps through work scheduled on the main queue. The later path uses hardware sample timestamps from batched device motion at approximately 200 Hz. A workout session supports capture while the display sleeps; an explicit buffer drain was added to the software after the earlier batched recording.
+
+Timing was computed directly from saved timestamps without sorting, deduplication or repair. All eight timestamp sequences were finite and strictly increasing. Effective rate is `(n − 1) / (last time − first time)`; median-interval rate is `1 / median(interval)`. Interval variation is `100 × population SD(interval) / mean(interval)`. Short intervals are below half the declared sampling interval and long intervals exceed 1.5 times that interval. These definitions describe the saved timestamps and do not identify the physical cause of every irregular interval.
+
+Coverage was evaluated separately by comparing capture-time marks with the recorded sample range. Marks remain user-generated events rather than independently verified completion times. Hand-operated marking can itself affect motion and cannot be assumed to provide an unbiased boundary reference.
+
+## Capture timing results
+
+| Measure | Six legacy recordings | Earlier batched recording | Video pilot |
+| --- | ---: | ---: | ---: |
+| Motion samples | 43,563 total | 14,275 | 17,026 |
+| Intervals | 43,557 | 14,274 | 17,025 |
+| Median-interval rate | 49.93 Hz, median across recordings | 200.00 Hz | 200.00 Hz |
+| Effective rate | 49.87–49.94 Hz | 199.692 Hz | 199.686 Hz |
+| Interval variation | 40.94%, median across recordings | 0.533% | 0.537% |
+| Short intervals | 2,383 (5.47%) | 0 | 0 |
+| Long intervals | 2,087 (4.79%) | 0 | 0 |
+| Marks outside sample coverage | 0 of 127 | 1 of 10 | No capture-time marks |
+
+The earlier batched recording ends at 71.4802 seconds, whereas its final capture mark occurs at 73.7182 seconds. The 2.2380-second difference demonstrates incomplete coverage relative to that mark despite regular timing within the saved stream. This recording predates the explicit final-buffer drain and cannot establish the behavior of that fix.
+
+The video pilot has no capture-time stitch marks, so the same mark-coverage test is unavailable. Its absence of short or long internal intervals does not alone establish complete end-to-end capture. Long-gap counts are also not direct estimates of physically lost sensor samples, particularly when timestamps were assigned through software scheduling.
+
+## Exploratory wrist-signal analyses
+
+The seven marked recordings were analyzed using the preserved historical procedures. These analyses are retrospective and exploratory; they were not preregistered. They use capture-time marks rather than independently adjudicated video boundaries.
+
+**Autocorrelation.** Rotation-rate magnitude was sampled onto a 25 Hz grid using the preceding available sample. An approximately three-second moving mean was subtracted, and the largest autocorrelation was selected over lags 2.48–15.96 seconds. Marks less than two seconds from the last retained mark were merged for this analysis only. A selected period met the pace criterion when it differed from the median retained inter-mark interval by less than 20%.
+
+| Recording | Retained marks | Median mark interval | Selected period | Autocorrelation | Meets criterion |
+| --- | ---: | ---: | ---: | ---: | --- |
+| H01 | 11 | 10.9 s | 12.8 s | 0.101 | Yes |
+| H02 | 12 | 10.0 s | 2.8 s | 0.111 | No |
+| H03 | 31 | 6.6 s | 7.1 s | 0.090 | Yes |
+| H04 | 29 | 5.7 s | 2.9 s | 0.101 | No |
+| H05 | 19 | 5.7 s | 5.2 s | 0.108 | Yes |
+| H06 | 10 | 6.8 s | 13.6 s | 0.111 | No |
+| H07 | 10 | 6.0 s | 5.5 s | 0.153 | Yes |
+
+Four of seven selected peaks met the stated criterion. Some other peaks were near half or twice the mark interval, but no harmonic-selection rule was specified. Preceding-sample resampling without an anti-aliasing filter, irregular legacy timestamps, mark filtering and the absence of an autocorrelation null test limit interpretation. These are candidate rhythms, not seven validated stitch-period estimates.
+
+**Randomized-center control.** Five-second windows of rotation-rate magnitude on the same 25 Hz grid were aligned to a pooled template using up to approximately ±1.5 seconds of temporal adjustment. Shifts were selected and the template refitted for eight iterations. Twenty controls, using Python random seed 7, replaced retained mark centers with uniformly random grid centers sampled with replacement at the same per-recording counts. Windows too close to recording edges were excluded. The scored windows also contributed to template fitting.
+
+Actual marks produced mean correlation 0.526, compared with 0.525 for randomized centers. The population standard deviation across the 20 control draws was 0.024, and the standardized difference rounded to +0.0. This spread describes those randomization draws rather than a confidence interval. The procedure produced similar agreement around randomized and actual centers, so the aligned appearance was not specific to capture marks. This in-sample negative control neither measures held-out detection performance nor establishes the absence of a wrist-observable boundary signal.
+
+## Synchronized-video annotation
+
+The pilot recorded ten intended single-crochet stitches with Apple Watch motion and video from a MacBook camera directed toward the hands. The encoded video was 1280 × 720, lasted 85.505567 seconds and contained 2,564 frames, approximately 30 frames per second. The camera request targeted ideal 60 fps; the encoded result is the measurement used here. Motion comprised 17,026 samples over 85.2588 seconds at an effective 199.686 Hz.
+
+Six tap correspondences aligned video time with Watch time using the affine model `Watch time = offset + scale × video time`. The fitted scale was 0.9997440057 and the offset −0.4915569426 seconds. Anchor residuals had root-mean-square 20.368 milliseconds and maximum absolute value 40.819 milliseconds. These are fit residuals, not verified absolute timing accuracy for stitch events.
+
+The completion event was defined as the first visible frame after the final pull-through leaves one loop on the hook. The maker reviewed the muted video twice. Each pass hid the other pass, motion traces, capture-time marks and detector output. The participant entered the expected count of ten in each pass and remembered making the stitches; the human review was therefore not blind to the sequence or intended count.
+
+All twenty saved human events were classified clear and marked during playback using presented-video-frame timestamps. The participant retrospectively reported normal-speed review, physical Watch placement on the right wrist, hook size 4.5 and yarn size 4. Hook units, yarn classification, lighting and measured camera geometry were not recorded. The Watch configuration reported left wrist, conflicting with the participant's report and project metadata. This discrepancy was retained.
+
+Historical review records do not contain complete playback, focus or edit histories, and the capture-time installed-build fingerprint and exact camera identity were not recorded. A frame timestamp does not eliminate human response delay or ambiguity in the completion definition.
+
+## Human and AI event comparisons
+
+Event pairing used an ordered, one-to-one dynamic-programming alignment allowing unmatched events. Maximum pairing distance was the smaller of one second and 45% of the median within-pass inter-event interval, with a 0.5-second fallback when no interval was available. This is a descriptive pairing rule, not a validated accuracy tolerance. All comparisons in the following table use video time.
+
+The AI reviewer was OpenAI GPT-6 Astra with high reasoning effort. A fresh review context received the completion definition and video-pixel input without the human count, human timestamps, audio or motion data. Blinding was instruction-based rather than enforced by operating-system isolation; broad tools remained available. The coordinating process already knew the human results, and the comparison was not preregistered.
+
+The reviewer inspected overview and candidate-window contact sheets derived from source frames, using a 650 × 400 crop and selected enlargements. Forty sheets were presented. Although all 2,564 source frames were decoded, this did not mean every full frame was inspected. Frame sampling, cropping, resizing, JPEG compression and unexposed model-side processing formed part of the method. Exact model weights, temperature and seed were unavailable. Predictions were locked and hashed before comparison with the human reference.
+
+The AI review proposed ten completion candidates but classified all exact boundaries uncertain because of occlusion, overlapping yarn and blur. Its plausible intervals are judgment ranges, not statistical confidence intervals.
+
+| Comparison | Paired events | Unmatched per source | Median absolute difference | Maximum paired difference |
+| --- | ---: | --- | ---: | ---: |
+| Human A / human B | 10 | 0 / 0 | 0.101950 s | 0.933567 s |
+| AI candidates / human A | 9 | 1 / 1 | 0.263633 s | 0.499767 s |
+| AI candidates / human B | 10 | 0 / 0 | 0.301250 s | 0.365067 s |
+
+Nine of ten human pairs differed by at most 0.170 seconds. The largest discrepancy was retained. The participant retrospectively attributed it to looking away briefly; attention was not measured contemporaneously. The two passes measure one person's responses on one clip and do not establish accuracy against an independent reference.
+
+The uncertain AI candidates occurred earlier than both human reviews. The candidate near the human outlier was 1.203 seconds from human A and remained unmatched under the one-second limit. No timing offset was fitted or subtracted. Different event interpretations, visibility and live button-response delay are possible explanations; these observations do not identify the correct boundary times. There were zero clear AI boundaries eligible for clear-only timing analysis. No wrist classifier was trained or evaluated on these labels.
+
+## Discussion
+
+The findings support three measurement lessons. First, regular timestamps and adequate recording coverage require separate checks: the earlier batched file passed the within-stream timing measures while ending before a recorded mark. Second, iterative alignment can yield similar-looking local structure around randomized and actual centers, making a matched control essential. Third, intra-rater agreement describes the repeatability of the annotation procedure, not the accuracy of its semantic target.
+
+The ten-stitch pilot demonstrates synchronized recording and preserved, separately reviewed events. Its typical human disagreement is smaller than its largest outlier, and the independent visual review exposes ambiguity that a clear-event count alone would conceal. Neither agreement between the reviews nor the AI candidate count constitutes independent ground truth.
+
+The study cannot distinguish a label-limited explanation from a sensor-limited explanation for the failed local-signature control. A consistent wrist signature may be obscured by uncertain event timing, or the meaningful completion event may occur primarily at the fingers and hook. The available evidence supports neither explanation decisively.
+
+## Limitations and ethics
+
+All recordings concern one participant, with instrumentation and marking procedures changing during collection. The legacy and high-rate recordings are not interchangeable conditions. The older high-rate stream is incomplete through its final capture mark; the video pilot provides only one short clip and two reviews by the maker. Independent adjudication, population generalization and held-out detector performance are outside the evidence reported here.
+
+Physical Watch placement, camera geometry and material properties were incompletely documented, and some context was obtained retrospectively. The human and AI reviewers used different viewing methods and may have applied different confidence standards. Instruction-based AI blinding and unexposed model settings limit reproducibility of that review. Identical recomputation establishes agreement with preserved files, not the correctness of their semantic interpretation.
+
+The author developed Loop through Lucci Labs and was the sole participant and human annotator. No additional participants were recruited. No institutional ethics approval or exemption is claimed. Identifiable recordings, audio and private review traces are retained under restricted access and are not included in a public dataset. AI assisted the visual review, analysis and manuscript preparation; the author is responsible for the interpretation and release.
+
+## Code and data availability
+
+The [Loop numerical supplement](https://huggingface.co/datasets/luccilabs/loop-measurement-supplement/tree/d83d8777bb11a17a2bf348bf90b5c85e627de140) provides five derived tables (72 rows), three analysis scripts, citation metadata and checksums as version 1.0.0. The [analysis code](https://huggingface.co/datasets/luccilabs/loop-measurement-supplement/tree/d83d8777bb11a17a2bf348bf90b5c85e627de140/code) is licensed MIT; the numerical tables and package documentation are licensed CC BY 4.0. The frozen dataset revision is `d83d8777bb11a17a2bf348bf90b5c85e627de140`. The companion [reproduction guide](/docs/loop) explains the commands, fields and measurement limits.
+
+The complete capture/review application is maintained in the restricted [Loop repository](https://github.com/lucci-xyz/loop). The source analysis revision associated with this report is `eeb169543cf617dbb43ec761524ba5dcc0d35468`. Public scripts reproduce event pairing, affine synchronization and numerical summaries from the supplied tables; withheld raw signals prevent independent re-extraction of the historical signal analyses.
+
+The supplement is indexed in the [Loop collection on Hugging Face](https://huggingface.co/collections/luccilabs/loop-6a9dc38be5cda2a8ce02017e). Original video, audio, participant images, raw sensor streams and private agent traces are withheld. A derived table of event timestamps is not an independently adjudicated reference, and the supplement is not a validated detector-training set.
+
+## Conclusion
+
+Loop provides a single-participant measurement case in which sensor timing, capture coverage and annotation repeatability lead to different conclusions. Hardware-timestamped recordings were regular internally, but one earlier recording failed the coverage check. Exploratory wrist rhythms did not consistently satisfy the stated pace criterion, and an iteratively aligned local-signature result did not distinguish actual from randomized centers. On one synchronized clip, two human reviews were typically close but retained a substantial outlier, while all AI exact-boundary proposals remained uncertain.
+
+The contribution is a reproducible distinction among measurement properties that can otherwise be mistaken for stitch-recognition accuracy. The observed results support the recording and review method within this limited case; they do not establish a validated stitch detector.
+
+## References
+
+1. Marciniak Z, Lertjaturaphat P, Bianchi A. StitchFlow: Enabling In-Situ Creative Explorations of Crochet Patterns With Stitch Tracking and Process Sharing. *UIST '25*. 2025. [doi:10.1145/3746059.3747715](https://doi.org/10.1145/3746059.3747715).
+2. Ordóñez FJ, Roggen D. Deep Convolutional and LSTM Recurrent Neural Networks for Multimodal Wearable Activity Recognition. *Sensors*. 2016;16(1):115. [doi:10.3390/s16010115](https://doi.org/10.3390/s16010115).
+3. Bradshaw A, Arakawa R, Liu X, Ahuja K. TransfHAR: Self-Supervised Wrist Representations for On-Demand Activity Recognition. *arXiv*, v2; record reports UIST 2026 acceptance. 2026. [arXiv:2608.15861](https://arxiv.org/abs/2608.15861).
+4. Kwon H, Abowd GD, Plötz T. Handling annotation uncertainty in human activity recognition. *ISWC '19*. 2019:109–117. [doi:10.1145/3341163.3347744](https://doi.org/10.1145/3341163.3347744).
+5. Zhang YC, Zhang S, Liu M, et al. SyncWISE: Window Induced Shift Estimation for Synchronization of Video and Accelerometry from Wearable Sensors. *Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies*. 2020;4(3):107. [doi:10.1145/3411824](https://doi.org/10.1145/3411824).
+6. Tran H, Potter V, Mazzucchelli U, John D, Intille S. Towards Practical, Best Practice Video Annotation to Support Human Activity Recognition. In: *Annotation of Real-World Data for Artificial Intelligence Systems*, ARDUOUS 2025; CCIS 2706:94–118. Springer citation year 2026; online publication 24 October 2025. [doi:10.1007/978-3-032-09117-8_6](https://doi.org/10.1007/978-3-032-09117-8_6).
+7. Siddiqui N, Chan RHM. Multimodal hand gesture recognition using single IMU and acoustic measurements at wrist. *PLOS ONE*. 2020;15(1):e0227039. [doi:10.1371/journal.pone.0227039](https://doi.org/10.1371/journal.pone.0227039).
+8. Moin A, Zhou A, Rahimi A, et al. A wearable biosensing system with in-sensor adaptive machine learning for hand gesture recognition. *Nature Electronics*. 2021;4:54–63. [doi:10.1038/s41928-020-00510-8](https://doi.org/10.1038/s41928-020-00510-8).
