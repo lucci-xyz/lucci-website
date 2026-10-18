@@ -37,7 +37,7 @@ export default async function WritingNotePage({ params }: { params: Promise<{ sl
         <div className="post-heading">
           <h1 className="post-title">{note.frontmatter.title}</h1>
           <div className="publish-metadata">
-            <span className="author">Lucci Labs</span>
+            <span className="author">{note.frontmatter.author ?? "Lucci Labs"}</span>
             <span>{formatFullDate(note.frontmatter.date)}</span>
           </div>
         </div>
@@ -56,7 +56,7 @@ export default async function WritingNotePage({ params }: { params: Promise<{ sl
               <section>
                 <h2>Citation</h2>
                 <p>
-                  Lucci Labs. &ldquo;{note.frontmatter.title}.&rdquo; {note.frontmatter.format},{" "}
+                  {note.frontmatter.author ?? "Lucci Labs"}. &ldquo;{note.frontmatter.title}.&rdquo; {note.frontmatter.format},{" "}
                   {formatMonthYear(note.frontmatter.date)}.
                 </p>
               </section>

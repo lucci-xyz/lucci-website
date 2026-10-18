@@ -9,6 +9,9 @@ Lucci Labs publishes independent research, open-source projects, and developer d
 - https://luccilabs.xyz/writing/context-as-infrastructure
 - https://luccilabs.xyz/building
 - https://luccilabs.xyz/docs
+- https://luccilabs.xyz/docs/loop
+- https://luccilabs.xyz/writing/loop-wp-01-measuring-fine-grained-manual-activity
+- https://huggingface.co/datasets/luccilabs/loop-measurement-supplement
 - https://luccilabs.xyz/openapi.json
 
 ## Notes

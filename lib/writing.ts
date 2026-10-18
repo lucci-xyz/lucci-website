@@ -10,6 +10,7 @@ export type NoteFrontmatter = {
   description: string
   date: string // YYYY-MM-DD
   format: string // e.g. "Research note", "Working paper"
+  author?: string
   published?: boolean
 }
 

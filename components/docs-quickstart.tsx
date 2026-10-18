@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, type ReactNode } from "react"
 
 type CodeFile = { name: string; lang: string; code: string }
 
@@ -79,7 +79,7 @@ const KEYWORDS = new Set([
 // Lightweight tokenizer: URLs (kept plain), comments, strings, numbers, keywords.
 // URLs are matched first so "https://" is never read as a // comment.
 function highlight(code: string) {
-  const nodes: Array<string | JSX.Element> = []
+  const nodes: Array<ReactNode> = []
   const re = /([a-z][a-z0-9+.-]*:\/\/[^\s'"`)]+)|(\/\/[^\n]*|#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)/g
   let last = 0
   let key = 0
@@ -111,7 +111,7 @@ const CheckIcon = () => (
   </svg>
 )
 
-function CodeCard({ files }: { files: CodeFile[] }) {
+export function CodeCard({ files }: { files: CodeFile[] }) {
   const [active, setActive] = useState(0)
   const [copied, setCopied] = useState(false)
   const file = files[active]
@@ -149,15 +149,32 @@ function CodeCard({ files }: { files: CodeFile[] }) {
   )
 }
 
-export function DocsQuickstart() {
+type Heading = { id: string; label: string }
+
+export function DocsQuickstart({ children, page = "quickstart", headings, showLoopGuide = false }: {
+  children?: ReactNode
+  page?: "quickstart" | "loop"
+  headings?: Heading[]
+  showLoopGuide?: boolean
+} = {}) {
   const [query, setQuery] = useState("")
+  const quickstartHeadings = [
+    { label: "Prerequisites", id: "prerequisites" },
+    { label: "Install", id: "install" },
+    { label: "Create your first run", id: "first-run" },
+    { label: "Context manifests", id: "how-it-works" },
+    { label: "Use with an AI coding agent", id: "ai-ready" },
+  ]
+  const toc = headings ?? quickstartHeadings
   const searchItems = useMemo(() => [
-    ["Prerequisites", "#prerequisites"],
-    ["Install", "#install"],
-    ["Create your first run", "#first-run"],
-    ["Context manifests", "#how-it-works"],
-    ["Use with an AI coding agent", "#ai-ready"],
-  ], [])
+    ["Prerequisites", "/docs#prerequisites"],
+    ["Install", "/docs#install"],
+    ["Create your first run", "/docs#first-run"],
+    ["Context manifests", "/docs#how-it-works"],
+    ["Use with an AI coding agent", "/docs#ai-ready"],
+    ...(showLoopGuide ? [["Loop: reproduce the analysis", "/docs/loop"]] : []),
+    ...(page === "loop" ? (headings ?? []).map(h => [h.label, `/docs/loop#${h.id}`]) : []),
+  ], [showLoopGuide, page, headings])
   const results = query ? searchItems.filter(([label]) => label.toLowerCase().includes(query.toLowerCase())) : []
 
   return (
@@ -173,13 +190,15 @@ export function DocsQuickstart() {
       </header>
 
       <div className="docs-layout">
-        <aside className="docs-sidebar">
-          <div className="docs-group"><p>Getting started</p><a aria-current="page" href="#top">Introduction</a><a href="#prerequisites">Prerequisites</a><a href="#install">Install</a><a href="#first-run">First run</a></div>
-          <div className="docs-group"><p>Core concepts</p><a href="#how-it-works">Context manifests</a><a href="#how-it-works">Runs</a><a href="#how-it-works">Tools</a><a href="#how-it-works">Events</a></div>
-          <div className="docs-group"><p>For AI agents</p><a href="/llms.txt">llms.txt</a><a href="#ai-ready">Markdown pages</a><a href="/openapi.json">OpenAPI schema</a></div>
+        <aside className="docs-sidebar" aria-label="Documentation navigation">
+          <div className="docs-group"><p>Getting started</p><a aria-current={page === "quickstart" ? "page" : undefined} href="/docs">Introduction</a><a href="/docs#prerequisites">Prerequisites</a><a href="/docs#install">Install</a><a href="/docs#first-run">First run</a></div>
+          <div className="docs-group"><p>Core concepts</p><a href="/docs#how-it-works">Context manifests</a><a href="/docs#how-it-works">Runs</a><a href="/docs#how-it-works">Tools</a><a href="/docs#how-it-works">Events</a></div>
+          {showLoopGuide && <div className="docs-group"><p>Research tools</p><a href="/docs/loop" aria-current={page === "loop" ? "page" : undefined}>Loop: reproduce the analysis</a></div>}
+          <div className="docs-group"><p>For AI agents</p><a href="/llms.txt">llms.txt</a><a href="/docs#ai-ready">Markdown pages</a><a href="/openapi.json">OpenAPI schema</a></div>
         </aside>
 
         <main className="docs-content" id="top">
+          {children ?? <>
           <p className="breadcrumbs">Docs / Getting started / Quickstart</p>
           <h1>Quickstart</h1>
           <p className="docs-lead">Install the SDK and issue a tool-using run against a versioned context manifest.</p>
@@ -209,9 +228,10 @@ export function DocsQuickstart() {
           </section>
 
           <section id="ai-ready"><h2>Use the docs with an AI coding agent</h2><p>Documentation is available through machine-readable discovery files so a coding agent can inspect the current interface without scraping the rendered page.</p><CodeCard files={endpointFiles} /></section>
+          </>}
         </main>
 
-        <aside className="docs-onpage"><p>On this page</p><a href="#prerequisites">Prerequisites</a><a href="#install">Install</a><a href="#first-run">Create your first run</a><a href="#how-it-works">What the SDK is doing</a><a href="#ai-ready">Use with an AI agent</a></aside>
+        <aside className="docs-onpage"><p>On this page</p>{toc.map(h => <a key={h.id} href={`#${h.id}`}>{h.label}</a>)}</aside>
       </div>
     </div>
   )

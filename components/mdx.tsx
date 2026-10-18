@@ -1,5 +1,5 @@
 import type React from "react"
-import type { MDXComponents } from "next-mdx-remote/rsc"
+import type { MDXComponents } from "mdx/types"
 import { slugifyHeading } from "@/lib/writing"
 
 function textOf(children: React.ReactNode): string {

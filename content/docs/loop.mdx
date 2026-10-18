@@ -1,0 +1,93 @@
+---
+title: Reproduce the Loop analysis
+description: Run the numerical checks, understand the tables, and interpret the measurement limits.
+published: true
+---
+
+Loop studies fine-grained wrist motion through crochet. This guide accompanies the single-participant measurement report and its released numerical supplement: five CSV tables, three Python scripts and 72 data rows. It explains how to check the calculations and what those checks establish.
+
+## Run the checks
+
+Use Python 3.9 or newer. The verifier uses only the standard library; no SDK, API key, account connection or additional Python package is needed to run it.
+
+From the supplement folder, run:
+
+```sh
+python3 code/verify_tables.py
+```
+
+The command reads the five CSVs in `data/`, prints JSON results and exits successfully when the recorded comparisons and aggregate checks agree. It does not modify data, upload files, train a model or open a recording. Keep the folder structure intact: paths are resolved relative to the script, rather than a particular computer's directories.
+
+Check file integrity separately. On macOS:
+
+```sh
+shasum -a 256 -c SHA256SUMS
+```
+
+On Linux:
+
+```sh
+sha256sum -c SHA256SUMS
+```
+
+Every listed file should report `OK`. Checksums detect changes relative to that manifest; they do not establish the scientific correctness of the labels. Use the supplement's exact release revision when reporting a reproduction. Version 1.0.0 is publicly downloadable from the [frozen supplement revision](https://huggingface.co/datasets/luccilabs/loop-measurement-supplement/tree/d83d8777bb11a17a2bf348bf90b5c85e627de140). Scripts are licensed MIT; tables and package documentation are CC BY 4.0. See Resources and access below.
+
+## Read the tables
+
+| File in data/ | Rows | Contents |
+| --- | ---: | --- |
+| `session_timing.csv` | 8 | Saved sample counts, timing regularity and mark coverage |
+| `review_events.csv` | 30 | Two human review passes and uncertain AI proposals |
+| `sync_anchors.csv` | 6 | Relative video/Watch tap correspondences |
+| `autocorrelation_summary.csv` | 7 | Historical exploratory pace comparisons |
+| `randomized_control.csv` | 21 | One actual-mark score and 20 randomized-center scores |
+
+**Session identifiers.** H01–H06 are legacy software-timestamped recordings, H07 is an earlier hardware-timestamped recording, and V01 is the synchronized ten-stitch video pilot. All concern the named author. The identifiers replace operational filenames; they do not make the study anonymous.
+
+**Timing fields.** `samples` counts saved samples; `sampleSpanSeconds` is the last saved timestamp minus the first. `effectiveHz` is `(samples − 1) / sampleSpanSeconds`; `observedMedianHz` is the inverse median adjacent interval. `intervalJitterCvPercent` is 100 times population interval SD divided by mean interval. `format_version` identifies the original export schema.
+
+`shortIntervalsBelowHalfExpected` and `longIntervalsAboveOnePointFiveExpected` count intervals below 0.5 or above 1.5 times the declared interval: 50 Hz for H01–H06, 200 Hz for H07/V01. Long gaps are not direct counts of physically missing sensor samples. `captureMarks` is the unfiltered capture-mark count. `captureMarksOutsideSampleRange` checks coverage separately from interval regularity. `secondsFromLastCaptureMarkToLastSample` is negative when recording ends before the final mark; a blank indicates no capture mark was available.
+
+**Review fields.** `source` distinguishes `human_A`, `human_B` and `AI`; the two human passes are by the same maker. `event_index` is one-based within a review, rather than a validated stitch identity. `video_seconds` is elapsed source-video time. `status` is clear for the twenty human events and uncertain for all ten AI proposals. `earliest_plausible_seconds` and `latest_plausible_seconds` contain AI judgment ranges; blank human values mean no interval was recorded, not zero uncertainty. These ranges are not statistical confidence intervals.
+
+**Synchronization fields.** `anchor_index` identifies a tap pair; `video_seconds` and `watch_seconds` are elapsed coordinates. No wall-clock times are included.
+
+**Exploratory fields.** The autocorrelation table contains `session_id`, `retained_marks`, `median_mark_interval_seconds`, `selected_period_seconds`, `autocorrelation` and a 1/0 `meets_source_criterion` flag. Printed periods and strengths are rounded; the flag preserves the original full-precision strict 20% criterion. Do not redefine it from the rounded columns. In the control table, `condition` is actual or randomized, `trial` is 0 for actual or 1–20 for randomized draws, and `mean_correlation` is the in-sample template score.
+
+The supplement README documents the same fields in detail. There are no training/test splits, raw motion channels, videos, audio, still images, private AI traces or personal context records in these tables.
+
+## Understand the measurements
+
+**Capture marks, reviewed events and context remain separate.** A mark made during recording is not an independently verified stitch completion. Later video events and retrospective observations retain their own provenance; this package does not replace them with reconciled ground truth.
+
+**The event definition is explicit.** Completion is the first visible frame after the final pull-through leaves one loop on the hook. The maker knew the intended count when reviewing the muted video twice. The AI reviewer used cropped source-frame sheets and different viewing conditions, with instruction-based blinding. The report describes those limitations. All AI boundaries remain uncertain.
+
+**Clocks are fitted before comparing coordinates.** Ordinary least squares fits `Watch time = offset + scale × video time` from the six tap pairs. Root-mean-square and maximum residuals describe the anchor fit; they do not verify absolute boundary timing. All review comparisons shown here use video time.
+
+**Event pairing allows unmatched events.** An ordered, one-to-one dynamic-programming alignment uses a maximum distance equal to the smaller of one second and 45% of the median within-review inter-event interval, with a 0.5-second fallback when no interval is available. A one-second cap is the pairing rule for this data, not an independently validated accuracy tolerance. No offset is fitted to make the reviews agree.
+
+**Controls retain their original limits.** The historical procedures use preceding-sample resampling at 25 Hz without an anti-aliasing filter. The randomized-center procedure fits and scores overlapping evidence in-sample, using eight template refits and seed 7 for twenty controls. Its random-draw SD is not a confidence interval. The original raw-signal inputs are withheld, so the public-table verifier cannot re-extract those signals or independently repeat the AI review.
+
+## Interpret the results
+
+Successful verification reproduces these video-time comparisons:
+
+| Comparison | Paired | Unmatched, first/second | Median absolute difference | Maximum difference |
+| --- | ---: | --- | ---: | ---: |
+| Human A / human B | 10 | 0 / 0 | 0.101950 s | 0.933567 s |
+| AI candidates / human A | 9 | 1 / 1 | 0.263633 s | 0.499767 s |
+| AI candidates / human B | 10 | 0 / 0 | 0.301250 s | 0.365067 s |
+
+The six-tap fit reproduces RMS residual 20.368 ms and maximum residual 40.819 ms. The actual-mark control score rounds to 0.526, compared with randomized mean 0.525 and population SD 0.024 across 20 draws. Four of seven historical autocorrelation peaks met the original pace criterion.
+
+Agreement with preserved numbers establishes numerical reproducibility within the supplied tables. Human repeatability on one clip does not establish semantic accuracy, independent inter-rater agreement, generalization or detector performance. The 30 review events describe one ten-stitch clip, not 30 independent stitches. There are no clear AI boundaries for a clear-only accuracy analysis.
+
+## Resources and access
+
+- [Measurement report](/writing/loop-wp-01-measuring-fine-grained-manual-activity): published research report on capture timing, signal controls and stitch-boundary annotation.
+- [Numerical supplement, version 1.0.0](https://huggingface.co/datasets/luccilabs/loop-measurement-supplement/tree/d83d8777bb11a17a2bf348bf90b5c85e627de140): public tables, package documentation, citation metadata, scoped licenses and checksums.
+- [Analysis code](https://huggingface.co/datasets/luccilabs/loop-measurement-supplement/tree/d83d8777bb11a17a2bf348bf90b5c85e627de140/code): the three Python scripts and MIT notice, pinned to the same release revision.
+- [Loop collection on Hugging Face](https://huggingface.co/collections/luccilabs/loop-6a9dc38be5cda2a8ce02017e): project resource index, including the released supplement.
+- [Natalie Hill's ORCID](https://orcid.org/0009-0001-3328-6549): researcher identity and public works.
+
+The source analysis revision for the report is `eeb169543cf617dbb43ec761524ba5dcc0d35468`; the public supplement revision is `d83d8777bb11a17a2bf348bf90b5c85e627de140`. Numerical tables and scripts retain the reviewed candidate's exact bytes; release changes add citation/license metadata and documentation. Cite the report and exact supplement revision used, following `report.bib` and `CITATION.cff` in that package. No DOI is claimed. Tables and package documentation are CC BY 4.0; scripts are MIT. No original media or raw sensor recording is included or licensed by this numerical release.

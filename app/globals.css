@@ -283,3 +283,17 @@ a.index-entry:hover .index-title, .index-title a:hover { text-decoration: underl
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Loop reproduction guide: reuse the docs typography and code cards. */
+.loop-guide { margin-top: 36px; }
+.loop-guide h2 { scroll-margin-top: 88px; }
+.loop-guide a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.loop-guide ul { list-style: square; }
+.loop-guide strong { color: var(--ink); font-weight: 600; }
+.loop-guide p code, .loop-guide li code { font-family: var(--mono); font-size: .87em; overflow-wrap: anywhere; }
+.loop-guide .docs-table-scroll { max-width: 100%; overflow-x: auto; margin: 24px 0 32px; }
+.loop-guide table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+.loop-guide th { color: var(--ink); font-weight: 500; border-bottom: 1px solid var(--ink); }
+.loop-guide td { border-bottom: 1px solid var(--line); vertical-align: top; }
+.loop-guide th, .loop-guide td { padding: 12px 14px 12px 0; line-height: 1.6; }
+.loop-guide table code { font-family: var(--mono); font-size: 12px; }

@@ -163,6 +163,16 @@
   margin-bottom: 0.2rem;
 }
 
+.content ol {
+  list-style: decimal;
+  margin-left: 1.5rem;
+  padding-left: 0;
+}
+
+.content ol > li {
+  margin-bottom: 0.4rem;
+}
+
 /* Links are always underlined, quietly */
 .content a {
   text-decoration: underline;

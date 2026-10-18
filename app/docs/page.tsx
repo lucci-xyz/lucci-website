@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { DocsQuickstart } from "@/components/docs-quickstart"
+import { getLoopGuide } from "@/lib/loop-docs"
 
 export const metadata: Metadata = {
   title: "Docs",
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
 }
 
 export default function DocsPage() {
-  return <DocsQuickstart />
+  return <DocsQuickstart showLoopGuide={Boolean(getLoopGuide())} />
 }
