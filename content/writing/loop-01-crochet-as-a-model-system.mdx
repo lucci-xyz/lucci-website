@@ -1,0 +1,77 @@
+---
+title: Crochet as a model system for fine-grained wearable sensing
+description: Why crochet is a useful testbed for studying what wrist-worn sensors can and cannot recover about complex manual skill.
+date: 2026-10-18
+format: Research note
+published: true
+---
+
+Crochet is a useful sensing problem because it sits in an awkward middle ground. The activity is repetitive enough to contain strong temporal structure, but each stitch is produced by coordinated finger, hook, yarn, and wrist motion that is only partially visible from a sensor worn at the wrist.
+
+That makes crochet more than a stitch-counting problem. It is a compact way to ask a broader question: **how much of a fine-grained manual skill can a commodity wearable actually observe?**
+
+Natalie Hill · Lucci Labs · [ORCID](https://orcid.org/0009-0001-3328-6549)
+
+## Why crochet
+
+Most wearable activity-recognition problems operate at a relatively coarse scale: walking, running, sleeping, lifting, typing, or broad gestures. Crochet compresses the target behavior into much smaller repeated units.
+
+A single stitch may involve yarn tension changes, hook rotation, finger repositioning, insertion, pull-through, and recovery into the next stitch. Some of those movements propagate clearly to the wrist. Others may occur almost entirely in the fingers.
+
+This creates a useful natural boundary for wearable sensing. If the wrist signal contains enough structure to recover stitches, stitch types, phases, or errors, we can measure that. If it does not, the failure is equally informative because it tells us which aspects of manual activity are not observable from that location.
+
+## The first research questions
+
+Loop begins with five questions.
+
+1. What temporal structure in crochet is observable from wrist inertial sensing alone?
+2. Can individual stitch boundaries be located reliably, rather than inferred from an average rhythm?
+3. Can different stitch types be distinguished once boundary timing is known accurately?
+4. How much variability comes from the person, wrist, hook, yarn, speed, or project?
+5. At what point does adding another sensing modality become more useful than adding model complexity?
+
+These questions are intentionally ordered. There is little value in training a more sophisticated classifier if the labeling process is noisier than the event being classified.
+
+## A measurement-first approach
+
+Loop currently uses Apple Watch motion sensing together with a Mac capture and review workflow. The system records inertial motion with hardware timestamps, contextual session metadata, explicit pause spans, and stitch markers. A separate labeling workflow can align motion with video using audio transients as synchronization anchors.
+
+The distinction between capture-time marks and later labels matters. Early sessions showed that pressing a mark control can itself perturb the motion being measured. Spoken or click-based marking removes much of that interruption, but marker timing still contains human latency and ambiguity.
+
+For this reason Loop keeps three things separate:
+
+- what the Watch recorded during the session;
+- what synchronized video later establishes;
+- what a researcher retrospectively annotates or corrects.
+
+Collapsing those into one label would make the dataset cleaner while making the research less trustworthy.
+
+## What the early data already suggests
+
+The current sessions contain strong periodic structure. Detrended autocorrelation can recover the stitch period, or a clean harmonic of it, across the sessions analyzed so far.
+
+That does **not** mean stitch boundaries have been solved.
+
+In the current analysis, windows centered on manual stitch marks were statistically indistinguishable from windows centered at shuffled control times. The signal appears rhythmic, but the available marks do not yet establish a sharp repeatable boundary.
+
+That is a useful negative result. It narrows the problem from “is there structure?” to “is the boundary absent, or are the labels too imprecise to reveal it?” Synchronized video is being introduced specifically to separate those possibilities.
+
+## Why this may generalize
+
+Crochet is only the first domain. The same observability problem appears anywhere a wearable tries to infer a detailed hand process from a sensor mounted farther up the kinematic chain.
+
+Examples include assembly work, instrument practice, rehabilitation exercises, crafts, tool use, and other repetitive skilled manipulation. In each case a model can only learn information that reaches the sensor and is represented accurately in the labels.
+
+The broader research question is therefore not “can AI count crochet stitches?” It is:
+
+> What aspects of fine manual activity survive projection onto a commodity wrist sensor, and how should we measure that limit before building models around it?
+
+## What comes next
+
+The immediate goal is to establish a controlled measurement baseline rather than publish a model result prematurely.
+
+The next experiments will focus on synchronized high-quality labels, label timing error, repeatability across sessions, simple segmentation baselines, and controlled changes in stitch type and project context.
+
+If wrist IMU reaches a reproducible ceiling, that becomes the basis for the next study: adding a sensing modality such as forearm surface EMG and measuring exactly what information it contributes.
+
+Code and research tooling will live at [lucci-xyz/loop](https://github.com/lucci-xyz/loop). Curated datasets and benchmarks will be released through the [Lucci Labs Hugging Face organization](https://huggingface.co/luccilabs) and the [Loop collection](https://huggingface.co/collections/luccilabs/loop) when their schemas and release terms are stable.
