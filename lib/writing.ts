@@ -1,7 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
 import matter from "gray-matter"
-import { forthcomingItems } from "./site-data"
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "writing")
 
@@ -21,7 +20,7 @@ export type Note = {
 }
 
 export type WritingListItem = {
-  slug?: string
+  slug: string
   title: string
   description: string
   format: string
@@ -53,19 +52,24 @@ export function getPublishedNotes(): Note[] {
     .map((file) => {
       const raw = fs.readFileSync(path.join(CONTENT_DIR, file), "utf8")
       const { data, content } = matter(raw)
-      return { slug: file.replace(/\.mdx$/, ""), frontmatter: data as NoteFrontmatter, content }
+      const frontmatter = {
+        ...data,
+        date: new Date(data.date).toISOString().slice(0, 10),
+        author: data.author?.trim() || "Lucci Labs",
+      } as NoteFrontmatter
+      return { slug: file.replace(/\.mdx$/, ""), frontmatter, content }
     })
     .filter((note) => note.frontmatter.published !== false)
-    .sort((a, b) => (a.frontmatter.date < b.frontmatter.date ? 1 : -1))
+    .sort((a, b) => b.frontmatter.date.localeCompare(a.frontmatter.date) || b.slug.localeCompare(a.slug))
 }
 
 export function getNote(slug: string): Note | undefined {
   return getPublishedNotes().find((note) => note.slug === slug)
 }
 
-// Published notes from content/writing plus forthcoming placeholders, newest first.
+// Published articles only, newest first.
 export function getWritingIndex(): WritingListItem[] {
-  const published: WritingListItem[] = getPublishedNotes().map((note) => ({
+  return getPublishedNotes().map((note) => ({
     slug: note.slug,
     title: note.frontmatter.title,
     description: note.frontmatter.description,
@@ -73,14 +77,6 @@ export function getWritingIndex(): WritingListItem[] {
     dateISO: note.frontmatter.date,
     dateLabel: formatMonthYear(note.frontmatter.date),
   }))
-  const forthcoming: WritingListItem[] = forthcomingItems.map((item) => ({
-    title: item.title,
-    description: item.description,
-    format: item.format,
-    dateISO: item.dateISO,
-    dateLabel: formatMonthYear(item.dateISO),
-  }))
-  return [...published, ...forthcoming].sort((a, b) => (a.dateISO < b.dateISO ? 1 : -1))
 }
 
 export function extractHeadings(content: string) {
