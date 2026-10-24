@@ -55,7 +55,7 @@ export function getPublishedNotes(): Note[] {
       const { data, content } = matter(raw)
       return { slug: file.replace(/\.mdx$/, ""), frontmatter: data as NoteFrontmatter, content }
     })
-    .filter((note) => note.frontmatter.published !== false)
+    .filter((note) => note.frontmatter.published === true)
     .sort((a, b) => (a.frontmatter.date < b.frontmatter.date ? 1 : -1))
 }
 
