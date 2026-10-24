@@ -26,3 +26,5 @@ frontmatter drives the hero and citation, `##` headings become the scrollspy
 TOC, and `Sidenote` / `Figure` / `ManifestDiagram` (see `components/mdx.tsx`)
 are available inline. Only published notes' image directories sync to
 `public/writing/<slug>/`; stale note and asset exports are removed together.
+The standard `npm run build` runs the writing-reader regression check before
+building the site, so preview and production builds use the same gate.
