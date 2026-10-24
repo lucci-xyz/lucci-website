@@ -15,6 +15,8 @@ The Labs Vercel project needs:
 | `RESEARCH_SIGNUP_SECRET` | A long random secret for signed confirmation links. Generate once and retain across deployments so outstanding links remain valid. |
 | `RESEARCH_SITE_URL` | Optional; defaults to `https://luccilabs.xyz`. Use a preview URL only for isolated review. |
 
+On October 24, 2026, Natalie approved creating the `Lucci Labs Research` segment and a dedicated `lucci-labs-research-signups` full-access key. The three required settings above were saved to the Labs Vercel **production** environment and verified by name and target. Their values are absent from Git and this document. Preview deployments deliberately lack those credentials, so a valid preview signup returns unavailable rather than sending mail.
+
 The company site requires no new secret. `RESEARCH_SUBSCRIBE_URL` optionally overrides its Labs API destination for isolated preview testing; production defaults to `https://luccilabs.xyz/api/subscribe`. Deploy Labs and configure its runtime first, then deploy HQ. Do not share the Labs API key with HQ or Git. The existing HQ contact-form key and variables remain separate.
 
 ## Verification
