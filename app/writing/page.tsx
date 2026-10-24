@@ -26,27 +26,15 @@ export default function WritingPage() {
         </section>
 
         <section className="index-list" aria-label="Research notes, newest first">
-          {items.map((item) => {
-            const content = (
-              <>
-                <p className="index-date">{item.dateLabel}<br />{item.format}</p>
-                <div>
-                  <h2 className="index-title">{item.title}</h2>
-                  <p className="index-desc">{item.description}</p>
-                </div>
-              </>
-            )
-            return item.slug ? (
-              <Link className="index-entry" href={`/writing/${item.slug}`} key={item.title}>
-                {content}
-              </Link>
-            ) : (
-              <div className="index-entry is-forthcoming" key={item.title}>
-                {content}
-                <p className="index-forthcoming">Forthcoming</p>
+          {items.map((item) => (
+            <Link className="index-entry" href={`/writing/${item.slug}`} key={item.slug}>
+              <p className="index-date">{item.dateLabel}<br />{item.format}</p>
+              <div>
+                <h2 className="index-title">{item.title}</h2>
+                <p className="index-desc">{item.description}</p>
               </div>
-            )
-          })}
+            </Link>
+          ))}
         </section>
       </main>
       <SiteFooter />

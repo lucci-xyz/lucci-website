@@ -130,13 +130,10 @@ section { scroll-margin-top: 70px; }
 .index-list { border-bottom: 1px solid var(--line); }
 .index-entry { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 26px; padding: 1.25rem 0 1.4rem; border-top: 1px solid var(--line); align-items: baseline; }
 .index-list .index-entry:first-child { border-top: 0; }
-.index-entry.is-forthcoming { cursor: default; }
 .index-date { margin: 0; color: var(--muted); font-family: var(--sans); font-size: 13px; line-height: 1.7; }
 .index-title { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 600; line-height: 1.4; }
 a.index-entry:hover .index-title, .index-title a:hover { text-decoration: underline; text-decoration-color: var(--underline); text-underline-offset: 2px; }
-.index-entry.is-forthcoming .index-title { color: var(--muted); }
 .index-desc { margin: 5px 0 0; color: var(--body); font-size: 0.95em; line-height: 1.55; }
-.index-forthcoming { grid-column: 2; margin: 6px 0 0; color: var(--faint); font-family: var(--sans); font-size: 12px; }
 .index-title .arrow { margin-left: 7px; font-family: var(--sans); font-size: 13px; font-weight: 400; color: var(--faint); }
 .index-meta { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 9px 0 0; color: var(--muted); font-family: var(--sans); font-size: 13px; }
 .index-meta a { color: var(--body); }
@@ -274,7 +271,6 @@ a.index-entry:hover .index-title, .index-title a:hover { text-decoration: underl
   .site-nav .kbd-chip { display: none; }
   .home-announcement { flex-direction: column; gap: 0.5rem; }
   .index-entry { grid-template-columns: 1fr; gap: 4px; }
-  .index-forthcoming { grid-column: 1; }
   .explanation-list > div { grid-template-columns: 1fr; gap: 8px; }
   .docs-header-links a:first-child { display: none; }
   .site-footer { flex-direction: column; gap: 14px; }

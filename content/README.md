@@ -12,11 +12,8 @@ files automatically — there is no list to maintain anywhere.
 The full authoring guide and the note template (`_template.mdx`) live in the
 writing repo's README.
 
-## Forthcoming teasers
-
-To tease unwritten work on the index ("Forthcoming"), add an entry to
-`lib/site-data.ts` — these are titles only, with no page behind them. Remove the
-entry when the real note ships.
+The index and command menu show published articles only, ordered by publication
+date from newest to oldest. Forthcoming placeholders are not listed.
 
 ## Rendering
 
