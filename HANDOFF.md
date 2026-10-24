@@ -1,7 +1,13 @@
 # Handoff
 
-Updated October 24, 2026 on branch `codex/research-subscriptions` in `/home/nat/lucci/lucci-website-research-subscriptions`.
+Updated October 24, 2026 in `/home/nat/lucci/lucci-website-compact-signup` on `codex/compact-research-signup`.
 
-The Lucci Labs site now has a research signup component on Home and Writing, a signed email confirmation flow, and a Resend segment integration. [Labs PR #28](https://github.com/lucci-xyz/lucci-website/pull/28) and [HQ PR #7](https://github.com/lucci-xyz/luccihq/pull/7) are review branches; production has not changed. Research updates remain manual, as Natalie requested. See [the subscription runbook](docs/research-subscriptions.md) for settings, verification, and sending procedure.
+## Current state
 
-`npm run test:subscriptions`, `npx tsc --noEmit`, and `npm run build` passed. Local invalid input returned 400, a bot honeypot returned 200 without sending, and a valid request with no runtime key returned 503. Vercel's PR preview check passed. With Natalie's specific approval, the `Lucci Labs Research` segment and dedicated full-access key were created in Resend, and all three required variables were added to the Labs Vercel **production** target. Their names and targets were verified without decrypting secrets. No email was sent and no Resend contact was created. Remaining: PR review, explicit production approval, then one separately approved confirmation-email test. Deploy Labs before the HQ form change.
+- [Labs PR #28](https://github.com/lucci-xyz/lucci-website/pull/28) merged and deployed to [luccilabs.xyz](https://luccilabs.xyz/). Home and Writing offer the same confirmed research subscription. The API sends a confirmation from `research@luccilabs.xyz`; only a completed confirmation adds a contact to the dedicated Resend segment.
+- One specifically approved live signup for `contact@luccilabs.xyz` returned 200, its confirmation email arrived, the confirmation returned `status=confirmed`, and Resend listed the contact in `Lucci Labs Research` with `unsubscribed: false`. No research update was sent. Updates remain review-before-send, as Natalie requested. See [the subscription runbook](docs/research-subscriptions.md).
+- Natalie found the new signup too large and wordy. This branch makes it a compact, single-row form on both Labs pages. The related HQ branch moves its form above the full-screen statement so visitors can find it.
+
+## Next step
+
+Review the compact signup PR and its preview. Merge/deploy only with Natalie's specific approval; then verify Home and Writing on production. No additional email test is needed for this visual change.
