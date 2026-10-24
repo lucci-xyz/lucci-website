@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { ResearchSubscribe } from "@/components/research-subscribe"
 
 export default function HomePage() {
   return (
@@ -46,6 +47,7 @@ export default function HomePage() {
             <a className="quiet-link" href="mailto:contact@luccilabs.xyz">contact@luccilabs.xyz</a>.
           </p>
         </section>
+        <ResearchSubscribe />
       </main>
       <SiteFooter />
     </div>
