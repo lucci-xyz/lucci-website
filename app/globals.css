@@ -114,6 +114,26 @@ html.motion-ready .index-entry:nth-child(n+5).is-visible { animation-delay: .2s;
 .home-intro .quiet-link { text-decoration: underline; text-decoration-color: var(--underline); text-underline-offset: 2px; }
 .home-intro .quiet-link:hover { text-decoration-color: var(--ink); }
 
+.research-subscribe { max-width: var(--reading); margin: clamp(56px, 8vw, 96px) auto 0; padding: clamp(28px, 4vw, 40px); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.research-subscribe h2 { margin: 8px 0 10px; font-family: var(--sans); font-size: clamp(22px, 3vw, 30px); font-weight: 500; letter-spacing: -0.04em; line-height: 1.2; }
+.research-subscribe p { margin: 0; color: var(--body); font-family: var(--sans); font-size: 14px; line-height: 1.6; }
+.research-subscribe-form { margin-top: 24px; position: relative; }
+.research-subscribe-form label { display: block; margin-bottom: 8px; font-family: var(--sans); font-size: 13px; color: var(--ink); }
+.research-subscribe-fields { display: flex; gap: 8px; }
+.research-subscribe-fields input { min-width: 0; flex: 1; padding: 11px 14px; border: 1px solid var(--line-dark); border-radius: var(--radius); background: var(--bg); font-family: var(--sans); font-size: 15px; }
+.research-subscribe-fields input:focus-visible, .research-subscribe-fields button:focus-visible, .subscribe-confirm-page button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.research-subscribe-fields button, .subscribe-confirm-page button { padding: 11px 16px; border-radius: var(--radius); background: var(--ink); color: var(--bg); font-family: var(--sans); font-size: 14px; cursor: pointer; white-space: nowrap; }
+.research-subscribe-fields button:disabled { opacity: .6; cursor: wait; }
+.research-subscribe .research-subscribe-note { margin-top: 10px; color: var(--muted); font-size: 12px; }
+.research-subscribe .research-subscribe-error { margin-top: 10px; color: #9d2b2b; }
+.research-subscribe .research-subscribe-status { margin-top: 24px; color: var(--ink); }
+.research-subscribe-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.subscribe-confirm-page { max-width: var(--reading); margin: 0 auto; padding: clamp(72px, 10vw, 120px) 0; }
+.subscribe-confirm-page h1 { margin: 14px 0; font-family: var(--sans); font-size: clamp(30px, 5vw, 48px); font-weight: 500; letter-spacing: -0.05em; line-height: 1.1; }
+.subscribe-confirm-page p { max-width: 540px; color: var(--body); }
+.subscribe-confirm-page form { margin: 28px 0; }
+.subscribe-confirm-page > .quiet-link { display: inline-block; margin-top: 20px; text-decoration: underline; text-underline-offset: 3px; }
+
 section { scroll-margin-top: 70px; }
 .section-head { max-width: var(--reading); margin: 0 auto; padding: clamp(44px, 6vw, 64px) 0 6px; display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
 .section-head h2 { margin: 0; font-family: var(--sans); font-size: 1.05rem; font-weight: 500; letter-spacing: -0.02em; }
@@ -267,6 +287,8 @@ a.index-entry:hover .index-title, .index-title a:hover { text-decoration: underl
   .docs-content { padding-top: 52px; }
 }
 @media (max-width: 600px) {
+  .research-subscribe-fields { flex-direction: column; }
+  .research-subscribe-fields button { white-space: normal; }
   .site-nav { gap: 16px; font-size: 14px; }
   .site-nav .kbd-chip { display: none; }
   .home-announcement { flex-direction: column; gap: 0.5rem; }

@@ -31,6 +31,9 @@ export default function PrivacyPage() {
               tracking cookies. If you email us, we receive your email address and message
               so we can reply.
             </p>
+            <p>
+              If you subscribe to research updates, we send a confirmation email and add your address to our Resend research list only after you confirm. We use it to send new research and honor unsubscribe requests. Every update includes an unsubscribe link; you can also ask us to remove your address.
+            </p>
           </section>
 
           <section>

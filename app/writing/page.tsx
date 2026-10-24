@@ -3,6 +3,7 @@ import Link from "next/link"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { getWritingIndex } from "@/lib/writing"
+import { ResearchSubscribe } from "@/components/research-subscribe"
 
 export const metadata: Metadata = {
   title: "Writing",
@@ -36,6 +37,7 @@ export default function WritingPage() {
             </Link>
           ))}
         </section>
+        <ResearchSubscribe />
       </main>
       <SiteFooter />
     </div>
