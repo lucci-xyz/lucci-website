@@ -236,9 +236,15 @@ a.index-entry:hover .index-title, .index-title a:hover { text-decoration: underl
 
 /* Footer — hairline, plain sans, no shouting */
 .site-footer { margin-top: clamp(64px, 9vw, 120px); border-top: 1px solid var(--line); padding: 28px 0 40px; display: flex; align-items: baseline; justify-content: space-between; gap: 24px; color: var(--muted); font-family: var(--sans); font-size: 14px; line-height: 1.7; letter-spacing: -0.01em; }
-.footer-links { display: flex; flex-wrap: wrap; gap: 22px; }
+.footer-links { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
 .footer-links a { color: var(--body); }
 .footer-links a:hover { text-decoration: underline; text-decoration-color: var(--underline); text-underline-offset: 2px; }
+.footer-social-links { display: flex; align-items: center; gap: 12px; }
+.footer-icon-link { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 4px; opacity: .75; }
+.footer-icon-link:hover { opacity: 1; }
+.footer-icon-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; opacity: 1; }
+.footer-icon-link img { display: block; width: 20px; height: 20px; }
+
 
 /* Privacy policy */
 .privacy-updated { margin: 22px 0 0; color: var(--muted); font-family: var(--sans); font-size: 13px; }
