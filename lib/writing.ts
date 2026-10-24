@@ -52,7 +52,12 @@ export function getPublishedNotes(): Note[] {
     .map((file) => {
       const raw = fs.readFileSync(path.join(CONTENT_DIR, file), "utf8")
       const { data, content } = matter(raw)
-      return { slug: file.replace(/\.mdx$/, ""), frontmatter: { ...data, date: new Date(data.date).toISOString().slice(0, 10) } as NoteFrontmatter, content }
+      const frontmatter = {
+        ...data,
+        date: new Date(data.date).toISOString().slice(0, 10),
+        author: data.author?.trim() || "Lucci Labs",
+      } as NoteFrontmatter
+      return { slug: file.replace(/\.mdx$/, ""), frontmatter, content }
     })
     .filter((note) => note.frontmatter.published !== false)
     .sort((a, b) => b.frontmatter.date.localeCompare(a.frontmatter.date) || b.slug.localeCompare(a.slug))

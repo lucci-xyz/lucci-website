@@ -14,6 +14,7 @@ writing repo's README.
 
 The index and command menu show published articles only, ordered by publication
 date from newest to oldest. Forthcoming placeholders are not listed.
+The author is optional; an omitted or blank author displays as **Lucci Labs**.
 
 ## Rendering
 

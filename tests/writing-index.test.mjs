@@ -47,3 +47,24 @@ test("the writing index contains published articles in descending publication da
     rmSync(root, { recursive: true, force: true })
   }
 })
+
+test("article authors are optional and blank names default to Lucci Labs", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "lucci-writing-authors-"))
+  try {
+    const content = path.join(root, "content/writing")
+    mkdirSync(content, { recursive: true })
+    for (const [slug, author] of [
+      ["omitted", ""], ["empty", "author:"],
+      ["whitespace", 'author: "   "'], ["named", "author: Natalie Hill"],
+    ]) {
+      writeFileSync(path.join(content, `${slug}.mdx`), `---\ntitle: ${slug}\ndate: 2026-10-24\npublished: true\n${author}\n---\nBody`)
+    }
+    const reader = loadReader(root)
+    for (const slug of ["omitted", "empty", "whitespace"]) {
+      assert.equal(reader.getNote(slug).frontmatter.author, "Lucci Labs")
+    }
+    assert.equal(reader.getNote("named").frontmatter.author, "Natalie Hill")
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
