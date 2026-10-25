@@ -1,0 +1,31 @@
+{
+  "siteUrl": "https://luccilabs.xyz",
+  "key": "03bccaafb73147ce97f7512b1465e4ef",
+  "sharedFiles": [
+    "lib/seo.ts",
+    "lib/writing.ts",
+    "lib/discovery.ts",
+    "lib/loop-docs.ts",
+    "app/layout.tsx",
+    "components/mdx.tsx"
+  ],
+  "contentRules": [
+    {
+      "prefix": "content/writing/",
+      "suffix": ".mdx",
+      "urlPrefix": "/writing/",
+      "related": [
+        "/",
+        "/writing"
+      ]
+    },
+    {
+      "prefix": "content/docs/",
+      "suffix": ".mdx",
+      "urlPrefix": "/docs/",
+      "related": [
+        "/docs"
+      ]
+    }
+  ]
+}

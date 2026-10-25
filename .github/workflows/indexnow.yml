@@ -1,0 +1,84 @@
+name: Notify search engines after production deploy
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "Recently changed canonical paths, separated by spaces"
+        required: true
+        default: "/"
+
+permissions:
+  contents: read
+  deployments: read
+
+concurrency:
+  group: indexnow-production
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production' &&
+       github.event.deployment.creator.login == 'vercel[bot]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.deployment.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - uses: actions/github-script@v8
+        env:
+          INPUT_URLS: ${{ inputs.urls }}
+        with:
+          script: |
+            const { execFileSync } = require('node:child_process');
+            const { writeFileSync } = require('node:fs');
+            const { join } = require('node:path');
+            const args = ['scripts/indexnow.mjs'];
+            if (context.eventName === 'workflow_dispatch') {
+              const urls = (process.env.INPUT_URLS || '').trim().split(/\s+/).filter(Boolean);
+              if (!urls.length) throw new Error('Supply the recently changed canonical paths.');
+              args.push('--urls', ...urls);
+            } else {
+              const current = context.payload.deployment;
+              // A preview or an unmerged branch must never run the public notifier.
+              execFileSync('git', ['merge-base', '--is-ancestor', current.sha, 'origin/main']);
+              const { data: deployments } = await github.rest.repos.listDeployments({
+                ...context.repo, environment: 'Production', per_page: 100
+              });
+              let previous;
+              for (const deployment of deployments) {
+                if (deployment.id === current.id) continue;
+                const { data: statuses } = await github.rest.repos.listDeploymentStatuses({
+                  ...context.repo, deployment_id: deployment.id, per_page: 10
+                });
+                if (!statuses.some(status => status.state === 'success')) continue;
+                if (deployment.created_at > current.created_at) {
+                  core.notice('A newer successful production deployment exists; skipping stale event.');
+                  return;
+                }
+                if (deployment.sha !== current.sha) {
+                  previous = deployment.sha;
+                  break;
+                }
+              }
+              if (!previous) {
+                core.notice('No earlier successful production revision found. Use the manual workflow with reviewed paths.');
+                return;
+              }
+              const files = execFileSync('git', ['diff', '--name-only', previous, current.sha], { encoding: 'utf8' });
+              const file = join(process.env.RUNNER_TEMP, 'indexnow-changed-files.txt');
+              writeFileSync(file, files);
+              args.push('--changed-files', file);
+            }
+            args.push('--submit');
+            const output = execFileSync('node', args, { encoding: 'utf8' });
+            core.info(output);
+            await core.summary.addHeading('IndexNow notification').addCodeBlock(output, 'json').write();

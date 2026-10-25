@@ -48,7 +48,9 @@ export default async function WritingNotePage({ params }: { params: Promise<{ sl
         image: `${SITE_URL}/og.png`, inLanguage: "en",
         author: note.frontmatter.author === "Lucci Labs" || !note.frontmatter.author
           ? { "@id": `${SITE_URL}/#organization` }
-          : { "@type": "Person", name: note.frontmatter.author },
+          : { "@type": "Person", name: note.frontmatter.author,
+              ...(note.frontmatter.author === "Natalie Hill" ? { url: "https://orcid.org/0009-0001-3328-6549" } : {}),
+            },
         publisher: { "@id": `${SITE_URL}/#organization` },
         isPartOf: { "@id": `${SITE_URL}/#website` },
       }} />
