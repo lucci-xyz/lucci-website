@@ -14,7 +14,7 @@ export default function PrivacyPage() {
           <p className="eyebrow">Lucci Labs</p>
           <h1>Privacy policy</h1>
           <p className="page-hero-copy">
-            Lucci Labs is an independent, open-source project. This policy covers this
+            Lucci Labs is the research arm of Lucci. This policy covers this
             website and Taste, our Pinterest-connected tool.
           </p>
           <p className="privacy-updated">Updated October 24, 2026</p>
