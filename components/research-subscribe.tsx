@@ -19,7 +19,7 @@ export function ResearchSubscribe() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, website, attribution: browserAttribution() }),
       })
-      if (response.ok && !website.trim()) trackConversion("subscribe_request")
+      if (response.ok && !website.trim()) trackConversion("sign_up")
       setState(response.ok ? "done" : "error")
     } catch {
       setState("error")
@@ -30,7 +30,7 @@ export function ResearchSubscribe() {
     <section className="research-subscribe" aria-labelledby="research-subscribe-title">
       <h2 id="research-subscribe-title">Research updates</h2>
       {state === "done" ? (
-        <p className="research-subscribe-status" role="status">Check your inbox to confirm.</p>
+        <p className="research-subscribe-status" role="status">You&apos;re subscribed.</p>
       ) : (
         <form onSubmit={submit} className="research-subscribe-form">
           <label className="sr-only" htmlFor="research-subscribe-email">Email address</label>
@@ -39,7 +39,7 @@ export function ResearchSubscribe() {
             <button type="submit" disabled={state === "sending"}>{state === "sending" ? "Sending…" : "Subscribe"}</button>
           </div>
           <input className="research-subscribe-honeypot" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" value={website} onChange={(event) => setWebsite(event.target.value)} />
-          {state === "error" && <p className="research-subscribe-error" role="alert">We couldn&apos;t send the confirmation. Please try again later.</p>}
+          {state === "error" && <p className="research-subscribe-error" role="alert">We couldn&apos;t subscribe you. Please try again later.</p>}
         </form>
       )}
     </section>

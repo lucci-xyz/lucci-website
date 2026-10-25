@@ -46,7 +46,7 @@ function loadAnalytics() {
   window.dispatchEvent(new Event("lucci:analytics-ready"))
 }
 
-export function trackConversion(name: "generate_lead" | "subscribe_request" | "sign_up"): boolean {
+export function trackConversion(name: "generate_lead" | "sign_up"): boolean {
   try {
     const g = window as GoogleWindow
     if (window.localStorage.getItem(choiceKey) !== "yes" || !g.gtag) return false

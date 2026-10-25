@@ -1,11 +1,16 @@
-import { createHash } from "node:crypto"
 import { NextResponse } from "next/server"
-import { confirmationToken, normalizeEmail } from "@/lib/research-subscriptions"
+import { compactAttribution, normalizeEmail } from "@/lib/research-subscriptions"
+import { addResearchSubscriber, welcomeResearchSubscriber } from "@/lib/research-list"
 
 export const runtime = "nodejs"
 
 function json(error: string, status: number) {
   return NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store" } })
+}
+
+// Every accepted request gets the same reply, so the form never reveals whether an address was already listed.
+function accepted() {
+  return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } })
 }
 
 export async function POST(request: Request) {
@@ -21,58 +26,23 @@ export async function POST(request: Request) {
   if (!body || typeof body !== "object" || Array.isArray(body)) return json("The request could not be read.", 400)
 
   // The hidden field catches basic form bots without exposing a subscriber address.
-  if (typeof body.website === "string" && body.website.trim()) return NextResponse.json({ ok: true })
+  if (typeof body.website === "string" && body.website.trim()) return accepted()
 
   const email = normalizeEmail(body.email)
   if (!email) return json("Add a valid email address.", 400)
 
   const key = process.env.RESEND_RESEARCH_API_KEY
-  const secret = process.env.RESEARCH_SIGNUP_SECRET
-  if (!key || !secret || secret.length < 32) return json("Signups are temporarily unavailable.", 503)
-
-  const now = Date.now()
-  const token = confirmationToken(email, secret, now, body.attribution)
-  const site = process.env.RESEARCH_SITE_URL || "https://luccilabs.xyz"
-  const confirmUrl = new URL("/subscribe/confirm", site)
-  confirmUrl.searchParams.set("token", token)
-  const text = `Confirm your Lucci Labs research subscription: ${confirmUrl.toString()}\n\nThe link expires within 48 hours. If you did not request this, ignore this email. Research updates are occasional, and every update includes an unsubscribe link.`
-  // Campaign changes must not allow multiple confirmation emails to one address in a day.
-  const idempotency = createHash("sha256").update(confirmationToken(email, secret, now)).digest("hex")
-  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Confirm your Lucci Labs research subscription</title></head><body style="margin:0;background-color:#ffffff;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="#ffffff" style="background-color:#ffffff;padding-top:32px;padding-right:20px;padding-bottom:32px;padding-left:20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;"><tr><td><h1 style="font-family:Arial,Helvetica,sans-serif;font-size:24px;line-height:32px;color:#282828;font-weight:600;">Confirm your subscription</h1><p style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:25px;color:#3c3836;">Receive occasional emails when Lucci Labs publishes new research.</p><p style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:25px;color:#3c3836;"><a href="${confirmUrl.toString()}" style="color:#282828;text-decoration:underline;">Confirm subscription</a></p><p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#676767;">This link expires within 48 hours. If you did not request this, ignore this email. Every research update includes an unsubscribe link.</p></td></tr></table></td></tr></table></body></html>`
+  const segment = process.env.RESEND_RESEARCH_SEGMENT_ID
+  if (!key || !segment) return json("Signups are temporarily unavailable.", 503)
+  const settings = { key, segment, attributionProperty: process.env.RESEND_RESEARCH_ATTRIBUTION_PROPERTY }
 
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-        "Idempotency-Key": `research-confirm/${idempotency}`,
-      },
-      body: JSON.stringify({
-        from: "Lucci Labs <research@luccilabs.xyz>",
-        to: [email],
-        reply_to: "contact@luccilabs.xyz",
-        subject: "Confirm your Lucci Labs research subscription",
-        text,
-        html,
-      }),
-      cache: "no-store",
-    })
-    if (!response.ok) {
-      if (response.status === 409) {
-        const error = await response.json().catch(() => null) as { name?: unknown } | null
-        // A different campaign must keep the earlier address/day request and inbox link.
-        if (error?.name === "invalid_idempotent_request") {
-          console.info("research signup confirmation deduplicated (invalid_idempotent_request)")
-          return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } })
-        }
-      }
-      console.error("research signup confirmation failed", response.status)
-      return json("We could not send the confirmation email. Try again later.", 502)
-    }
-  } catch {
-    return json("We could not send the confirmation email. Try again later.", 502)
+    // Sign-up is single opt-in: the address joins the segment now, and only a new member gets the welcome.
+    const outcome = await addResearchSubscriber(email, compactAttribution(body.attribution), settings)
+    if (outcome === "subscribed") await welcomeResearchSubscriber(email, settings)
+  } catch (error) {
+    console.error("research signup failed", error instanceof Error ? error.message : "unknown")
+    return json("We could not subscribe you. Try again later.", 502)
   }
-
-  return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } })
+  return accepted()
 }

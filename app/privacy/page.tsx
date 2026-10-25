@@ -17,7 +17,7 @@ export default function PrivacyPage() {
             Lucci Labs is the research arm of Lucci. This policy covers this
             website and Taste, our Pinterest-connected tool.
           </p>
-          <p className="privacy-updated">Updated October 24, 2026</p>
+          <p className="privacy-updated">Updated October 25, 2026</p>
         </header>
 
         <div className="privacy-content">
@@ -31,7 +31,7 @@ export default function PrivacyPage() {
             </p>
             <p>
               We remember campaign tags from links you visit (UTM parameters), the landing path, and the referring
-              site&apos;s domain for up to 90 days in your browser. We include them when you request a research subscription
+              site&apos;s domain for up to 90 days in your browser. We include them when you subscribe to research updates
               so we can understand how people found our work. We do not save full referring URLs.
             </p>
             <p>
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
             </p>
             <AnalyticsPreferences />
             <p>
-              If you subscribe to research updates, we send a confirmation email and add your address to our Resend research list only after you confirm. We use it to send new research and honor unsubscribe requests. Every update includes an unsubscribe link; you can also ask us to remove your address.
+              If you subscribe to research updates, we add your address to our Resend research list and send you a welcome email. We use it to send new research and honor unsubscribe requests. Every update includes an unsubscribe link; you can also ask us to remove your address.
             </p>
           </section>
 

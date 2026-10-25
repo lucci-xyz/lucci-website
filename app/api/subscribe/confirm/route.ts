@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { subscriptionFromToken } from "@/lib/research-subscriptions"
-import { normalizeAttribution } from "@/lib/attribution"
+import { addResearchSubscriber, welcomeResearchSubscriber } from "@/lib/research-list"
 import { confirmationReceipt, CONFIRMATION_RECEIPT_COOKIE, CONFIRMATION_RECEIPT_SECONDS } from "@/lib/subscription-analytics"
 
 export const runtime = "nodejs"
@@ -19,46 +19,14 @@ export async function POST(request: Request) {
   const subscription = typeof token === "string" ? subscriptionFromToken(token, secret) : null
   if (!subscription) return destination(request, "expired")
   const { email, attribution } = subscription
-  const attributionProperty = process.env.RESEND_RESEARCH_ATTRIBUTION_PROPERTY
+  const settings = { key, segment, attributionProperty: process.env.RESEND_RESEARCH_ATTRIBUTION_PROPERTY }
 
-  const headers = { Authorization: `Bearer ${key}`, "Content-Type": "application/json" }
-  const contactUrl = `https://api.resend.com/contacts/${encodeURIComponent(email)}`
-
-  async function saveAttribution(previousValue?: unknown) {
-    if (!attribution || !attributionProperty) return
-    let previous = null
-    try { previous = normalizeAttribution(JSON.parse(typeof previousValue === "string" ? previousValue : "null")) } catch { /* No earlier campaign. */ }
-    const value = { first: previous?.first || attribution.first, last: attribution.last }
-    const updated = await fetch(contactUrl, {
-      method: "PATCH", headers, cache: "no-store",
-      body: JSON.stringify({ properties: { [attributionProperty]: JSON.stringify(value) } }),
-    })
-    if (!updated.ok) console.error("research attribution update failed", updated.status)
-  }
-
+  // Links emailed before sign-up became single opt-in still finish here until they expire.
   try {
-    const existing = await fetch(contactUrl, { headers, cache: "no-store" })
-    if (existing.ok) {
-      const contact = (await existing.json()) as { unsubscribed?: boolean; properties?: Record<string, unknown> }
-      // Never silently override a prior global unsubscribe.
-      if (contact.unsubscribed) return destination(request, "unsubscribed")
-      const added = await fetch(`${contactUrl}/segments/${encodeURIComponent(segment)}`, {
-        method: "POST", headers, cache: "no-store",
-      })
-      if (!added.ok && added.status !== 409) throw new Error(`segment: ${added.status}`)
-      try { await saveAttribution(attributionProperty ? contact.properties?.[attributionProperty] : undefined) } catch { console.error("research attribution update unavailable") }
-    } else if (existing.status === 404) {
-      const created = await fetch("https://api.resend.com/contacts", {
-        method: "POST", headers, cache: "no-store",
-        body: JSON.stringify({ email, unsubscribed: false, segments: [{ id: segment }] }),
-      })
-      // A concurrent confirmation may have created the contact already.
-      if (created.status === 409) return destination(request, "unavailable")
-      if (!created.ok) throw new Error(`contact: ${created.status}`)
-      try { await saveAttribution() } catch { console.error("research attribution update unavailable") }
-    } else {
-      throw new Error(`lookup: ${existing.status}`)
-    }
+    const outcome = await addResearchSubscriber(email, attribution, settings)
+    if (outcome === "unsubscribed") return destination(request, "unsubscribed")
+    if (outcome === "busy") return destination(request, "unavailable")
+    if (outcome === "subscribed") await welcomeResearchSubscriber(email, settings)
   } catch (error) {
     console.error("research signup confirmation failed", error instanceof Error ? error.message : "unknown")
     return destination(request, "unavailable")

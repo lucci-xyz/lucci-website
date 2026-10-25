@@ -24,13 +24,13 @@ Review: [Labs PR #33](https://github.com/lucci-xyz/lucci-website/pull/33), await
 
 - HQ attribution/analytics PR #11 and Labs PR #32 are merged in the base main branches. The sites use separate GA4 streams and retain existing consent and first/latest campaign handling. No cross-domain visitor continuity was added.
 - HQ Cloudflare Web Analytics was observed collecting visits, page views and Web Vitals during this audit. The earlier handoff's claim that it was off is stale. The prior website chat also verified Labs Vercel analytics through its dashboard; the earlier API error did not establish it was disabled.
-- The single Lucci Labs Research segment and existing Resend confirmation flow remain in place. Provider settings were not reconfigured here, and any live email test needs separate approval. See existing analytics and research-subscription documentation.
+- The single Lucci Labs Research segment remains. On 2026-10-25 Natalie made sign-up single opt-in: the form adds the address at once, and the Resend automation *Research subscription welcome* sends one welcome email to each new member. Any live email test needs separate approval. See `docs/research-subscriptions.md`.
 
 ## SEO completion release — 2026-10-25
 
 This release adds opt-in, bounded IndexNow notification after successful production deploys, with a hosted public ownership key and canonical/noindex/sitemap validation. Set GitHub Actions `INDEXNOW_ENABLED=true` only when enabling automatic notifications. Submission receipts do not establish indexing. See `docs/indexnow.md`.
 
-GA4 configuration and events use sanitized campaign URLs and origin-only referrers. Analytics remains opt-in. Labs distinguishes confirmation-email requests from signed, consented confirmation completions; actual subscribers remain in the single Resend research segment.
+GA4 configuration and events use sanitized campaign URLs and origin-only referrers. Analytics remains opt-in. Both sites' forms send `sign_up` when a subscription succeeds. Links from confirmation emails sent before 2026-10-25 can still record a signed, consented confirmation completion. Actual subscribers remain in the single Resend research segment.
 
 The existing Lucci Drive audit owns release receipts, live account checks, query baselines and marketing follow-up: https://docs.google.com/document/d/1Va3Rsy-l_jlxXimL5XkhLFTBeXATaJ8o1VSFGbRFD7Q. Do not copy its business strategy into this repository.
 
