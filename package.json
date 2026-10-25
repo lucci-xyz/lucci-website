@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run test:writing && next build",
     "start": "next start",
     "lint": "eslint .",
+    "test:writing": "node --test tests/writing*.test.mjs",
     "test:subscriptions": "node --experimental-strip-types --test test/research-subscriptions.test.mjs"
   },
   "dependencies": {

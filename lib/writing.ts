@@ -59,7 +59,7 @@ export function getPublishedNotes(): Note[] {
       } as NoteFrontmatter
       return { slug: file.replace(/\.mdx$/, ""), frontmatter, content }
     })
-    .filter((note) => note.frontmatter.published !== false)
+    .filter((note) => note.frontmatter.published === true)
     .sort((a, b) => b.frontmatter.date.localeCompare(a.frontmatter.date) || b.slug.localeCompare(a.slug))
 }
 
