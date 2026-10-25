@@ -1,14 +1,11 @@
-import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 import Link from "next/link"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { getWritingIndex } from "@/lib/writing"
 import { ResearchSubscribe } from "@/components/research-subscribe"
 
-export const metadata: Metadata = {
-  title: "Writing",
-  description: "Research notes, studies, and working papers from Lucci Labs.",
-}
+export const metadata = pageMetadata("/writing", "Research notes & reports", "Read Lucci Labs research on context infrastructure, AI agents, portable context and fine-grained wearable sensing, with methods and stated limitations.")
 
 export default function WritingPage() {
   const items = getWritingIndex()

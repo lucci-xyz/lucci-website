@@ -1,12 +1,9 @@
-import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { getLucciRepositories } from "@/lib/github"
 
-export const metadata: Metadata = {
-  title: "Building",
-  description: "Open-source instruments built in the course of Lucci Labs research.",
-}
+export const metadata = pageMetadata("/building", "Open-source research instruments", "Explore open-source instruments built during Lucci Labs research. Find project code, context and contribution history on GitHub.")
 
 export const revalidate = 3600
 

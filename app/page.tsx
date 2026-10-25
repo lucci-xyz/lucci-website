@@ -1,9 +1,14 @@
+import { pageMetadata } from "@/lib/seo"
 import Link from "next/link"
+import { getDiscoveryNotes } from "@/lib/discovery"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { ResearchSubscribe } from "@/components/research-subscribe"
 
+export const metadata = pageMetadata("", "AI systems & wearable sensing research", "Research notes, reports and open-source instruments from Lucci Labs, the research arm of Lucci. Agents, portable context and wearable sensing.")
+
 export default function HomePage() {
+  const latest = getDiscoveryNotes()[0]
   return (
     <div className="shell" id="top">
       <SiteHeader />
@@ -11,15 +16,15 @@ export default function HomePage() {
         <section className="hero" aria-labelledby="hero-title">
           <h1 className="hero-wordmark" id="hero-title">Lucci Labs</h1>
           <p className="hero-tagline">Studying intelligent systems by building them.</p>
-          <Link className="home-announcement" href="/writing/context-as-infrastructure">
+          {latest && <Link className="home-announcement" href={`/writing/${latest.slug}`}>
             <span className="pill"><span className="status-dot" />New</span>
-            <span className="announcement-text">Context as infrastructure — our latest research note</span>
-          </Link>
+            <span className="announcement-text">{latest.frontmatter.title} — latest research</span>
+          </Link>}
         </section>
 
         <section className="home-intro" aria-label="About Lucci Labs">
           <p>
-            Lucci Labs is an independent research studio working on tool-using agents,
+            Lucci Labs is the research arm of Lucci, working on tool-using agents,
             local inference, and the interfaces around them. We are interested in what
             makes intelligent systems dependable in practice: how they receive context,
             how they act on it, and how the people using them stay oriented to what the
@@ -41,7 +46,7 @@ export default function HomePage() {
             <Link className="quiet-link" href="/building">Building</Link>.
           </p>
           <p>
-            Everything is open source by default. The code lives on{" "}
+            Published code and research instruments are available on{" "}
             <a className="quiet-link" href="https://github.com/lucci-xyz" target="_blank" rel="noreferrer">GitHub</a>,
             and the lab reads its mail at{" "}
             <a className="quiet-link" href="mailto:contact@luccilabs.xyz">contact@luccilabs.xyz</a>.

@@ -1,12 +1,9 @@
-import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { AnalyticsPreferences } from "@/components/analytics-consent"
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "How Lucci Labs handles information from this website and Taste.",
-}
+export const metadata = pageMetadata("/privacy", "Privacy policy", "How Lucci Labs handles website visits, research subscriptions and optional analytics, and information from Taste.")
 
 export default function PrivacyPage() {
   return (

@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 import type { ReactElement, ReactNode } from "react"
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
@@ -10,7 +11,7 @@ import { extractHeadings } from "@/lib/writing"
 
 export function generateMetadata(): Metadata {
   const guide = getLoopGuide()
-  return guide ? { title: guide.title, description: guide.description, robots: guide.published ? undefined : { index: false, follow: false } } : {}
+  return guide ? { ...pageMetadata("/docs/loop", guide.title, guide.description), robots: guide.published ? undefined : { index: false, follow: false } } : {}
 }
 
 export default function LoopGuidePage() {

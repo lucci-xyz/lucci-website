@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "test:writing": "node --test tests/writing*.test.mjs",
-    "test:subscriptions": "node --experimental-strip-types --test test/research-subscriptions.test.mjs"
+    "test:subscriptions": "node --experimental-strip-types --test test/research-subscriptions.test.mjs",
+    "test": "node --experimental-strip-types --test test/*.test.mjs tests/*.test.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "1.3.1",
