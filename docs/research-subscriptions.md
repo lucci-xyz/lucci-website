@@ -2,7 +2,7 @@
 
 Both `luccilabs.xyz` and `luccihq.com` collect signups for one **Lucci Labs Research** segment in Resend. The Labs site owns the API and sends a confirmation from `Lucci Labs <research@luccilabs.xyz>`. A click opens a confirmation page; the address enters the segment only after a second button press. The company site forwards its form request to the Labs API and stores no copy.
 
-Research updates are **manual**. Publishing a writing article does not send email. For each new post, draft a Resend Broadcast to the Lucci Labs Research segment, set the sender to `research@luccilabs.xyz`, include the post link and Resend's unsubscribe footer, review recipients and content, then send only with Natalie's specific approval. Resend [segments](https://resend.com/docs/api-reference/segments/create-segment) and [Broadcasts](https://resend.com/docs/api-reference/broadcasts/create-broadcast) supply list management and unsubscribe handling.
+Research updates are **drafted automatically and sent by hand**. When a `lucci-xyz/writing` note goes live for the first time, its publish workflow creates a draft Resend Broadcast to the Lucci Labs Research segment from the *Research published* template (alias `research-published`), which sets the sender, postal address and unsubscribe footer. Natalie reviews the recipients and content in Resend and sends it; the workflow has no send or scheduling mode. The writing repository's README, under Newsletter, covers its settings. Resend [segments](https://resend.com/docs/api-reference/segments/create-segment) and [Broadcasts](https://resend.com/docs/api-reference/broadcasts/create-broadcast) supply list management and unsubscribe handling.
 
 ## Runtime settings
 
