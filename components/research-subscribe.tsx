@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { browserAttribution } from "@/lib/attribution"
+import { trackConversion } from "@/components/analytics-consent"
 
 export function ResearchSubscribe() {
   const [email, setEmail] = useState("")
@@ -15,8 +17,9 @@ export function ResearchSubscribe() {
       const response = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, website }),
+        body: JSON.stringify({ email, website, attribution: browserAttribution() }),
       })
+      if (response.ok && !website.trim()) trackConversion("subscribe_request")
       setState(response.ok ? "done" : "error")
     } catch {
       setState("error")
