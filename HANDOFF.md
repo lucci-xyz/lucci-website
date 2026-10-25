@@ -4,11 +4,13 @@ Updated October 24, 2026 on `codex/search-discovery`.
 
 ## Search discovery review
 
-- Branch/workspace: `/home/nat/lucci/.worktrees/lucci-website-seo`, based on current main at task start. Adds canonical/social/article metadata, organization identity, robots/sitemap, published-only RSS and Markdown/MDX exports, permanent legacy redirects, subscription noindex and a current homepage research link.
-- npm test: 12 passed; TypeScript and Next production build passed; 110 rendered discovery checks passed. Publication tests cover false, absent and string publication flags, as well as missing/unpublished Loop guides. Both desktop and phone layouts were inspected. A separate code review found no critical issues; the guide-link gate it identified was corrected and tested. See [technical scope and verification](docs/search-discovery.md).
+- Branch/workspace: `/home/nat/lucci/.worktrees/lucci-website-seo`, based on main at task start and merged with main at 4fc6f91 to preserve the independently approved strict HTML publication gate and standard-build tests. Adds canonical/social/article metadata, organization identity, robots/sitemap, published-only RSS and Markdown/MDX exports, permanent legacy redirects, subscription noindex and a current homepage research link.
+- npm test: 13 passed; TypeScript and Next production build passed; 110 rendered discovery checks passed. Publication tests cover false, absent and string publication flags, as well as missing/unpublished Loop guides. Both desktop and phone layouts were inspected. A separate code review found no critical issues; the guide-link gate it identified was corrected and tested. See [technical scope and verification](docs/search-discovery.md).
 - The marketing audit and profile/content recommendations are in the restricted Lucci Drive [audit document](https://docs.google.com/document/d/1Va3Rsy-l_jlxXimL5XkhLFTBeXATaJ8o1VSFGbRFD7Q). Strategy stays there, not in Git.
 - No production deployment, provider settings, search submission, public-profile edit or email send occurred in this task. Obtain Natalie's specific approval before merging/deploying.
 - Next after approval: deploy via existing pipeline, verify both custom domains and discovery URLs, enable HQ Always Use HTTPS at Cloudflare, then establish verified Google Search Console and Bing Webmaster Tools properties and submit each sitemap. Indexing/ranking and provider citations remain unverified.
+
+Review: [Labs PR #33](https://github.com/lucci-xyz/lucci-website/pull/33), awaiting specific merge/deployment approval.
 
 ## Existing integration context
 

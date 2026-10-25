@@ -4,7 +4,8 @@
 The `.mdx` files in `content/writing/` here are sync artifacts — a GitHub Action
 in that repo copies every note marked `published: true` into this directory and
 pushes, which triggers the Vercel deploy. Do not edit them here; edits belong in
-the writing repo (drafts with `published: false` never leave it).
+the writing repo. Both the exporter and this site's reader require explicit
+`published: true`; false, missing or string-valued flags do not make a public page.
 
 The Writing index, the paper pages, and the ⌘K palette all derive from these
 files automatically — there is no list to maintain anywhere.
@@ -21,4 +22,7 @@ The author is optional; an omitted or blank author displays as **Lucci Labs**.
 `app/writing/[slug]/page.tsx` renders each note through the post template:
 frontmatter drives the hero and citation, `##` headings become the scrollspy
 TOC, and `Sidenote` / `Figure` / `ManifestDiagram` (see `components/mdx.tsx`)
-are available inline. Images sync to `public/writing/<slug>/`.
+are available inline. Only published notes' image directories sync to
+`public/writing/<slug>/`; stale note and asset exports are removed together.
+The standard `npm run build` runs the writing-reader regression check before
+building the site, so preview and production builds use the same gate.
