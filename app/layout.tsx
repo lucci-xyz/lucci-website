@@ -3,7 +3,7 @@ import { organizationGraph } from "@/lib/seo"
 import type React from "react"
 import type { Metadata } from "next"
 import { Chakra_Petch, Geist, Geist_Mono, Newsreader } from "next/font/google"
-import { Analytics } from "@vercel/analytics/react"
+import { AggregateAnalytics } from "@/components/aggregate-analytics"
 import { AnalyticsConsent } from "@/components/analytics-consent"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { CommandPalette } from "@/components/command-palette"
@@ -57,7 +57,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {children}
         <CommandPalette notes={getWritingIndex()} />
         <ScrollReveal />
-        <Analytics />
+        <AggregateAnalytics />
         <AnalyticsConsent />
       </body>
     </html>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { subscriptionFromToken } from "@/lib/research-subscriptions"
 import { normalizeAttribution } from "@/lib/attribution"
+import { confirmationReceipt, CONFIRMATION_RECEIPT_COOKIE, CONFIRMATION_RECEIPT_SECONDS } from "@/lib/subscription-analytics"
 
 export const runtime = "nodejs"
 
@@ -63,5 +64,10 @@ export async function POST(request: Request) {
     return destination(request, "unavailable")
   }
 
-  return destination(request, "confirmed")
+  const response = destination(request, "confirmed")
+  const receipt = confirmationReceipt(token as string, secret, Date.now(), form.get("analytics_consent"))
+  response.cookies.set(CONFIRMATION_RECEIPT_COOKIE, receipt || "", {
+    httpOnly: true, secure: true, sameSite: "lax", path: "/subscribe/confirmed", maxAge: receipt ? CONFIRMATION_RECEIPT_SECONDS : 0,
+  })
+  return response
 }
