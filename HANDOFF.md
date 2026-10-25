@@ -1,13 +1,14 @@
 # Handoff
 
-Updated October 24, 2026 in `/home/nat/lucci/lucci-website-compact-signup` on `codex/compact-research-signup`.
+Updated October 24, 2026 on `codex/free-analytics-utm`.
 
 ## Current state
 
-- [Labs PR #28](https://github.com/lucci-xyz/lucci-website/pull/28) merged and deployed to [luccilabs.xyz](https://luccilabs.xyz/). Home and Writing offer the same confirmed research subscription. The API sends a confirmation from `research@luccilabs.xyz`; only a completed confirmation adds a contact to the dedicated Resend segment.
-- One specifically approved live signup for `contact@luccilabs.xyz` returned 200, its confirmation email arrived, the confirmation returned `status=confirmed`, and Resend listed the contact in `Lucci Labs Research` with `unsubscribed: false`. No research update was sent. Updates remain review-before-send, as Natalie requested. See [the subscription runbook](docs/research-subscriptions.md).
-- Natalie found the new signup too large and wordy. This branch makes it a compact, single-row form on both Labs pages. The related HQ branch moves its form above the full-screen statement so visitors can find it.
+- [Labs PR #32](https://github.com/lucci-xyz/lucci-website/pull/32) is open for review. It adds first/latest UTM attribution to research confirmation tokens, a consent-gated GA4 integration, and updated privacy text. The one Lucci Labs Research segment remains the only research list.
+- TypeScript, Next.js, subscription tests, and attribution tests passed. Vercel preview check passed. No production deployment or signup email test occurred. The existing lint command cannot run because eslint is absent from the repository's installed dependencies.
+- Natalie specifically approved one Resend `research_attribution` string contact property and `RESEND_RESEARCH_ATTRIBUTION_PROPERTY=research_attribution` in the Labs Vercel project; both are configured for production and preview. A confirmed subscriber's first/latest tagged visit is saved there when this PR is deployed.
+- [HQ PR #11](https://github.com/lucci-xyz/luccihq/pull/11) contains the matching company-site capture and link builder. GA4 is not active because Natalie still needs to create its property and provide a `G-` measurement ID. The Vercel Web Analytics API currently says `Web Analytics not found` despite the script in the code; activation approval has been requested.
 
 ## Next step
 
-Review the compact signup PR and its preview. Merge/deploy only with Natalie's specific approval; then verify Home and Writing on production. No additional email test is needed for this visual change.
+After review and specific deployment approval, set `NEXT_PUBLIC_GA_MEASUREMENT_ID` on the Labs Vercel project to the same ID used for HQ, then merge/deploy and verify campaign reporting and research attribution. The technical setup is in [HQ analytics setup](https://github.com/lucci-xyz/luccihq/blob/codex/free-analytics-utm/docs/analytics.md). Any email test needs separate specific approval.
