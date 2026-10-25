@@ -26,4 +26,8 @@ The company site requires no new secret. `RESEARCH_SUBSCRIBE_URL` optionally ove
 3. After deployment approval, test one signup and its confirmation only with specific approval for the confirmation email. Confirm the contact is in the research segment and that a prior globally unsubscribed contact stays unsubscribed.
 4. Review the form on desktop and phone, and make a **draft** Broadcast to verify the sender and unsubscribe footer without sending it.
 
-The signup endpoint sends at most one confirmation per address per calendar day through Resend's 24-hour idempotency key. It has a honeypot; if abuse appears, add provider edge rate limiting. Confirmation links expire within 48 hours and contain a signed address, so only the address owner can complete a subscription. No research update is scheduled or sent automatically.
+The signup endpoint sends at most one confirmation per address per UTC calendar day through Resend's 24-hour idempotency key.
+
+A repeated request with changed campaign data may receive Resend's documented `invalid_idempotent_request` conflict; only that named HTTP 409 is treated as an existing confirmation request. The earlier inbox link and its signed attribution remain authoritative for that day. Concurrent, unknown and malformed conflicts remain errors; the endpoint never retries under a new key. See [Resend idempotency behavior](https://resend.com/docs/dashboard/emails/idempotency-keys).
+
+The endpoint has a honeypot; if abuse appears, add provider edge rate limiting. Confirmation links expire within 48 hours and contain a signed address, so only the address owner can complete a subscription. No research update is scheduled or sent automatically.
