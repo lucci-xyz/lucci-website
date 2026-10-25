@@ -9,12 +9,32 @@ import ts from "typescript"
 
 const require = createRequire(import.meta.url)
 const root = fileURLToPath(new URL("../", import.meta.url))
-const secret = "fixture-secret-for-subscribe-route-tests"
-const fixedNow = Date.UTC(2026, 9, 25, 12)
+const segment = "fixture-research-segment"
+const reader = "reader@example.com"
 
-function routeHarness(provider, now = () => fixedNow) {
+// A small in-memory stand-in for the Resend contacts, segments and events endpoints.
+function resend({ contact = null, segments = [], createStatus = 201, eventStatus = 202, lookupStatus } = {}) {
+  return async (url, options = {}) => {
+    const { pathname } = new URL(url)
+    const method = options.method || "GET"
+    const reply = (status, body = {}) => new Response(JSON.stringify(body), { status })
+    if (method === "GET" && pathname === `/contacts/${encodeURIComponent(reader)}`) {
+      if (lookupStatus) return reply(lookupStatus, { message: "provider-body-do-not-log" })
+      return contact ? reply(200, { id: "fixture-contact", email: reader, ...contact }) : reply(404, { name: "not_found" })
+    }
+    if (method === "GET" && pathname === "/contacts/fixture-contact/segments") {
+      return reply(200, { object: "list", data: segments.map(id => ({ id, name: "Fixture" })), has_more: false })
+    }
+    if (method === "POST" && pathname === `/contacts/${encodeURIComponent(reader)}/segments/${segment}`) return reply(201, { id: segment })
+    if (method === "POST" && pathname === "/contacts") return reply(createStatus, { id: "fixture-contact" })
+    if (method === "PATCH" && pathname === `/contacts/${encodeURIComponent(reader)}`) return reply(200, { id: "fixture-contact" })
+    if (method === "POST" && pathname === "/events/send") return reply(eventStatus, { object: "event", event: "research.subscribed" })
+    throw new Error(`unexpected Resend call: ${method} ${pathname}`)
+  }
+}
+
+function routeHarness(provider, env = {}) {
   const calls = [], logs = [], modules = new Map()
-  class ClockDate extends Date { static now() { return now() } }
   function load(filename) {
     if (modules.has(filename)) return modules.get(filename)
     const exports = {}
@@ -23,15 +43,15 @@ function routeHarness(provider, now = () => fixedNow) {
       compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: true },
     }).outputText
     vm.runInNewContext(code, {
-      exports, Buffer, URL, Request, Response, Date: ClockDate,
-      process: { env: { RESEND_RESEARCH_API_KEY: "fixture-not-a-real-key", RESEARCH_SIGNUP_SECRET: secret } },
+      exports, Buffer, URL, Request, Response, Date,
+      process: { env: { RESEND_RESEARCH_API_KEY: "fixture-not-a-real-key", RESEND_RESEARCH_SEGMENT_ID: segment, ...env } },
       console: {
         info: (...values) => logs.push(values),
         error: (...values) => logs.push(values),
       },
       fetch: async (url, options) => {
-        assert.equal(url, "https://api.resend.com/emails")
-        calls.push({ url, ...options })
+        assert.ok(url.startsWith("https://api.resend.com/"))
+        calls.push({ url, method: options?.method || "GET", body: options?.body ? JSON.parse(options.body) : undefined })
         return provider(url, options)
       },
       require: name => name.startsWith("@/")
@@ -43,65 +63,93 @@ function routeHarness(provider, now = () => fixedNow) {
   return { POST: load(path.join(root, "app/api/subscribe/route.ts")).POST, calls, logs }
 }
 
-const request = attribution => new Request("https://luccilabs.xyz/api/subscribe", {
-  method: "POST", headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ email: "reader@example.com", attribution }),
+const request = (body = { email: reader }) => new Request("https://luccilabs.xyz/api/subscribe", {
+  method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
 })
 
-test("only the documented changed-payload conflict is treated as a duplicate confirmation request", async t => {
-  for (const [label, status, body, expected] of [
-    ["accepted", 200, '{"id":"fixture-email"}', 200],
-    ["same daily key, changed payload", 409, '{"name":"invalid_idempotent_request","message":"provider-body-do-not-log"}', 200],
-    ["concurrent request still processing", 409, '{"name":"concurrent_idempotent_requests"}', 502],
-    ["unknown conflict", 409, '{"name":"some_other_conflict"}', 502],
-    ["malformed conflict body", 409, 'not JSON', 502],
-    ["null conflict body", 409, 'null', 502],
-    ["non-string conflict name", 409, '{"name":409}', 502],
-    ["wrong HTTP status with duplicate name", 500, '{"name":"invalid_idempotent_request"}', 502],
-    ["rate limit", 429, '{"name":"rate_limit_exceeded"}', 502],
-  ]) {
-    await t.test(label, async () => {
-      const route = routeHarness(async () => new Response(body, { status }))
-      const response = await route.POST(request())
-      assert.equal(response.status, expected)
-      assert.equal(response.headers.get("cache-control"), "no-store")
-      if (expected === 200) assert.deepEqual(await response.json(), { ok: true })
-      else assert.equal(typeof (await response.json()).error, "string")
-      assert.equal(route.calls.length, 1, "must never retry with a different key")
-      const log = JSON.stringify(route.logs)
-      for (const privateValue of ["reader@example.com", secret, "fixture-not-a-real-key", "provider-body-do-not-log"]) {
-        assert.ok(!log.includes(privateValue), "diagnostics must not contain request or provider payloads")
-      }
-    })
+const events = route => route.calls.filter(call => call.url.endsWith("/events/send"))
+
+function assertPrivateLogs(route) {
+  const log = JSON.stringify(route.logs)
+  for (const privateValue of [reader, "fixture-not-a-real-key", "provider-body-do-not-log"]) {
+    assert.ok(!log.includes(privateValue), "diagnostics must not contain addresses, keys or provider payloads")
   }
+}
+
+async function assertAccepted(response) {
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("cache-control"), "no-store")
+  assert.deepEqual(await response.json(), { ok: true })
+}
+
+test("a new address joins the segment at once and gets one welcome, with no confirmation email", async () => {
+  const route = routeHarness(resend())
+  await assertAccepted(await route.POST(request()))
+  const created = route.calls.find(call => call.method === "POST" && call.url.endsWith("/contacts"))
+  assert.deepEqual(created.body, { email: reader, unsubscribed: false, segments: [{ id: segment }] })
+  assert.deepEqual(events(route).map(call => call.body), [{ event: "research.subscribed", email: reader }])
+  assert.ok(!route.calls.some(call => call.url.endsWith("/emails")), "sign-up must not send a confirmation email")
+  assertPrivateLogs(route)
 })
 
-test("a repeated campaign keeps the daily key and earlier emailed link instead of sending under a new key", async () => {
-  const route = routeHarness(async (_url, options) => new Response(
-    route.calls.length === 1 ? '{"id":"fixture-email"}' : '{"name":"invalid_idempotent_request"}',
-    { status: route.calls.length === 1 ? 200 : 409 }))
-  const touch = source => ({ utm_source: source, landing_path: "/", captured_at: new Date(fixedNow).toISOString() })
-  const first = touch("labs"), second = touch("hq")
-  assert.equal((await route.POST(request({ first, last: first }))).status, 200)
-  assert.equal((await route.POST(request({ first: second, last: second }))).status, 200)
-  assert.equal(route.calls.length, 2)
-  assert.equal(route.calls[0].headers["Idempotency-Key"], route.calls[1].headers["Idempotency-Key"])
-  assert.notEqual(JSON.parse(route.calls[0].body).text, JSON.parse(route.calls[1].body).text,
-    "the first request's signed campaign must not be erased to make later payloads match")
+test("an existing contact outside the segment is added and welcomed", async () => {
+  const route = routeHarness(resend({ contact: { unsubscribed: false }, segments: ["another-segment"] }))
+  await assertAccepted(await route.POST(request()))
+  assert.ok(route.calls.some(call => call.method === "POST" && call.url.endsWith(`/segments/${segment}`)))
+  assert.equal(events(route).length, 1)
 })
 
-test("a request crossing UTC midnight uses the same day for its emailed token and send key", async () => {
-  const beforeMidnight = Date.UTC(2026, 9, 25, 23, 59, 59, 999)
-  let reads = 0
-  const route = routeHarness(async () => new Response('{"id":"fixture-email"}'),
-    () => beforeMidnight + reads++)
-  assert.equal((await route.POST(request())).status, 200)
-  const sent = route.calls[0]
-  const text = JSON.parse(sent.body).text
-  const url = text.match(/https:\/\/[^\s]+/)[0]
-  const token = new URL(url).searchParams.get("token")
-  const payload = JSON.parse(Buffer.from(token.split(".")[0], "base64url").toString())
-  assert.equal(payload.day, 20751)
-  assert.equal(sent.headers["Idempotency-Key"],
-    "research-confirm/e3e14c05b7831b66eb0ef8d43686494ca096c2cc3874c0c2b15941dc6be9ad72")
+test("an address already in the segment gets the same reply and no second welcome", async () => {
+  const route = routeHarness(resend({ contact: { unsubscribed: false }, segments: [segment] }))
+  await assertAccepted(await route.POST(request()))
+  assert.ok(!route.calls.some(call => call.method === "POST"), "nothing is added or sent")
+})
+
+test("a prior global unsubscribe is never overridden or revealed", async () => {
+  const route = routeHarness(resend({ contact: { unsubscribed: true } }))
+  await assertAccepted(await route.POST(request()))
+  assert.deepEqual(route.calls.map(call => call.method), ["GET"])
+})
+
+test("a concurrent sign-up that already created the contact sends no second welcome", async () => {
+  const route = routeHarness(resend({ createStatus: 409 }))
+  await assertAccepted(await route.POST(request()))
+  assert.equal(events(route).length, 0)
+})
+
+test("a failed welcome is logged without private data and the subscription still stands", async () => {
+  const route = routeHarness(resend({ eventStatus: 500 }))
+  await assertAccepted(await route.POST(request()))
+  assert.equal(events(route).length, 1, "the welcome event is never retried")
+  assert.ok(route.logs.length > 0)
+  assertPrivateLogs(route)
+})
+
+test("a provider failure before the address is listed asks the visitor to retry", async () => {
+  const route = routeHarness(resend({ lookupStatus: 500 }))
+  const response = await route.POST(request())
+  assert.equal(response.status, 502)
+  assert.equal(typeof (await response.json()).error, "string")
+  assert.equal(events(route).length, 0)
+  assertPrivateLogs(route)
+})
+
+test("the honeypot, invalid input and missing settings never call Resend", async () => {
+  const honeypot = routeHarness(resend())
+  await assertAccepted(await honeypot.POST(request({ email: reader, website: "https://spam.example" })))
+  const invalid = routeHarness(resend())
+  assert.equal((await invalid.POST(request({ email: "not-an-address" }))).status, 400)
+  const unconfigured = routeHarness(resend(), { RESEND_RESEARCH_SEGMENT_ID: "" })
+  assert.equal((await unconfigured.POST(request())).status, 503)
+  for (const route of [honeypot, invalid, unconfigured]) assert.equal(route.calls.length, 0)
+})
+
+test("campaign details are saved on the contact without arbitrary query data", async () => {
+  const route = routeHarness(resend(), { RESEND_RESEARCH_ATTRIBUTION_PROPERTY: "research_attribution" })
+  const touch = { utm_source: "linkedin", landing_path: "/writing", captured_at: "2026-10-25T12:00:00.000Z", unknown: "private" }
+  await assertAccepted(await route.POST(request({ email: reader, attribution: { first: touch, last: touch } })))
+  const patch = route.calls.find(call => call.method === "PATCH")
+  const saved = JSON.parse(patch.body.properties.research_attribution)
+  assert.equal(saved.first.utm_source, "linkedin")
+  assert.ok(!JSON.stringify(saved).includes("private"))
 })
