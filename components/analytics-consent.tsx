@@ -33,7 +33,6 @@ function loadAnalytics() {
   g.dataLayer = g.dataLayer || []
   g.gtag = (...args: unknown[]) => { g.dataLayer?.push(args) }
   g.gtag("js", new Date())
-  g.gtag("set", "linker", { domains: ["luccihq.com", "luccilabs.xyz"] })
   g.gtag("consent", "default", {
     analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied",
   })
@@ -88,7 +87,6 @@ export function AnalyticsConsent() {
     try { window.localStorage.setItem(choiceKey, value) } catch { /* This visit only. */ }
     setChoice(value)
     if (value === "yes") loadAnalytics()
-    if (value === "no" && loaded) window.location.reload()
     if (value === "no" && loaded) window.location.reload()
   }
 
