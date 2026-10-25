@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Chakra_Petch, Geist, Geist_Mono, Newsreader } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
+import { AnalyticsConsent } from "@/components/analytics-consent"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { CommandPalette } from "@/components/command-palette"
 import { getWritingIndex } from "@/lib/writing"
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <CommandPalette notes={getWritingIndex()} />
         <ScrollReveal />
         <Analytics />
+        <AnalyticsConsent />
       </body>
     </html>
   )

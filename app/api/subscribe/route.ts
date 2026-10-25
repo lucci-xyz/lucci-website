@@ -10,9 +10,9 @@ function json(error: string, status: number) {
 
 export async function POST(request: Request) {
   const raw = await request.text()
-  if (raw.length > 2000) return json("The request is too large.", 413)
+  if (raw.length > 4000) return json("The request is too large.", 413)
 
-  let body: { email?: unknown; website?: unknown }
+  let body: { email?: unknown; website?: unknown; attribution?: unknown }
   try {
     body = JSON.parse(raw) as typeof body
   } catch {
@@ -30,12 +30,13 @@ export async function POST(request: Request) {
   const secret = process.env.RESEARCH_SIGNUP_SECRET
   if (!key || !secret || secret.length < 32) return json("Signups are temporarily unavailable.", 503)
 
-  const token = confirmationToken(email, secret)
+  const token = confirmationToken(email, secret, Date.now(), body.attribution)
   const site = process.env.RESEARCH_SITE_URL || "https://luccilabs.xyz"
   const confirmUrl = new URL("/subscribe/confirm", site)
   confirmUrl.searchParams.set("token", token)
   const text = `Confirm your Lucci Labs research subscription: ${confirmUrl.toString()}\n\nThe link expires within 48 hours. If you did not request this, ignore this email. Research updates are occasional, and every update includes an unsubscribe link.`
-  const idempotency = createHash("sha256").update(token).digest("hex")
+  // Campaign changes must not allow multiple confirmation emails to one address in a day.
+  const idempotency = createHash("sha256").update(confirmationToken(email, secret)).digest("hex")
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Confirm your Lucci Labs research subscription</title></head><body style="margin:0;background-color:#ffffff;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="#ffffff" style="background-color:#ffffff;padding-top:32px;padding-right:20px;padding-bottom:32px;padding-left:20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;"><tr><td><h1 style="font-family:Arial,Helvetica,sans-serif;font-size:24px;line-height:32px;color:#282828;font-weight:600;">Confirm your subscription</h1><p style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:25px;color:#3c3836;">Receive occasional emails when Lucci Labs publishes new research.</p><p style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:25px;color:#3c3836;"><a href="${confirmUrl.toString()}" style="color:#282828;text-decoration:underline;">Confirm subscription</a></p><p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#676767;">This link expires within 48 hours. If you did not request this, ignore this email. Every research update includes an unsubscribe link.</p></td></tr></table></td></tr></table></body></html>`
 
   try {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { AnalyticsPreferences } from "@/components/analytics-consent"
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -19,7 +20,7 @@ export default function PrivacyPage() {
             Lucci Labs is an independent, open-source project. This policy covers this
             website and Taste, our Pinterest-connected tool.
           </p>
-          <p className="privacy-updated">Updated September 26, 2026</p>
+          <p className="privacy-updated">Updated October 24, 2026</p>
         </header>
 
         <div className="privacy-content">
@@ -31,6 +32,17 @@ export default function PrivacyPage() {
               tracking cookies. If you email us, we receive your email address and message
               so we can reply.
             </p>
+            <p>
+              We remember campaign tags from links you visit (UTM parameters), the landing path, and the referring
+              site&apos;s domain for up to 90 days in your browser. We include them when you request a research subscription
+              so we can understand how people found our work. We do not save full referring URLs.
+            </p>
+            <p>
+              With your permission, Google Analytics 4 measures visits and actions such as research signups. It may use
+              cookies and process your IP address and device details. We load it only after you choose
+              &ldquo;Allow analytics.&rdquo; You can change your choice below.
+            </p>
+            <AnalyticsPreferences />
             <p>
               If you subscribe to research updates, we send a confirmation email and add your address to our Resend research list only after you confirm. We use it to send new research and honor unsubscribe requests. Every update includes an unsubscribe link; you can also ask us to remove your address.
             </p>
