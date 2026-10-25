@@ -2,28 +2,25 @@
 
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
-import { browserAttribution, UTM_KEYS } from "@/lib/attribution"
+import { browserAttribution } from "@/lib/attribution"
+import { analyticsContext, ANALYTICS_CHOICE_KEY } from "@/lib/analytics"
 
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ""
-const choiceKey = "lucci_analytics_choice_v1"
+const choiceKey = ANALYTICS_CHOICE_KEY
 let loaded = false
 
 type Choice = "yes" | "no" | null
 type GoogleWindow = Window & { dataLayer?: unknown[][]; gtag?: (...args: unknown[]) => void }
 
-function safeLocation() {
-  const url = new URL(window.location.href)
-  const allowed = new URLSearchParams()
-  for (const key of UTM_KEYS) {
-    const value = url.searchParams.get(key)
-    if (value && !/\S+@\S+\.\S+/.test(value)) allowed.set(key, value.slice(0, 120))
-  }
-  return `${url.origin}${url.pathname}${allowed.size ? `?${allowed}` : ""}`
+function currentContext() {
+  return { ...analyticsContext(window.location.href, document.referrer), page_title: document.title }
 }
 
 function sendPageView() {
   const g = window as GoogleWindow
-  g.gtag?.("event", "page_view", { page_location: safeLocation(), page_title: document.title })
+  const context = currentContext()
+  g.gtag?.("config", measurementId, { ...context, send_page_view: false })
+  g.gtag?.("event", "page_view", context)
 }
 
 function loadAnalytics() {
@@ -38,6 +35,7 @@ function loadAnalytics() {
   })
   g.gtag("config", measurementId, {
     send_page_view: false,
+    ...currentContext(),
     allow_google_signals: false,
     allow_ad_personalization_signals: false,
   })
@@ -45,12 +43,16 @@ function loadAnalytics() {
   script.async = true
   script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`
   document.head.appendChild(script)
+  window.dispatchEvent(new Event("lucci:analytics-ready"))
 }
 
-export function trackConversion(name: "generate_lead" | "subscribe_request") {
+export function trackConversion(name: "generate_lead" | "subscribe_request" | "sign_up"): boolean {
   try {
-    if (window.localStorage.getItem(choiceKey) === "yes") (window as GoogleWindow).gtag?.("event", name)
-  } catch { /* Analytics choice storage can be unavailable. */ }
+    const g = window as GoogleWindow
+    if (window.localStorage.getItem(choiceKey) !== "yes" || !g.gtag) return false
+    g.gtag("event", name, { ...currentContext(), ...(name === "sign_up" ? { method: "email" } : {}) })
+    return true
+  } catch { return false }
 }
 
 export function AnalyticsConsent() {
