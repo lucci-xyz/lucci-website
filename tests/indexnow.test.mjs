@@ -88,3 +88,11 @@ test("a batch over the bound is rejected before preflight or posting", async () 
   }
   await assert.rejects(runIndexNow({ config, urls, submit: true, fetchImpl }), /more than 100 URLs/)
 })
+
+test("homepage canonicals with and without the root slash are equivalent", async () => {
+  const remote = external({ canonical: "https://example.org" })
+  const result = await runIndexNow({ config, urls: ["/"], submit: true, fetchImpl: remote.fetch })
+  assert.equal(result.status, 200)
+  assert.deepEqual(result.urlList, ["https://example.org/"])
+  assert.equal(remote.posts.length, 1)
+})

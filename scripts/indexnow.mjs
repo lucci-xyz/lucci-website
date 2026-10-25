@@ -90,7 +90,7 @@ export async function runIndexNow({ config, urls = [], changedFiles = [], submit
     const canonical = tags.find(tag => tag.rel?.toLowerCase() === "canonical")?.href
     const noindex = /\b(?:noindex|none)\b/i.test(response.headers.get("x-robots-tag") ?? "") ||
       tags.some(tag => /^(robots|googlebot|bingbot)$/i.test(tag.name ?? "") && /\b(?:noindex|none)\b/i.test(tag.content ?? ""))
-    if (canonical !== url || noindex) throw new Error("Live canonical/noindex preflight failed: " + url)
+    if (!canonical || canonicalUrl(canonical, origin) !== url || noindex) throw new Error("Live canonical/noindex preflight failed: " + url)
   }
   const response = await request(ENDPOINT, {
     method: "POST", headers: { "content-type": "application/json; charset=utf-8" },

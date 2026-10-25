@@ -4,7 +4,8 @@ export const CONFIRMATION_RECEIPT_COOKIE = "lucci_research_confirmation"
 export const CONFIRMATION_RECEIPT_SECONDS = 600
 
 // A short-lived proof of a successful confirmation, with no address or token.
-export function confirmationReceipt(token: string, secret: string, now = Date.now()): string {
+export function confirmationReceipt(token: string, secret: string, now = Date.now(), consent: unknown = null): string | null {
+  if (consent !== "yes") return null
   const id = createHmac("sha256", secret).update(`analytics:${token}`).digest("hex")
   const payload = Buffer.from(JSON.stringify({ id, issued: now, expires: now + CONFIRMATION_RECEIPT_SECONDS * 1000 })).toString("base64url")
   return `${payload}.${createHmac("sha256", secret).update(payload).digest("base64url")}`

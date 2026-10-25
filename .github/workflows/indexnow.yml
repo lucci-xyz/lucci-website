@@ -21,7 +21,8 @@ jobs:
   notify:
     if: >-
       (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
-      (github.event.deployment_status.state == 'success' &&
+      (vars.INDEXNOW_ENABLED == 'true' &&
+       github.event.deployment_status.state == 'success' &&
        github.event.deployment.environment == 'Production' &&
        github.event.deployment.creator.login == 'vercel[bot]')
     runs-on: ubuntu-latest

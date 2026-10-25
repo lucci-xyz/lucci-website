@@ -8,7 +8,7 @@ export function ConfirmedSubscriptionEvent({ receiptId }: { receiptId: string })
   useEffect(() => {
     const record = () => {
       try {
-        recordConfirmation(receiptId, window.localStorage.getItem(ANALYTICS_CHOICE_KEY), window.sessionStorage, () => trackConversion("sign_up"))
+        recordConfirmation(receiptId, window.localStorage.getItem(ANALYTICS_CHOICE_KEY), window.localStorage, () => trackConversion("sign_up"))
       } catch { /* Analytics and deduplication storage are optional. */ }
     }
     window.addEventListener("lucci:analytics-ready", record)

@@ -1,3 +1,4 @@
+import { ConfirmationForm } from "@/components/confirmation-form"
 import Link from "next/link"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
@@ -12,10 +13,7 @@ export default async function ConfirmPage({ searchParams }: { searchParams: Prom
         <h1>Confirm your subscription.</h1>
         <p>One more step before we send you new research. You can unsubscribe from any update.</p>
         {token ? (
-          <form method="post" action="/api/subscribe/confirm">
-            <input type="hidden" name="token" value={token} />
-            <button type="submit">Confirm subscription</button>
-          </form>
+          <ConfirmationForm token={token} />
         ) : <p>This confirmation link is incomplete. Please sign up again.</p>}
         <Link className="quiet-link" href="/writing">Explore the research</Link>
       </main>

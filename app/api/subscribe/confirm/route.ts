@@ -65,8 +65,9 @@ export async function POST(request: Request) {
   }
 
   const response = destination(request, "confirmed")
-  response.cookies.set(CONFIRMATION_RECEIPT_COOKIE, confirmationReceipt(token as string, secret), {
-    httpOnly: true, secure: true, sameSite: "lax", path: "/subscribe/confirmed", maxAge: CONFIRMATION_RECEIPT_SECONDS,
+  const receipt = confirmationReceipt(token as string, secret, Date.now(), form.get("analytics_consent"))
+  response.cookies.set(CONFIRMATION_RECEIPT_COOKIE, receipt || "", {
+    httpOnly: true, secure: true, sameSite: "lax", path: "/subscribe/confirmed", maxAge: receipt ? CONFIRMATION_RECEIPT_SECONDS : 0,
   })
   return response
 }

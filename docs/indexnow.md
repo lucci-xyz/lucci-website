@@ -24,3 +24,5 @@ The public key and content-to-route mapping live in `indexnow.config.json`. Mean
 The workflow also has a manual main-branch trigger with explicit paths. Receipts are in the workflow log and job summary. HTTP 200 means received; HTTP 202 means received with ownership validation pending. Neither proves crawling, indexing, ranking or citation. A failed notification does not roll back the website; inspect the log, correct the key/route issue, then rerun with the affected paths. Disable this workflow to stop automatic notifications. Rotate the key by changing both the config and matching root text file in one deployment.
 
 The implementation follows the [official protocol](https://www.indexnow.org/documentation) and [FAQ](https://www.indexnow.org/faq), checked October 25, 2026. One endpoint shares notifications with participating search engines. Existing XML sitemaps remain the canonical public URL inventory.
+
+Automatic notifications are disabled unless repository Actions variable `INDEXNOW_ENABLED=true` is set. The manual main-branch workflow remains an explicit submission path. To pause only automatic notifications, set this variable to `false`.

@@ -22,3 +22,15 @@ test("confirmed signup events require consent and deduplicate a signed receipt",
   assert.equal(sent, 1)
   assert.equal(recordConfirmation("b".repeat(64), "yes", { getItem() { throw Error("blocked") }, setItem() {} }, send), false)
 })
+
+test("browser-wide receipt ledger expires old entries and remains bounded", () => {
+  const values = new Map(); const store = { getItem: k => values.get(k) || null, setItem: (k,v) => values.set(k,v) }
+  const id = "c".repeat(64), now = Date.UTC(2026, 9, 25)
+  assert.equal(recordConfirmation(id, "yes", store, () => true, now), true)
+  const secondTab = { ...store }
+  assert.equal(recordConfirmation(id, "yes", secondTab, () => true, now + 1000), false)
+  assert.equal(recordConfirmation(id, "yes", secondTab, () => true, now + 49 * 3600000), true)
+  for (let n = 0; n < 100; n++) recordConfirmation(n.toString(16).padStart(64, "0"), "yes", store, () => true, now + 50 * 3600000 + n)
+  assert.equal(values.size, 1)
+  assert.ok(JSON.parse([...values.values()][0]).length <= 64)
+})
