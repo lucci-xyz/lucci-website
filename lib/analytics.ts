@@ -37,3 +37,8 @@ export function recordConfirmation(id: string, choice: string | null, storage: P
     return sent
   } catch { return false }
 }
+
+// Preserve the command format used by Google's documented gtag.js snippet.
+export function createGoogleTag(queue: unknown[]): (...args: unknown[]) => void {
+  return function gtag() { queue.push(arguments) }
+}

@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { browserAttribution } from "@/lib/attribution"
-import { analyticsContext, ANALYTICS_CHOICE_KEY } from "@/lib/analytics"
+import { analyticsContext, ANALYTICS_CHOICE_KEY, createGoogleTag } from "@/lib/analytics"
 
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ""
 const choiceKey = ANALYTICS_CHOICE_KEY
 let loaded = false
 
 type Choice = "yes" | "no" | null
-type GoogleWindow = Window & { dataLayer?: unknown[][]; gtag?: (...args: unknown[]) => void }
+type GoogleWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void }
 
 function currentContext() {
   return { ...analyticsContext(window.location.href, document.referrer), page_title: document.title }
@@ -28,7 +28,7 @@ function loadAnalytics() {
   loaded = true
   const g = window as GoogleWindow
   g.dataLayer = g.dataLayer || []
-  g.gtag = (...args: unknown[]) => { g.dataLayer?.push(args) }
+  g.gtag = createGoogleTag(g.dataLayer)
   g.gtag("js", new Date())
   g.gtag("consent", "default", {
     analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied",
