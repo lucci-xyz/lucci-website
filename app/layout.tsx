@@ -1,3 +1,5 @@
+import { JsonLd } from "@/components/json-ld"
+import { organizationGraph } from "@/lib/seo"
 import type React from "react"
 import type { Metadata } from "next"
 import { Chakra_Petch, Geist, Geist_Mono, Newsreader } from "next/font/google"
@@ -45,6 +47,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable} ${newsreader.variable} ${chakraPetch.variable}`} suppressHydrationWarning>
       <body>
+        <JsonLd data={organizationGraph} />
         <script
           dangerouslySetInnerHTML={{
             __html:

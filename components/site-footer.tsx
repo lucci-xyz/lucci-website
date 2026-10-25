@@ -8,6 +8,7 @@ export function SiteFooter() {
         <a className="quiet-link" href="https://luccihq.com" target="_blank" rel="noreferrer">Lucci HQ</a>
         <a className="quiet-link" href="mailto:contact@luccilabs.xyz">Contact</a>
         <Link className="quiet-link" href="/privacy">Privacy</Link>
+        <a className="quiet-link" href="/feed.xml">RSS</a>
         <Link className="quiet-link" href="/docs">API docs</Link>
         <div className="footer-social-links">
           <a className="footer-icon-link" href="https://github.com/lucci-xyz" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub">
