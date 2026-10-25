@@ -29,6 +29,8 @@ npm install
 npm run dev
 ```
 
+Research signup on the home and Writing pages is described in [docs/research-subscriptions.md](docs/research-subscriptions.md). A separate confirmation email is required before an address joins the Resend research segment; publishing a note never sends an update automatically.
+
 The projects page uses the public GitHub API. Set `GITHUB_TOKEN` in environments where a higher API rate limit is needed.
 
 ## Loop documentation source

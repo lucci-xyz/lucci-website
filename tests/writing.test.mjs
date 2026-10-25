@@ -15,7 +15,8 @@ test("the actual writing reader admits only explicit YAML boolean true", () => {
     const content = path.join(root, "content/writing")
     mkdirSync(content, { recursive: true })
     for (const [slug, status] of [["approved", "true"], ["draft", "false"],
-      ["missing", undefined], ["string-true", '"true"'], ["_template", "true"]]) {
+      ["missing", undefined], ["string-true", '"true"'], ["_template", "true"],
+      ["null", "null"], ["number", "1"], ["string-false", '"false"']]) {
       writeFileSync(path.join(content, `${slug}.mdx`), `---\ntitle: ${slug}\ndate: 2026-10-24\n${status ? `published: ${status}\n` : ""}---\nBody`)
     }
     const exports = {}
@@ -24,12 +25,14 @@ test("the actual writing reader admits only explicit YAML boolean true", () => {
     }).outputText
     vm.runInNewContext(compiled, {
       exports, process: { cwd: () => root },
-      require: (name) => name === "./site-data" ? { forthcomingItems: [] } : require(name),
+      require,
     })
     assert.equal(JSON.stringify(exports.getPublishedNotes().map((note) => note.slug)), '["approved"]')
-    assert.equal(exports.getNote("draft"), undefined)
-    assert.equal(exports.getNote("missing"), undefined)
-    assert.equal(exports.getNote("string-true"), undefined)
+    assert.equal(JSON.stringify(exports.getWritingIndex().map((note) => note.slug)), '["approved"]')
+    assert.equal(exports.getNote("approved").slug, "approved")
+    for (const slug of ["draft", "missing", "string-true", "_template", "null", "number", "string-false"]) {
+      assert.equal(exports.getNote(slug), undefined)
+    }
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
