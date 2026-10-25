@@ -1,8 +1,16 @@
 # Handoff
 
-Updated October 24, 2026 on `codex/search-discovery`.
+Updated October 25, 2026 on `codex/google-tag-queue`.
 
-## Search discovery review
+## Google tag command format
+
+- Workspace: `/home/nat/lucci/.worktrees/lucci-website-seo`, branch `codex/google-tag-queue`, based on merged `origin/main` at `3b9679a`. The prior SEO branch is preserved.
+- `createGoogleTag(queue: unknown[])` in `lib/analytics.ts` returns a normal function that pushes its `arguments` object. `components/analytics-consent.tsx` uses that helper with the existing data layer. Consent, sanitized URL/referrer context and event payloads are unchanged.
+- The regression first failed against the extracted previous arrow implementation: `[object Array]` instead of `[object Arguments]`. With the fix, it checks the command object type, non-array status, ordered commands, indexed payloads and preservation of existing queue entries. Full suite: 27 tests passed; TypeScript passed; `npm run build` with the existing Labs measurement ID passed.
+- Official references checked October 25, 2026: [gtag.js setup](https://developers.google.com/tag-platform/gtagjs) and [data layer installation](https://developers.google.com/tag-platform/tag-manager/datalayer#installation). Both show a normal function pushing `arguments`.
+- This branch is ready for targeted review. No deployment, production telemetry or provider setting change was performed as part of this fix. After approval and release, verify the actual consented Google Analytics request separately.
+
+## Earlier search discovery review
 
 - Branch/workspace: `/home/nat/lucci/.worktrees/lucci-website-seo`, based on main at task start and merged with main at 4fc6f91 to preserve the independently approved strict HTML publication gate and standard-build tests. Adds canonical/social/article metadata, organization identity, robots/sitemap, published-only RSS and Markdown/MDX exports, permanent legacy redirects, subscription noindex and a current homepage research link.
 - npm test: 13 passed; TypeScript and Next production build passed; 110 rendered discovery checks passed. Publication tests cover false, absent and string publication flags, as well as missing/unpublished Loop guides. Both desktop and phone layouts were inspected. A separate code review found no critical issues; the guide-link gate it identified was corrected and tested. See [technical scope and verification](docs/search-discovery.md).
