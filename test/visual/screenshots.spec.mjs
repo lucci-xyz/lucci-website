@@ -22,7 +22,7 @@ for (const entry of PAGES) {
       scrollTo(0, 0)
     })
     await expect.poll(() => page.evaluate(() => [...document.images].every((image) => image.complete && image.naturalWidth > 0))).toBe(true)
-    assertCaptureDocument({ status: response?.status(), url: page.url(), heading: await page.locator("h1").innerText(), body: await page.locator("body").innerText(), errors }, entry)
+    assertCaptureDocument({ status: response?.status(), url: page.url(), heading: (await page.locator("h1").textContent()).trim(), body: await page.locator("body").innerText(), errors }, entry)
     await mkdir("ci-preview", { recursive: true })
     const filename = `${info.project.name}-${entry.name}.png`
     await saveCapture(page, `ci-preview/${filename}`)
