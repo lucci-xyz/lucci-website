@@ -20,3 +20,57 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npx tsc --noEmit --incremental false
+      - name: Build candidate for screenshots (PR only)
+        if: github.event_name == 'pull_request'
+        timeout-minutes: 5
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+        run: npm run build
+      - name: Install screenshot browser (PR only)
+        timeout-minutes: 3
+        if: github.event_name == 'pull_request'
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Capture desktop and phone CI build evidence
+        id: screenshots
+        timeout-minutes: 3
+        if: github.event_name == 'pull_request'
+        env:
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: npm run screenshots
+      - name: Save screenshots and capture receipts
+        id: screenshot_artifact
+        if: always() && github.event_name == 'pull_request' && steps.screenshots.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-build-screenshots-${{ github.event.pull_request.head.sha }}
+          path: ci-preview/
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
+      - name: Save screenshot failure diagnostics
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-failure-diagnostics
+          path: screenshot-diagnostics/
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Link visual evidence in the job summary
+        if: always() && github.event_name == 'pull_request'
+        env:
+          CAPTURE_OUTCOME: ${{ steps.screenshots.outcome }}
+          ARTIFACT_URL: ${{ steps.screenshot_artifact.outputs.artifact-url }}
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          {
+            echo '### CI build screenshots'
+            echo 'Local Next production build, not a deployed Vercel preview. No hosting account required.'
+            echo "Candidate: $CANDIDATE_HEAD"
+            echo "Capture outcome: $CAPTURE_OUTCOME"
+            if [ -n "$ARTIFACT_URL" ]; then
+              echo "[Download desktop and phone screenshots + receipts]($ARTIFACT_URL)"
+              echo 'Home, Writing, published Portable context article, Privacy; reduced-motion stills. Artifact expires after 3 days.'
+            else
+              echo 'No successful screenshot evidence. Read the failed step and any diagnostic artifact.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

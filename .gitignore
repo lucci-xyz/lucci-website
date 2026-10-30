@@ -5,3 +5,7 @@ out
 .DS_Store
 .env
 tsconfig.tsbuildinfo
+
+# Generated CI screenshot evidence
+/ci-preview/
+/screenshot-diagnostics/
